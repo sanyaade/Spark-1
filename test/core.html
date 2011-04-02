@@ -7,7 +7,11 @@
 	<body>
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
-			
+			Spark.extend('message', function(message) {
+				alert(message);
+				
+				return this;
+			});
 		</script>
 	</body>
 </html>
