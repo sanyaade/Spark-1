@@ -10,7 +10,12 @@
 	// Create the object
 	function Spark(){}
 	
-	// Add the extend function
+	/**
+	 * Adds a variable to Spark's prototype
+	 * 
+	 * @param {String} name Name you wish to add your variable under
+	 * @param toAdd Variable you wish to add
+	 */
 	Spark.prototype.extend = function(name, toAdd) {
 		// Add the object
 		this.prototype[name] = toAdd;
