@@ -11,8 +11,15 @@
 	var Spark = {};
 	
 	// Add the extend function
-	Spark.prototype.extend = function(toAdd) {
+	Spark.prototype.extend = function(name, toAdd) {
+		// Check if it is an object
+		if(typeof toAdd === 'object') {
+			// If so, we need to add the extend function to it
+			toAdd.prototype.extend = this.extend;
+		}
 		
+		// Add the object or function to this object
+		this[name] = toAdd;
 	};
 	
 	// Check if the name is already in use
