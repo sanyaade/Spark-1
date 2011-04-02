@@ -20,4 +20,4 @@
 		// If not then expose the object
 		window.Spark = Spark;
 	}
-});
+}());
