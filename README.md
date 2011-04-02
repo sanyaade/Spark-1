@@ -1,3 +1,9 @@
+Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/), a 17 year old web developer from Essex, England.
+
+It incorporates animation, DOM control, AJAX and JSON manipulation. It can be extended with plugins to accomplish more.
+
+You can download it and read up on the functions from the links below.
+
 ## Links
 
  * [Website](http://sparkjs.co.uk/)
@@ -5,6 +11,10 @@
  * [Documentation](http://sparkjs.co.uk/documentation.html)
  * [Twitter](http://twitter.com/#!/SparkJavaScript)
  * [My blog](http://blog.flowdev.co.uk/)
+
+## Building
+
+To build Spark you will need make installed as well as Java to run the compressor. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
 
 ## Licences
 
