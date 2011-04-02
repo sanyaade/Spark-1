@@ -8,7 +8,10 @@
  */
 (function() {
 	// Create the object
-	var Spark = {
+	var Spark = {};
+	
+	// Add the extend function
+	Spark.prototype.extend = function(func) {
 		
 	};
 	
