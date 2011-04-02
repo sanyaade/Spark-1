@@ -11,7 +11,7 @@
 	var Spark = {};
 	
 	// Add the extend function
-	Spark.prototype.extend = function(func) {
+	Spark.prototype.extend = function(toAdd) {
 		
 	};
 	
