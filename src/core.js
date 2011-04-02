@@ -20,7 +20,7 @@
 			}
 			
 			// Add the object or function to this array
-			this.prototype[name] = toAdd;
+			this[name] = toAdd;
 		}
 	};
 	
