@@ -1,8 +1,9 @@
 # Set the source directory
-source = src/
+src = src/
 
 # Create the list of files
-files = ${source}core.js
+files = ${src}core.js\
+		${src}ready.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
