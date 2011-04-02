@@ -7,24 +7,26 @@
  * http://sparkjs.co.uk/licence.html
  */
 (function() {
-	// Create the object
-	var Spark = {};
+	// Create the array
+	var Spark = [];
 	
 	// Add the extend function
-	Spark.prototype.extend = function(name, toAdd) {
-		// Check if it is an object
-		if(typeof toAdd === 'object') {
-			// If so, we need to add the extend function to it
-			toAdd.prototype.extend = this.extend;
+	Spark.prototype = {
+		extend: function(name, toAdd) {
+			// Check if it is an object
+			if(typeof toAdd === 'object') {
+				// If so, we need to add the extend function to it
+				toAdd.prototype.extend = this.extend;
+			}
+			
+			// Add the object or function to this array
+			this.prototype[name] = toAdd;
 		}
-		
-		// Add the object or function to this object
-		this.prototype[name] = toAdd;
 	};
 	
-	// Check if the name is already in use
+	// Make sure the name is not in use
 	if(window.hasOwnProperty('Spark') === false) {
-		// If not then expose the object
+		// Expose the array
 		window.Spark = Spark;
 	}
 }());
