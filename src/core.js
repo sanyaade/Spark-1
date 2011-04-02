@@ -16,9 +16,6 @@
 		this[name] = toAdd;
 	};
 	
-	// Make sure the name is not in use
-	if(window.hasOwnProperty('Spark') === false) {
-		// Expose the object
-		window.Spark = new Spark();
-	}
+	// Expose the object
+	window.Spark = new Spark();
 }());
