@@ -1,3 +1,11 @@
+## Links
+
+ * [Website](http://sparkjs.co.uk/)
+ * [Downloads](http://sparkjs.co.uk/download.html)
+ * [Documentation](http://sparkjs.co.uk/documentation.html)
+ * [Twitter](http://twitter.com/#!/SparkJavaScript)
+ * [My blog](http://blog.flowdev.co.uk/)
+
 ## Licences
 
 ### MIT
