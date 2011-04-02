@@ -19,7 +19,7 @@
 		}
 		
 		// Add the object or function to this object
-		this[name] = toAdd;
+		this[name] = this()[name] = toAdd;
 	};
 	
 	// Check if the name is already in use
