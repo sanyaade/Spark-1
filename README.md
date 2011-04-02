@@ -14,7 +14,7 @@ You can download it and read up on the functions from the links below.
 
 ## Building
 
-To build Spark you will need make installed as well as Java to run the compressor. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
+To build Spark you will need GNU make, NodeJS and Java installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
 
 ## Licences
 
