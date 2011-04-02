@@ -16,7 +16,7 @@ var result = jshint(src, {
 // Check for errors
 if(result) {
 	// All good baby, baby!
-	sys.puts('What beautiful syntax!');
+	sys.puts('Validation successful');
 }
 else {
 	// It's the end of the world!
