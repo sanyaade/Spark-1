@@ -1,2 +1,2 @@
 // Include jshint
-var JSHINT = require('./jshint').JSHINT;
+var jshint = require('./jshint').JSHINT;
