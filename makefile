@@ -9,12 +9,15 @@ default: spark.js spark.min.js validate
 
 # Combine all of the files into spark.js
 spark.js: ${files}
-	cat > $@ $^
+	@@echo 'Building...'
+	@@cat > $@ $^
 
 # Compress spark.js into spark.min.js
 spark.min.js: spark.js
-	java -jar build/compiler.jar --js $^ --js_output_file $@
+	@@echo 'Compressing...'
+	@@java -jar build/compiler.jar --js $^ --js_output_file $@
 
 # Validate spark.js with jshint
 validate:
-	node build/validate.js
+	@@echo 'Validating...'
+	@@node build/validate.js
