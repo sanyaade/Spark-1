@@ -23,7 +23,7 @@
 	};
 	
 	// Check if the name is already in use
-	if(typeof window.Spark === 'undefined') {
+	if(window.hasOwnProperty('Spark') === false) {
 		// If not then expose the object
 		window.Spark = Spark;
 	}
