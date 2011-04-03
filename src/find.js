@@ -17,12 +17,6 @@ Spark.extend('find', function(parameters, context) {
 		// Perform a basic tag search
 		found = ctx.getElementsByTagName(par.tag);
 	}
-	else if(par.tag instanceof Array) {
-		// Perform a looping tag search
-		for(i = 0; i < par.tag.length; i++) {
-			found.concat(ctx.getElementsByTagName(par.tag[i]));
-		}
-	}
 	else {
 		// Default to grabbing all tags
 		found = ctx.getElementsByTagName('*');
