@@ -82,6 +82,18 @@ Spark.extend('ajax', {
 		
 		// Send the request
 		req.send();
+		
+		// Check if the callback has not been passed
+		if(typeof callback === 'undefined') {
+			if(req.status === 200) {
+				// Just return the content because it was a syncronous request
+				return req.responseText;
+			}
+			else {
+				// There was an error so return false
+				return false;
+			}
+		}
 	},
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
