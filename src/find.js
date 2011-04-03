@@ -6,8 +6,13 @@
  * @returns {Object} Returns the Spark object to allow chaining
  */
 Spark.extend('find', function(parameters, context) {
+	function checkTag(){return true;}
+	function checkId(){return true;}
+	function checkClass(){return true;}
+	
 	// Initialise any required variables
 	var found = [],
+		filtered = [],
 		par = parameters,
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null,
@@ -46,6 +51,17 @@ Spark.extend('find', function(parameters, context) {
 		
 		// Get the classes of the element
 		classes = e.className.split(/\s+/g).join(' ');
+		
+		// Check if the element matches
+		if(checkTag(e.nodeName, par.tags) === true && checkClass(classes, par.classes) === true && checkId(e.id, par.ids) === true) {
+			// Add the found element to the filtered array
+			filtered.push(e);
+		}
+	}
+	
+	// Loop through the filtered adding them to the object
+	for(i = 0; i < filtered.length; i++) {
+		built[i] = filtered[i];
 	}
 	
 	// Return the object with all the elements within it
