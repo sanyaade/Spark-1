@@ -12,12 +12,26 @@ Spark.extend('find', function(parameters, context) {
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null,
 		e = null,
+		tempFound = null,
 		built = this.clone();
 	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
 		// Perform a basic tag search
 		found = ctx.getElementsByTagName(par.tag);
+	}
+	else if(par.tag instanceof Array) {
+		// Perform a looping tag search
+		for(i = 0; i < par.tag.length; i++) {
+			// Search into the temporary location
+			tempFound = ctx.getElementsByTagName(par.tag[i]);
+			
+			// Loop through the elements
+			for(e = 0; e < tempFound.length; e++) {
+				// Push the found element to found
+				found.push(tempFound[e]);
+			}
+		}
 	}
 	else {
 		// Default to grabbing all tags
