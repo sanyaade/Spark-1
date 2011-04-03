@@ -10,7 +10,8 @@ Spark.extend('find', function(parameters, context) {
 	var found = [],
 		par = parameters,
 		ctx = (typeof context !== 'undefined') ? context : document,
-		i = null;
+		i = null,
+		e = null;
 	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
@@ -20,5 +21,11 @@ Spark.extend('find', function(parameters, context) {
 	else {
 		// Default to grabbing all tags
 		found = ctx.getElementsByTagName('*');
+	}
+	
+	// Loop through all elements
+	for(i = 0; i < found.length; i++) {
+		// Grab the current element
+		e = found[i];
 	}
 });
