@@ -113,5 +113,11 @@ Spark.extend('ajax', {
 	post: function(file, parameters, callback) {
 		// Set up the AJAX object
 		var req = this.initialise();
+		
+		// Check for the callback
+		if(typeof callback === 'function') {
+			// It exists, so pass it to the callback handling function
+			this.handleCallback(req, callback);
+		}
 	}
 });
