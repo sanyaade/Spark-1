@@ -28,4 +28,7 @@ Spark.extend('find', function(parameters, context) {
 		// Grab the current element
 		e = found[i];
 	}
+	
+	// Return the object with all the elements within it
+	return this;
 });
