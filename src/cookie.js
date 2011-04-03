@@ -30,6 +30,9 @@ Spark.extend('cookie', function(name, content, duration) {
 				return cookie.substring(nameEQ.length, cookie.length);
 			}
 		}
+		
+		// Return false if we did not find it
+		return false;
 	}
 	
 	// Check if we need to get or set
