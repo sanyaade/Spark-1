@@ -23,4 +23,8 @@ Spark.extend('find', function(parameters, context) {
 			found.concat(ctx.getElementsByTagName(par.tag[i]));
 		}
 	}
+	else {
+		// Default to grabbing all tags
+		found = ctx.getElementsByTagName('*');
+	}
 });
