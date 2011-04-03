@@ -70,6 +70,12 @@ Spark.extend('ajax', {
 		
 		// Add the parameters to the file name
 		file += '?' + this.buildParameterString(parameters);
+		
+		// Check for the callback
+		if(typeof callback === 'function') {
+			// It exists, so pass it to the callback handling function
+			this.handleCallback(req, callback);
+		}
 	},
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
