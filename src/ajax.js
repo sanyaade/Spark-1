@@ -30,8 +30,8 @@ Spark.extend('ajax', {
 			}
 		}
 		
-		// Remove the trailing ampersand and return
-		return built.slice(0, built.length - 1);
+		// Remove the trailing ampersand and return the escaped string
+		return escape(built.slice(0, built.length - 1));
 	},
 	/**
 	 * Pass the data to the callback when the request is complete
