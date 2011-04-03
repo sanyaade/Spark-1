@@ -21,6 +21,13 @@
 		Spark.prototype[name] = toAdd;
 	};
 	
+	/**
+	 * Create a clone of the object. This should be done when anything is being stored in it for chaining.
+	 * Otherwise added variables will be there for ever.
+	 * This way they only exist within that chain
+	 * 
+	 * @returns {Object} The copy of the object
+	 */
 	Spark.prototype.clone = function() {
 		return new Spark();
 	};
