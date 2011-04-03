@@ -10,6 +10,7 @@ Spark.extend('ajax', {
 			new ActiveXObject('Microsoft.XMLHTTP') :
 			new XMLHttpRequest();
 	},
+	
 	/**
 	 * Turns an object of parameters into a string
 	 * 
@@ -33,6 +34,7 @@ Spark.extend('ajax', {
 		// Remove the trailing ampersand and return the escaped string
 		return escape(built.slice(0, built.length - 1));
 	},
+	
 	/**
 	 * Pass the data to the callback when the request is complete
 	 * 
@@ -56,6 +58,7 @@ Spark.extend('ajax', {
 			}
 		};
 	},
+	
 	/**
 	 * Perform a get request with optional parameters either syncronously or asyncronously
 	 * 
@@ -95,6 +98,7 @@ Spark.extend('ajax', {
 			}
 		}
 	},
+	
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
 	 * 
