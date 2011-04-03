@@ -64,8 +64,8 @@ Spark.extend('ajax', {
 	 * 
 	 * @param {String} file Path of the target file
 	 * @param {Object} parameters The arguments you wish to pass to the file
-	 * @param {Function} callback If set, the call become asyncronous and the data is passed to it on completion
-	 * @returns {String} The data retrived from the file if it is a syncronous call
+	 * @param {Function} callback If set, the call become asyncronous and the data is passed to it on completion, it will pass false if it failed
+	 * @returns {String|Boolean} The data retrived from the file if it is a syncronous call, returns false if it failed
 	 */
 	get: function(file, parameters, callback) {
 		// Set up the AJAX object
@@ -107,8 +107,8 @@ Spark.extend('ajax', {
 	 * 
 	 * @param {String} file Path of the target file
 	 * @param {Object} parameters The arguments you wish to pass to the file
-	 * @param {Function} callback If set, the call become asyncronous and the data is passed to it on completion
-	 * @returns {String} The data retrived from the file if it is a syncronous call
+	 * @param {Function} callback If set, the call become asyncronous and the data is passed to it on completion, it will pass false if it failed
+	 * @returns {String|Boolean} The data retrived from the file if it is a syncronous call, returns false if it failed
 	 */
 	post: function(file, parameters, callback) {
 		// Set up the AJAX object
