@@ -9,7 +9,7 @@
 Spark.extend('cookie', function(name, content, duration) {
 	// Initialise any required variables
 	var cookies = document.cookie.split(';'),
-		i = 0,
+		i = null,
 		cookie = null,
 		nameEQ = name + '=',
 		date = new Date();
@@ -18,7 +18,7 @@ Spark.extend('cookie', function(name, content, duration) {
 	if(typeof content === 'undefined') {
 		// Get the cookie
 		// Loop through all the cookies
-		for(i < cookies.length; i++) {
+		for(i = 0; i < cookies.length; i++) {
 			// Grab the current cookie and trim any whitespace
 			cookie = cookies[i].replace(/^\s+|\s+$/g, '');
 			
