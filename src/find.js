@@ -6,10 +6,6 @@
  * @returns {Object} Returns the Spark object to allow chaining
  */
 Spark.extend('find', function(parameters, context) {
-	function checkTag(){return true;}
-	function checkId(){return true;}
-	function checkClass(){return true;}
-	
 	// Initialise any required variables
 	var found = [],
 		filtered = [],
@@ -20,6 +16,10 @@ Spark.extend('find', function(parameters, context) {
 		tempFound = null,
 		classes = null,
 		built = this.clone();
+	
+	function checkTag(){return true;}
+	function checkId(){return true;}
+	function checkClass(){return true;}
 	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
