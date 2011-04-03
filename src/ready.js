@@ -24,7 +24,7 @@ Spark.extend('ready', function(fn) {
 				// See if it throws errors until after it is ready
 				tempNode.doScroll('left');
 				
-				// Call ready
+				// Call the function
 				fn();
 			}
 			catch(err) {
