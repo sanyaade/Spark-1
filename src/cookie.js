@@ -23,7 +23,7 @@ Spark.extend('cookie', function(name, content, duration) {
 			cookie = cookies[i].replace(/^\s+|\s+$/g, '');
 			
 			// Check if the cookie contains the name
-			if(cookie.indexOf(nameEQ + '=') === 0) {
+			if(cookie.indexOf(nameEQ) === 0) {
 				return cookie.substring(nameEQ.length, cookie.length);
 			}
 		}
