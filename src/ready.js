@@ -12,11 +12,6 @@ Spark.extend('ready', function(fn) {
 	else {
 		// For IE
 		(function(){
-			// Check IE's proprietary DOM members
-			if(!document.uniqueID && document.expando) {
-				return;
-			}
-			
 			// Create the custom tag
 			var tempNode = document.createElement('document:ready');
 			
