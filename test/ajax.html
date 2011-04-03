@@ -7,10 +7,12 @@
 	<body>
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
-			document.write(Spark.ajax.get('../.gitignore', {
+			Spark.ajax.get('../.gitignore', {
 				q: 'something',
 				foo: 'bar'
-			}));
+			}, function(data) {
+				alert(data);
+			});
 		</script>
 	</body>
 </html>
