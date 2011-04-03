@@ -7,9 +7,7 @@ Spark.extend('ready', function(fn) {
 	// Check if we can use addEventListener
 	if(window.addEventListener) {
 		// For all browsers except IE
-		document.addEventListener('DOMContentLoaded', function() {
-			fn();
-		}, false);
+		document.addEventListener('DOMContentLoaded', fn, false);
 	}
 	else {
 		// For IE
