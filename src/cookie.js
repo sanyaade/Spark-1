@@ -17,12 +17,18 @@ Spark.extend('cookie', function(name, content, duration) {
 		// Initialise any required variables
 		var cookies = document.cookie.split(';'),
 			i = null,
-			cookie = null;
+			cookie = null,
+			nameEQ = name + '=';
 		
 		// Loop through all the cookies
 		for(i = 0; i < cookies.length; i++) {
-			// Grab the current cookie
-			cookie = cookies[i];
+			// Grab the current cookie and trim any whitespace
+			cookie = cookies[i].replace(/^\s+|\s+$/g, '');
+			
+			// Check if the cookie contains the name
+			if(cookie.indexOf(nameEQ + '=') === 0) {
+				return cookie.substring(nameEQ.length, cookie.length);
+			}
 		}
 	}
 });
