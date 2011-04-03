@@ -17,9 +17,18 @@ Spark.extend('find', function(parameters, context) {
 		classes = null,
 		built = this.clone();
 	
-	function checkTag(){return true;}
-	function checkId(){return true;}
-	function checkClass(){return true;}
+	/**
+	 * Compare the value of a tag or ID to an array or string of comparisons
+	 * 
+	 * @param {String} value Either an ID or a tag name to compare
+	 * @param {String|Array} compare The string or array of values to check against
+	 * @returns {Boolean} Returns true if it can not be compared or if they match
+	 */
+	function compareValue(value, compare) {
+		
+	}
+	
+	function compareClass(){return true;}
 	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
@@ -53,7 +62,7 @@ Spark.extend('find', function(parameters, context) {
 		classes = e.className.split(/\s+/g).join(' ');
 		
 		// Check if the element matches
-		if(checkTag(e.nodeName, par.tags) === true && checkClass(classes, par.classes) === true && checkId(e.id, par.ids) === true) {
+		if(compareValue(e.nodeName, par.tags) === true && compareClass(classes, par.classes) === true && compareValue(e.id, par.ids) === true) {
 			// Add the found element to the filtered array
 			filtered.push(e);
 		}
