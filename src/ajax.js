@@ -125,5 +125,13 @@ Spark.extend('ajax', {
 		
 		// Set the headers
 		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		
+		// Only send the data if it is set
+		if(typeof parameters === 'object') {
+			req.send(this.buildParameterString(parameters));
+		}
+		else {
+			req.send();
+		}
 	}
 });
