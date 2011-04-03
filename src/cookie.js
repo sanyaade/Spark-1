@@ -14,6 +14,7 @@ Spark.extend('cookie', function(name, content, duration) {
 	 * @returns {String|Boolean} The contents of the cookie or false if it was not found
 	 */
 	function getCookie(name) {
-		
+		// Initialise any required variables
+		var cookies = document.cookie.split(';');
 	}
 });
