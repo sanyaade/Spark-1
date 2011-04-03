@@ -34,6 +34,29 @@ Spark.extend('ajax', {
 		return built.slice(0, built.length - 1);
 	},
 	/**
+	 * Pass the data to the callback when the request is complete
+	 * 
+	 * @param {Object} req The AJAX request object
+	 * @param {Function} callback The callback function that the data should be passed to
+	 */
+	handleCallback: function(req, callback) {
+		// Listen for the change in state
+		req.onreadystatechange = function() {
+			// Check if it is finished
+			if(req.readyState === 4) {
+				// Check the status
+				if(req.status === 200) {
+					// It's all good, Pass the data to the callback
+					callback(req.responseText);
+				}
+				else {
+					// There was an error so pass false to the callback
+					callback(false);
+				}
+			}
+		};
+	},
+	/**
 	 * Perform a get request with optional parameters either syncronously or asyncronously
 	 * 
 	 * @param {String} file Path of the target file
