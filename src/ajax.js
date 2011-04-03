@@ -27,12 +27,12 @@ Spark.extend('ajax', {
 			// Make sure it is not a prototype
 			if(parameters.hasOwnProperty(p) === true) {
 				// Add the parameter
-				built += p + '=' + parameters[p] + '&';
+				built += escape(p) + '=' + escape(parameters[p]) + '&';
 			}
 		}
 		
 		// Remove the trailing ampersand and return the escaped string
-		return escape(built.slice(0, built.length - 1));
+		return built.slice(0, built.length - 1);
 	},
 	
 	/**
