@@ -19,8 +19,23 @@ Spark.extend('ajax', {
 	 * @returns {String} The data retrived from the file if it is a syncronous call
 	 */
 	get: function(file, parameters, callback) {
+		// Initialise any required variables
+		var p = null;
+		
 		// Set up the AJAX object
 		var req = this.initialise();
+		
+		// Prepare the filename for the parameters
+		file += '?';
+		
+		// Loop through the parameters appending them to the filename
+		for(p in parameters) {
+			// Make sure it is not a prototype
+			if(parameters.hasOwnProperty(p) === true) {
+				// Add the parameter
+				file += p + '=' + parameters[p];
+			}
+		}
 	},
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
