@@ -18,7 +18,7 @@
 	 */
 	Spark.prototype.extend = function(name, toAdd) {
 		// Add the object
-		this.prototype[name] = toAdd;
+		Spark.prototype[name] = toAdd;
 	};
 	
 	// Expose the object
