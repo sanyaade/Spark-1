@@ -71,8 +71,11 @@ Spark.extend('ajax', {
 		// Set up the AJAX object
 		var req = this.initialise();
 		
-		// Add the parameters to the file name
-		file += '?' + this.buildParameterString(parameters);
+		// Make sure parameters is an object
+		if(typeof parameters === 'object') {
+			// Add the parameters to the file name
+			file += '?' + this.buildParameterString(parameters);
+		}
 		
 		// Check for the callback
 		if(typeof callback === 'function') {
