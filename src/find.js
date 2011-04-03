@@ -13,6 +13,7 @@ Spark.extend('find', function(parameters, context) {
 		i = null,
 		e = null,
 		tempFound = null,
+		classes = null,
 		built = this.clone();
 	
 	// Check what the tag filter is
@@ -42,6 +43,9 @@ Spark.extend('find', function(parameters, context) {
 	for(i = 0; i < found.length; i++) {
 		// Grab the current element
 		e = found[i];
+		
+		// Get the classes of the element
+		classes = e.className.split(/\s+/g).join(' ');
 	}
 	
 	// Return the object with all the elements within it
