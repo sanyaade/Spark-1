@@ -2,19 +2,18 @@
  * Find elements that match the specified parameters
  * 
  * @param {Object} parameters The criteria the element must meet to be selected
+ * @param {Element} context The place you wish to start the search from, defaults to document
  * @returns {Object} Returns the Spark object to allow chaining
  */
-Spark.extend('find', function(parameters) {
+Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
-	var name = null,
-		value = null;
+	var found = [],
+		par = parameters,
+		ctx = (typeof context !== 'undefined') ? context : document;
 	
-	// Loop through all the parameters
-	for(name in parameters) {
-		// Make sure it is not a prototype
-		if(parameters.hasOwnProperty(name)) {
-			// Grab the current parameter
-			value = parameters[name];
-		}
+	// Work out what we need to do
+	if(typeof par.tag === 'string') {
+		// Perform a basic tag search
+		found.push(ctx.getElementsByTagName(par.tag));
 	}
 });
