@@ -79,6 +79,9 @@ Spark.extend('ajax', {
 		
 		// Open the request, if the callback is set then make it asyncronous
 		req.open('GET', file, (typeof callback === 'function') ? true : false);
+		
+		// Send the request
+		req.send();
 	},
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
