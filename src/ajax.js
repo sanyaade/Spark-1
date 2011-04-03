@@ -122,5 +122,8 @@ Spark.extend('ajax', {
 		
 		// Open the request, if the callback is set then make it asyncronous
 		req.open('POST', file, (typeof callback === 'function') ? true : false);
+		
+		// Set the headers
+		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	}
 });
