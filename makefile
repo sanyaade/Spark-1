@@ -3,7 +3,8 @@ src = src/
 
 # Create the list of files
 files = ${src}core.js\
-		${src}ready.js
+		${src}ready.js\
+		${src}ajax.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
