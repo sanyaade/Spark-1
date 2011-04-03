@@ -31,4 +31,9 @@ Spark.extend('cookie', function(name, content, duration) {
 			}
 		}
 	}
+	
+	// Check if we need to get or set
+	if(typeof content === 'undefined') {
+		return getCookie(name);
+	}
 });
