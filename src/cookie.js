@@ -16,11 +16,13 @@ Spark.extend('cookie', function(name, content, duration) {
 	function getCookie(name) {
 		// Initialise any required variables
 		var cookies = document.cookie.split(';'),
-			i = null;
+			i = null,
+			cookie = null;
 		
 		// Loop through all the cookies
 		for(i = 0; i < cookies.length; i++) {
-			
+			// Grab the current cookie
+			cookie = cookies[i];
 		}
 	}
 });
