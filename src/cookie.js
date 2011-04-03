@@ -7,5 +7,13 @@
  * @returns {String} The content of the cookie whos name you specified
  */
 Spark.extend('cookie', function(name, content, duration) {
-	
+	/**
+	 * Gets the specified cookie
+	 * 
+	 * @param {String} name The name of the cookie
+	 * @returns {String|Boolean} The contents of the cookie or false if it was not found
+	 */
+	function getCookie(name) {
+		
+	}
 });
