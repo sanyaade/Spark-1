@@ -11,6 +11,29 @@ Spark.extend('ajax', {
 			new XMLHttpRequest();
 	},
 	/**
+	 * Turns an object of parameters into a string
+	 * 
+	 * @param {Object} parameters An object of parameters
+	 * @returns {String} The combined string, ready to be appended to a filename
+	 */
+	buildParameterString: function(parameters) {
+		// Initialise any required variables
+		var p = null,
+			built = '';
+		
+		// Loop through the parameters appending them to the filename
+		for(p in parameters) {
+			// Make sure it is not a prototype
+			if(parameters.hasOwnProperty(p) === true) {
+				// Add the parameter
+				built += p + '=' + parameters[p] + '&';
+			}
+		}
+		
+		// Remove the trailing ampersand and return
+		return built.slice(0, built.length - 1);
+	},
+	/**
 	 * Perform a get request with optional parameters either syncronously or asyncronously
 	 * 
 	 * @param {String} file Path of the target file
@@ -19,23 +42,11 @@ Spark.extend('ajax', {
 	 * @returns {String} The data retrived from the file if it is a syncronous call
 	 */
 	get: function(file, parameters, callback) {
-		// Initialise any required variables
-		var p = null;
-		
 		// Set up the AJAX object
 		var req = this.initialise();
 		
-		// Prepare the filename for the parameters
-		file += '?';
-		
-		// Loop through the parameters appending them to the filename
-		for(p in parameters) {
-			// Make sure it is not a prototype
-			if(parameters.hasOwnProperty(p) === true) {
-				// Add the parameter
-				file += p + '=' + parameters[p];
-			}
-		}
+		// Add the parameters to the file name
+		file += '?' + this.buildParameterString(parameters);
 	},
 	/**
 	 * Perform a post request with optional parameters either syncronously or asyncronously
