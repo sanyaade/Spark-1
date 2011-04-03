@@ -11,7 +11,8 @@ Spark.extend('find', function(parameters, context) {
 		par = parameters,
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null,
-		e = null;
+		e = null,
+		built = this.clone();
 	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
@@ -30,5 +31,5 @@ Spark.extend('find', function(parameters, context) {
 	}
 	
 	// Return the object with all the elements within it
-	return this;
+	return built;
 });

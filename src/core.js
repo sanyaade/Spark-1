@@ -21,6 +21,10 @@
 		Spark.prototype[name] = toAdd;
 	};
 	
+	Spark.prototype.clone = function() {
+		return new Spark();
+	};
+	
 	// Expose the object
 	window.Spark = new Spark();
 }());
