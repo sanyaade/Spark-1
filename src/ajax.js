@@ -111,6 +111,7 @@ Spark.extend('ajax', {
 	 * @returns {String} The data retrived from the file if it is a syncronous call
 	 */
 	post: function(file, parameters, callback) {
-		
+		// Set up the AJAX object
+		var req = this.initialise();
 	}
 });
