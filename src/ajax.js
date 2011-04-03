@@ -1,5 +1,16 @@
 Spark.extend('ajax', {
 	/**
+	 * Selects what AJAX object to use
+	 * 
+	 * @returns {Object} The correct AJAX object for this browser
+	 */
+	initialise: function() {
+		// Pass back the correct object
+		return (typeof XMLHttpRequest === 'undefined') ? 
+			new ActiveXObject('Microsoft.XMLHTTP') :
+			new XMLHttpRequest();
+	},
+	/**
 	 * Perform a get request with optional parameters either syncronously or asyncronously
 	 * 
 	 * @param {String} file Path of the target file
