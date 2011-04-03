@@ -11,7 +11,6 @@ Spark.extend('cookie', function(name, content, duration) {
 	var cookies = document.cookie.split(';'),
 		i = null,
 		cookie = null,
-		nameEQ = name + '=',
 		date = new Date();
 	
 	// Check if we need to get or set
@@ -20,11 +19,11 @@ Spark.extend('cookie', function(name, content, duration) {
 		// Loop through all the cookies
 		for(i = 0; i < cookies.length; i++) {
 			// Grab the current cookie and trim any whitespace
-			cookie = cookies[i].replace(/^\s+|\s+$/g, '');
+			cookie = cookies[i].replace(/^\s+/g, '');
 			
 			// Check if the cookie contains the name
-			if(cookie.indexOf(nameEQ) === 0) {
-				return cookie.substring(nameEQ.length, cookie.length);
+			if(cookie.indexOf(name + '=') === 0) {
+				return cookie.substring(name.length + 1, cookie.length);
 			}
 		}
 		
