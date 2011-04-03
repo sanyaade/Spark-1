@@ -12,15 +12,15 @@ Spark.extend('find', function(parameters, context) {
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null;
 	
-	// Work out what we need to do
+	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
 		// Perform a basic tag search
-		found.push(ctx.getElementsByTagName(par.tag));
+		found = ctx.getElementsByTagName(par.tag);
 	}
 	else if(par.tag instanceof Array) {
 		// Perform a looping tag search
 		for(i = 0; i < par.tag.length; i++) {
-			found.push(ctx.getElementsByTagName(par.tag[i]));
+			found.concat(ctx.getElementsByTagName(par.tag[i]));
 		}
 	}
 });
