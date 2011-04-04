@@ -29,19 +29,92 @@ Spark.extend('find', function(parameters, context) {
 			built = Spark.clone(),
 			i = null,
 			p = null,
-			path = null;
+			path = null,
+			parameters = null,
+			tempFound = null,
+			found = [];
 		
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
 			// Grab the paths
 			paths = selectors[i].split(/\s+/g);
 			
+			// Reset the parameters
+			parameters = [];
+			
 			// Loop through all the paths
 			for(p = 0; p < paths.length; p++) {
 				// Grab the path
 				path = paths[p];
+				
+				// Add the new object
+				parameters.push({});
+				
+				// Keep looping until the string is gone
+				while(path.length > 0) {
+					if(path.match(/^([a-z]+)/i)) {
+						// Element
+						if(typeof parameters[p].tag === 'undefined') {
+							parameters[p].tag = [path.replace(/^([a-z]+).*/i, "$1")];
+						}
+						else {
+							parameters[p].tag.push(path.replace(/^([a-z]+).*/i, "$1"));
+						}
+						
+						// Remove the selection
+						path = path.replace(/^([a-z]+)/i, '');
+					}
+					else if(path.match(/^#([a-z][a-z0-9-_:]*)/i)) {
+						// ID
+						if(typeof parameters[p].id === 'undefined') {
+							parameters[p].id = [path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1")];
+						}
+						else {
+							parameters[p].id.push(path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1"));
+						}
+						
+						// Remove the selection
+						path = path.replace(/^#([a-z][a-z0-9-_:]*)/i, '');
+					}
+					else if(path.match(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i)) {
+						// Class
+						if(typeof parameters[p].classes === 'undefined') {
+							parameters[p].classes = [path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1")];
+						}
+						else {
+							parameters[p].classes.push(path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1"));
+						}
+						
+						// Remove the selection
+						path = path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i, '');
+					}
+				}
 			}
+			
+			// So now we have an array of parameter objects
+			// Set up temp found to search with
+			tempFound = Spark.clone();
+			
+			// Loop through all of the parameter objects
+			for(p = 0; p < parameters.length; p++) {
+				// Now do the search into tempFound
+				tempFound = tempFound.find(parameters[p]);
+			}
+			
+			// When done concat these results to the found array
+			found = found.concat(tempFound.elements);
 		}
+		
+		// Loop through the found adding them to the object
+		for(i = 0; i < found.length; i++) {
+			built[i] = found[i];
+		}
+
+		// Add the array version
+		built.elements = found;
+
+		// Add the length
+		built.length = found.length;
 		
 		// Return the built object
 		return built;
