@@ -20,12 +20,13 @@ Spark.extend('find', function(parameters, context) {
 	 * Turns a selector string into an object that the find function can understand
 	 * 
 	 * @param {String} selector The selector string
-	 * @returns {Object} The object version of the selector string
+	 * @returns {Object} An instance of Spark containing all of the found elements
 	 */
 	function parseSelector(selector) {
 		// Initialise any required variables
 		var selectors = selector.split(/\s*,\s*/g),
-			paths = null;
+			paths = null,
+			built = Spark.clone();
 	}
 	
 	/**
@@ -121,6 +122,12 @@ Spark.extend('find', function(parameters, context) {
 			// Default to grabbing all tags
 			return ctx.getElementsByTagName('*');
 		}
+	}
+	
+	// Check if parameters is a string
+	if(typeof parameters === 'string') {
+		// If so, then return what is found by the parse selector function
+		return parseSelector(parameters);
 	}
 	
 	// Check if this is part of the chain
