@@ -83,7 +83,7 @@ Spark.extend('find', function(parameters, context) {
 	function findElements(tag, ctx) {
 		// Initialise any required variables
 		var tempFound = null,
-			found = null;
+			found = [];
 		
 		// Check what the tag filter is
 		if(typeof tag === 'string') {
