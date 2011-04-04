@@ -20,7 +20,7 @@ Spark.extend('find', function(parameters, context) {
 	/**
 	 * Compare the value of a tag or ID to an array or string of comparisons
 	 * 
-	 * @param {String} value Either an ID or a tag name to compare
+	 * @param {String|Array} value Either an ID, an array of classes or a tag name to compare
 	 * @param {String|Array} compare The string or array of values to check against
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
 	 */
