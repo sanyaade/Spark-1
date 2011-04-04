@@ -17,7 +17,7 @@ Spark.extend('find', function(parameters, context) {
 		built = this.clone();
 	
 	/**
-	 * Turns a selector string into an object that the find function can understand
+	 * Takes a string, breaks it down into its components and uses them to run the find function
 	 * 
 	 * @param {String} selector The selector string
 	 * @returns {Object} An instance of Spark containing all of the found elements
