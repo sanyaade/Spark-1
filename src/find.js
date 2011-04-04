@@ -9,7 +9,6 @@ Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
 	var found = [],
 		filtered = [],
-		par = parameters,
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null,
 		e = null,
@@ -106,7 +105,7 @@ Spark.extend('find', function(parameters, context) {
 			// Perform a looping tag search
 			for(i = 0; i < tag.length; i++) {
 				// Search into the temporary location
-				tempFound = ctx.getElementsByTagName(par.tag[i]);
+				tempFound = ctx.getElementsByTagName(tag[i]);
 				
 				// Loop through the elements
 				for(e = 0; e < tempFound.length; e++) {
@@ -129,7 +128,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(par.tag, this.elements[i]);
+			tempFound = findElements(parameters.tag, this.elements[i]);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -140,7 +139,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(par.tag, ctx);
+		found = findElements(parameters.tag, ctx);
 	}
 	
 	// Loop through all elements
@@ -152,7 +151,7 @@ Spark.extend('find', function(parameters, context) {
 		classes = e.className.split(/\s+/g);
 		
 		// Check if the element matches
-		if(compareValue(e.nodeName, par.tag, true) === true && compareValue(classes, par.classes) === true && compareValue(e.id, par.id) === true) {
+		if(compareValue(e.nodeName, parameters.tag, true) === true && compareValue(classes, parameters.classes) === true && compareValue(e.id, parameters.id) === true) {
 			// Add the found element to the filtered array
 			filtered.push(e);
 		}
@@ -170,9 +169,9 @@ Spark.extend('find', function(parameters, context) {
 	built.length = filtered.length;
 	
 	// Check if there is a find parameter
-	if(typeof par.find === 'object') {
+	if(typeof parameters.find === 'object') {
 		// Refind with the passed parameters
-		built = built.find(par.find);
+		built = built.find(parameters.find);
 	}
 	
 	// Return the object with all the elements within it
