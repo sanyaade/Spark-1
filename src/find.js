@@ -105,7 +105,7 @@ Spark.extend('find', function(parameters, context) {
 		classes = e.className.split(/\s+/g);
 		
 		// Check if the element matches
-		if(compareValue(e.nodeName, par.tags) === true && compareValue(classes, par.classes) === true && compareValue(e.id, par.ids) === true) {
+		if(compareValue(e.nodeName, par.tag) === true && compareValue(classes, par.classes) === true && compareValue(e.id, par.id) === true) {
 			// Add the found element to the filtered array
 			filtered.push(e);
 		}
