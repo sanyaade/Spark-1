@@ -18,6 +18,16 @@ Spark.extend('find', function(parameters, context) {
 		built = this.clone();
 	
 	/**
+	 * Turns a selector string into an object that the find function can understand
+	 * 
+	 * @param {String} selector The selector string
+	 * @returns {Object} The object version of the selector string
+	 */
+	function parseSelector(selector) {
+		
+	}
+	
+	/**
 	 * Compare the value of a tag or ID to an array or string of comparisons
 	 * 
 	 * @param {String|Array} value Either an ID, an array of classes or a tag name to compare
