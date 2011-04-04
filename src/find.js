@@ -58,7 +58,7 @@ Spark.extend('find', function(parameters, context) {
 					}
 				}
 				else {
-					if(value === ((tag) ? compare.toUpperCase() : compare)) {
+					if(value === ((tag) ? compare[i].toUpperCase() : compare[i])) {
 						return true;
 					}
 				}
