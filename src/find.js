@@ -24,16 +24,17 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {String|Array} compare The string or array of values to check against
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
 	 */
-	function compareValue(value, compare) {
+	function compareValue(value, compare, tag) {
 		// Initialise any required variables
 		var i = null,
-			classes = ((value instanceof Array) ? value.join(' ') : false);
+			classes = ((value instanceof Array) ? value.join(' ') : false),
+			args = 'g' + ((tag) ? 'i' : '');
 		
 		// Check what type of search we need to do
 		if(typeof compare === 'string') {
 			// Compare the two strings
 			if(classes) {
-				if(classes.match(new RegExp('(^| )' + compare + '($| )', 'g'))) {
+				if(classes.match(new RegExp('(^| )' + compare + '($| )', args))) {
 					return true;
 				}
 				else {
@@ -53,7 +54,7 @@ Spark.extend('find', function(parameters, context) {
 			// Loop through and compare
 			for(i = 0; i < compare.length; i++) {
 				if(classes) {
-					if(classes.match(new RegExp('(^| )' + compare[i] + '($| )', 'g'))) {
+					if(classes.match(new RegExp('(^| )' + compare[i] + '($| )', args))) {
 						return true;
 					}
 				}
@@ -105,7 +106,7 @@ Spark.extend('find', function(parameters, context) {
 		classes = e.className.split(/\s+/g);
 		
 		// Check if the element matches
-		if(compareValue(e.nodeName, par.tag) === true && compareValue(classes, par.classes) === true && compareValue(e.id, par.id) === true) {
+		if(compareValue(e.nodeName, par.tag, true) === true && compareValue(classes, par.classes) === true && compareValue(e.id, par.id) === true) {
 			// Add the found element to the filtered array
 			filtered.push(e);
 		}
