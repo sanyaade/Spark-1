@@ -25,7 +25,34 @@ Spark.extend('find', function(parameters, context) {
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
 	 */
 	function compareValue(value, compare) {
+		// Initialise any required variables
+		var i = null;
 		
+		// Check what type of search we need to do
+		if(typeof compare === 'string') {
+			// Compare the two strings
+			if(value === compare) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else if(compare instanceof Array) {
+			// Loop through and compare
+			for(i = 0; i < compare.length; i++) {
+				if(value === compare[i]) {
+					return true;
+				}
+			}
+			
+			// Default to returning false
+			return false;
+		}
+		else {
+			// Default to returning true
+			return true;
+		}
 	}
 	
 	function compareClass(){return true;}
