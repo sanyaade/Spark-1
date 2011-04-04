@@ -27,11 +27,20 @@ Spark.extend('find', function(parameters, context) {
 		var selectors = selector.split(/\s*,\s*/g),
 			paths = null,
 			built = Spark.clone(),
-			i = null;
+			i = null,
+			p = null,
+			path = null;
 		
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
+			// Grab the paths
+			paths = selectors[i].split(/\s+/g);
 			
+			// Loop through all the paths
+			for(p = 0; p < paths.length; p++) {
+				// Grab the path
+				path = paths[p];
+			}
 		}
 		
 		// Return the built object
