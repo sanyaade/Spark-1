@@ -5,70 +5,94 @@
 	</head>
 	
 	<body>
-		<CENTER>
-		<H1>A Simple Sample Web Page</H1>
+		<div class='wrapper'> 
+					<header> 
+						<h1><a href='/'>Spark JavaScript library</a></h1> 
+					</header> 
+				</div> 
 
-		<H2>Demonstrating a few HTML features</H2>
+				<nav> 
+					<div class='wrapper'> 
+						<ul> 
+							<li class='home selected'><a href='/'>home</a></li> 
+							<li class='download'><a href='/download.html'>download</a></li> 
+							<li class='documentation'><a href='/documentation.html'>documentation</a></li> 
+							<li class='discussion'><a href='http://groups.google.com/group/sparkjs'>discussion</a></li> 
+						</ul> 
+					</div> 
+				</nav> 
 
-		</CENTER>
+				<div class='wrapper'> 
+					<div class='content'> 
+		<div class='focus'> 
+			<div class='container'> 
+				<h2>Spark is a new breed of <em>JavaScript library</em></h2> 
 
-		HTML is really a very simple language. It consists of ordinary text, with commands that are enclosed by "<" and ">" characters, or bewteen an "&" and a ";". <P>
+				<p>It is fast and lightweight leaving a tiny, beautiful, footprint within your application. You can learn all about it’s capabilities within the documentation.</p> 
 
+				<p>Download either the minified or production (unminified) version from the right or the downloads page.</p> 
+			</div> 
 
-		You don't really need to know much HTML to create a page, because you can copy bits of HTML from other pages that do what you want, then change the text!<P>
+			<div class='container-right'> 
+				<p><a href='/assets/downloads/Spark-v2.3.8.min.js'><img src='/assets/images/download-minified.png' alt='Download minified' /></a></p> 
 
+				<p><a href='/assets/downloads/Spark-v2.3.8.js'><img src='/assets/images/download-production.png' alt='Download production' /></a></p> 
 
-		This page shows on the left as it appears in your browser, and the corresponding HTML code appears on the right. The HTML commands are linked to explanations of what they do.
+				<p>Current version &middot; v2.3.8</p> 
 
+				<p><a href='/download.html'>all versions</a></p> 
+			</div> 
+		</div> 
 
+		<div class='main'> 
+			<div class='left'> 
+			<h3>Learn by example</h3> 
 
+			<p>I feel the best way for you to get started with Spark is to see it in action. You may have noticed the tweets on the right sneaking in there, well that was Spark, but try clicking this box below for another demonstration.</p> 
 
-		<H3>Line Breaks</H3>
+			<div id='lbe'><p>Pretty cool, if I do say so my self.</p></div> 
 
-		HTML doesn't normally use line breaks for ordinary text. A white space of any size is treated as a single space. This is because the author of the page has no way of knowing the size of the reader's screen, or what size type they will have their browser set for.<P>
+			<p>Impressed? This can be accomplished easily using the <a href='/documentation/animate.html'>animate</a> and <a href='/documentation/event.html'>event</a> functions. Play about, try to recreate it. Once you create a nice effect or function, why not turn it into a plugin and share it with other users.</p> 
 
+			<h3>So what are you waiting for?</h3> 
 
+			<p><a href='/download.html'>Download Spark</a>, read the <a href='/documentation.html'>documentation</a> and maybe even the <a href='/assets/downloads/SparkGuide.pdf'>Spark guide</a>. Then get coding amazing web apps. Good luck and have fun doing what you do best.</p> 
+		</div> 
 
-		If you want to put a line break at a particular place, you can use the "<BR>" command, or, for a paragraph break, the "<P>" command, which will insert a blank line. The heading command ("<4></4>") puts a blank line above and below the heading text.
+		<div class='right'> 
+			<div class='container'> 
+				<h3>Twitter <span class='light'><a href='http://twitter.com/#!/SparkJavaScript'>@SparkJavaScript</a></span></h3> 
+				<div id='tweetlist'></div> 
+			</div> 
+		</div> 
+		</div> 
+					</div> 
 
+					<br class='clear' /> 
 
-
-		<H4>Starting and Stopping Commands</H4>
-
-		Most HTML commands come in pairs: for example, "<H4>" marks the beginning of a size 4 heading, and "</H4>" marks the end of it. The closing command is always the same as the opening command, except for the addition of the "/".<P>
-
-
-
-		Modifiers are sometimes included along with the basic command, inside the opening command's < >. The modifier does not need to be repeated in the closing command.
-
-
-
-
-
-		<H1>This is a size "1" heading</H1>
-
-		<H2>This is a size "2" heading</H2>
-
-		<H3>This is a size "3" heading</H3>
-
-		<H4>This is a size "4" heading</H4>
-
-		<H5>This is a size "5" heading</H5>
-
-		<H6>This is a size "6" heading</H6>
-
-		<center>
-
-		<H4>Copyright © 1997, by
-		<A HREF="http://sheldonbrown.com/index.html">Sheldon Brown</A>
-		</H4>
-
-		If you would like to make a link or bookmark to this page, the URL is:<BR> http://sheldonbrown.com/web_sample1.html
+					<footer> 
+						<p>&copy; 2011 <a href='http://flowdev.co.uk/'>Oliver Caldwell</a> &middot; <a href='/sitemap.xml'>Sitemap</a></p> 
+					</footer> 
+				</div>
 		
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				
+				Spark
+					.find({
+						tag: 'div',
+						classes: 'focus'
+					})
+					.find({
+						tag: ['h2', 'h3']
+					})
+					.find({
+						tag: ['p', 'a'],
+						classes: 'container'
+					})
+					.each(function(e) {
+						e.style.color = '#FF0000';
+					});
 			});
 		</script>
 	</body>
