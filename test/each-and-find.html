@@ -74,32 +74,28 @@
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				Spark
-					.find({
+				Spark.find({
+					tag: 'div',
+					classes: 'focus',
+					find: {
 						tag: 'div',
-						classes: 'focus'
-					})
-					.find({
-						tag: 'div',
-						classes: 'container'
-					})
-					.find({
-						tag: ['p', 'h2']
-					})
-					.each(function(e) {
-						e.style.color = '#FF0000';
-					});
+						classes: 'container',
+						find: {
+							tag: ['p', 'h2']
+						}
+					}
+				}).each(function(e) {
+					e.style.color = '#FF0000';
+				});
 				
-				Spark
-					.find({
-						id: 'tweetlist'
-					})
-					.find({
+				Spark.find({
+					id: 'tweetlist',
+					find: {
 						tag: 'p'
-					})
-					.each(function(e) {
-						e.style.color = '#0000FF';
-					});
+					}
+				}).each(function(e) {
+					e.style.color = '#0000FF';
+				});
 			});
 		</script>
 	</body>

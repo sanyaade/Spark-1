@@ -157,6 +157,12 @@ Spark.extend('find', function(parameters, context) {
 	// Add the length
 	built.length = filtered.length;
 	
+	// Check if there is a find parameter
+	if(typeof par.find === 'object') {
+		// Refind with the passed parameters
+		built = built.find(par.find);
+	}
+	
 	// Return the object with all the elements within it
 	return built;
 });
