@@ -62,7 +62,7 @@
 		<div class='right'> 
 			<div class='container'> 
 				<h3>Twitter <span class='light'><a href='http://twitter.com/#!/SparkJavaScript'>@SparkJavaScript</a></span></h3> 
-				<div id='tweetlist'></div> 
+				<div id='tweetlist'><p>Loading...</p></div> 
 			</div> 
 		</div> 
 		</div> 
@@ -92,6 +92,17 @@
 					})
 					.each(function(e) {
 						e.style.color = '#FF0000';
+					});
+				
+				Spark
+					.find({
+						id: 'tweetlist'
+					})
+					.find({
+						tag: 'p'
+					})
+					.each(function(e) {
+						e.style.color = '#0000FF';
 					});
 			});
 		</script>
