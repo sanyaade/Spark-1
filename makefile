@@ -12,6 +12,10 @@ files = ${src}core.js\
 # Set the default files to be built
 default: spark.js spark.min.js validate
 
+# Set up the develop list of files
+# Basically without the compressed version
+develop: spark.js validate
+
 # Combine all of the files into spark.js
 spark.js: ${files}
 	@@echo 'Building...'
