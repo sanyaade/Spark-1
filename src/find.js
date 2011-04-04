@@ -55,8 +55,6 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
-	function compareClass(){return true;}
-	
 	// Check what the tag filter is
 	if(typeof par.tag === 'string') {
 		// Perform a basic tag search
