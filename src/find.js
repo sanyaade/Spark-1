@@ -73,16 +73,43 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
-	// Check what the tag filter is
-	if(typeof par.tag === 'string') {
-		// Perform a basic tag search
-		found = ctx.getElementsByTagName(par.tag);
+	function findElements(tag, ctx) {
+		// Initialise any required variables
+		var tempFound = null,
+			found = null;
+		
+		// Check what the tag filter is
+		if(typeof tag === 'string') {
+			// Perform a basic tag search
+			return ctx.getElementsByTagName(tag);
+		}
+		else if(tag instanceof Array) {
+			// Perform a looping tag search
+			for(i = 0; i < tag.length; i++) {
+				// Search into the temporary location
+				tempFound = ctx.getElementsByTagName(par.tag[i]);
+				
+				// Loop through the elements
+				for(e = 0; e < tempFound.length; e++) {
+					// Push the found element to found
+					found.push(tempFound[e]);
+				}
+			}
+			
+			// Return the found ones
+			return found;
+		}
+		else {
+			// Default to grabbing all tags
+			return ctx.getElementsByTagName('*');
+		}
 	}
-	else if(par.tag instanceof Array) {
-		// Perform a looping tag search
-		for(i = 0; i < par.tag.length; i++) {
-			// Search into the temporary location
-			tempFound = ctx.getElementsByTagName(par.tag[i]);
+	
+	// Check if this is part of the chain
+	if(this.elements instanceof Array) {
+		// Loop through the elements
+		for(i = 0; i < this.length; i++) {
+			tempFound = findElements(par.tag, this.elements[i]);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -92,8 +119,7 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	else {
-		// Default to grabbing all tags
-		found = ctx.getElementsByTagName('*');
+		found = findElements(par.tag, ctx);
 	}
 	
 	// Loop through all elements
