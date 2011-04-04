@@ -9,7 +9,7 @@ Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
 	var found = [],
 		filtered = [],
-		par = parameters,
+		par = null,
 		ctx = (typeof context !== 'undefined') ? context : document,
 		i = null,
 		e = null,
@@ -121,6 +121,8 @@ Spark.extend('find', function(parameters, context) {
 			return ctx.getElementsByTagName('*');
 		}
 	}
+	
+	par = (typeof parameters === 'string') ? parseSelector(parameters) : parameters;
 	
 	// Check if this is part of the chain
 	if(this.elements instanceof Array) {
