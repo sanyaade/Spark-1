@@ -116,6 +116,9 @@ Spark.extend('find', function(parameters, context) {
 		built[i] = filtered[i];
 	}
 	
+	// Add the array version
+	built.elements = filtered;
+	
 	// Add the length
 	built.length = filtered.length;
 	
