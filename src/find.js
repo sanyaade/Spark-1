@@ -26,23 +26,41 @@ Spark.extend('find', function(parameters, context) {
 	 */
 	function compareValue(value, compare) {
 		// Initialise any required variables
-		var i = null;
+		var i = null,
+			classes = ((value instanceof Array) ? value.join(' ') : false);
 		
 		// Check what type of search we need to do
 		if(typeof compare === 'string') {
 			// Compare the two strings
-			if(value === compare) {
-				return true;
+			if(classes) {
+				if(classes.match(new RegExp('(^| )' + compare + '($| )', 'g'))) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
-				return false;
+				if(value === compare) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		}
 		else if(compare instanceof Array) {
 			// Loop through and compare
 			for(i = 0; i < compare.length; i++) {
-				if(value === compare[i]) {
-					return true;
+				if(classes) {
+					if(classes.match(new RegExp('(^| )' + compare[i] + '($| )', 'g'))) {
+						return true;
+					}
+				}
+				else {
+					if(value === compare[i]) {
+						return true;
+					}
 				}
 			}
 			
