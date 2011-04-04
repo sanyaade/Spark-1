@@ -73,6 +73,13 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
+	/**
+	 * Find elements from a context
+	 * 
+	 * @param {String} tag The name of the tag you wish to find
+	 * @param {Object} ctx The context you wish to search in
+	 * @returns {Array} Returns an array of the found elements
+	 */
 	function findElements(tag, ctx) {
 		// Initialise any required variables
 		var tempFound = null,
@@ -107,6 +114,7 @@ Spark.extend('find', function(parameters, context) {
 	
 	// Check if this is part of the chain
 	if(this.elements instanceof Array) {
+		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
 			tempFound = findElements(par.tag, this.elements[i]);
@@ -119,6 +127,7 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	else {
+		// Find from scratch
 		found = findElements(par.tag, ctx);
 	}
 	
