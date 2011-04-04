@@ -27,6 +27,9 @@ Spark.extend('find', function(parameters, context) {
 		var selectors = selector.split(/\s*,\s*/g),
 			paths = null,
 			built = Spark.clone();
+		
+		// Return the built object
+		return built;
 	}
 	
 	/**
