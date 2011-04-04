@@ -116,6 +116,9 @@ Spark.extend('find', function(parameters, context) {
 		built[i] = filtered[i];
 	}
 	
+	// Add the length
+	built.length = filtered.length;
+	
 	// Return the object with all the elements within it
 	return built;
 });
