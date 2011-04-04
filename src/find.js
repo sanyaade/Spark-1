@@ -24,7 +24,9 @@ Spark.extend('find', function(parameters, context) {
 	 * @returns {Object} The object version of the selector string
 	 */
 	function parseSelector(selector) {
-		
+		// Initialise any required variables
+		var selectors = selector.split(/\s*,\s*/g),
+			paths = null;
 	}
 	
 	/**
