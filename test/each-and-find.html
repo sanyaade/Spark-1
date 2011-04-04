@@ -84,11 +84,11 @@
 						classes: 'focus'
 					})
 					.find({
-						tag: ['h2', 'h3']
+						tag: 'div',
+						classes: 'container'
 					})
 					.find({
-						tag: ['p', 'a'],
-						classes: 'container'
+						tag: ['p', 'h2']
 					})
 					.each(function(e) {
 						e.style.color = '#FF0000';
