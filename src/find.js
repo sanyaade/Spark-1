@@ -297,7 +297,8 @@ Spark.extend('find', function(parameters, context) {
 		if(
 			compareValue(e.nodeName, parameters.tag, true) === true &&
 			compareValue(classes, parameters.classes) === true &&
-			compareValue(e.id, parameters.id) === true
+			compareValue(e.id, parameters.id) === true &&
+			compareValue(e, parameters.attribute) === true
 			) {
 			// Add the found element to the filtered array
 			filtered.push(e);
