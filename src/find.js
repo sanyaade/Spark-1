@@ -228,6 +228,12 @@ Spark.extend('find', function(parameters, context) {
 							// It doesnt
 							return false;
 						}
+						else {
+							if(value[i] === '') {
+								// It is empty
+								return false;
+							}
+						}
 					}
 					
 					// So now we check if it has the value again, if it does we compare
