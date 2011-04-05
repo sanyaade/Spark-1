@@ -53,21 +53,21 @@ Spark.extend('find', function(parameters, context) {
 				
 				// Keep looping until the string is gone
 				while(path.length > 0) {
-					if(path.match(/^([a-z0-9]+)/i)) {
+					if(path.match(/^([a-z0-9*]+)/i)) {
 						// Element
 						if(typeof parameters[p].tag === 'undefined') {
-							parameters[p].tag = path.replace(/^([a-z0-9]+).*/i, "$1");
+							parameters[p].tag = path.replace(/^([a-z0-9*]+).*/i, "$1");
 						}
 						else {
 							if(typeof parameters[p].tag === 'string') {
 								parameters[p].tag = [parameters[p].tag];
 							}
 							
-							parameters[p].tag.push(path.replace(/^([a-z0-9]+).*/i, "$1"));
+							parameters[p].tag.push(path.replace(/^([a-z0-9*]+).*/i, "$1"));
 						}
 						
 						// Remove the selection
-						path = path.replace(/^([a-z0-9]+)/i, '');
+						path = path.replace(/^([a-z0-9*]+)/i, '');
 					}
 					else if(path.match(/^#([a-z][a-z0-9-_:]*)/i)) {
 						// ID
@@ -165,6 +165,10 @@ Spark.extend('find', function(parameters, context) {
 					return true;
 				}
 				else {
+					if(tag && compare === '*') {
+						return true;
+					}
+					
 					return false;
 				}
 			}
