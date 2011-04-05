@@ -55,9 +55,13 @@ Spark.extend('find', function(parameters, context) {
 					if(path.match(/^([a-z]+)/i)) {
 						// Element
 						if(typeof parameters[p].tag === 'undefined') {
-							parameters[p].tag = [path.replace(/^([a-z]+).*/i, "$1")];
+							parameters[p].tag = path.replace(/^([a-z]+).*/i, "$1");
 						}
 						else {
+							if(typeof parameters[p].tag === 'string') {
+								parameters[p].tag = [parameters[p].tag];
+							}
+							
 							parameters[p].tag.push(path.replace(/^([a-z]+).*/i, "$1"));
 						}
 						
@@ -67,9 +71,13 @@ Spark.extend('find', function(parameters, context) {
 					else if(path.match(/^#([a-z][a-z0-9-_:]*)/i)) {
 						// ID
 						if(typeof parameters[p].id === 'undefined') {
-							parameters[p].id = [path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1")];
+							parameters[p].id = path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1");
 						}
 						else {
+							if(typeof parameters[p].id === 'string') {
+								parameters[p].id = [parameters[p].id];
+							}
+							
 							parameters[p].id.push(path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1"));
 						}
 						
@@ -79,9 +87,13 @@ Spark.extend('find', function(parameters, context) {
 					else if(path.match(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i)) {
 						// Class
 						if(typeof parameters[p].classes === 'undefined') {
-							parameters[p].classes = [path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1")];
+							parameters[p].classes = path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1");
 						}
 						else {
+							if(typeof parameters[p].classes === 'string') {
+								parameters[p].classes = [parameters[p].classes];
+							}
+							
 							parameters[p].classes.push(path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1"));
 						}
 						
