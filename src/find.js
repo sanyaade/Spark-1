@@ -16,6 +16,30 @@ Spark.extend('find', function(parameters, context) {
 		classes = null,
 		built = this.clone();
 	
+	// Check if parameters is not an actual search object
+	if(typeof parameters === 'object') {
+		if(typeof parameters.nodeName === 'string') {
+			// They passed an element, this needs to be adopted into the chain
+			built[0] = parameters;
+			built.elements = [parameters];
+			built.length = 1;
+			
+			// Return the object with the adopted value
+			return built;
+		}
+		else if(parameters instanceof Array) {
+			// They passed an array, this needs to be adopted into the chain
+			for(i = 0; i < parameters.length; i++) {
+				built[i] = parameters[i];
+			}
+			
+			built.length = parameters.length;
+			
+			// Return the object with the adopted values
+			return built;
+		}
+	}
+	
 	/**
 	 * Takes a string, breaks it down into its components and uses them to run the find function
 	 * 
