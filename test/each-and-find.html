@@ -36,7 +36,7 @@
 			<div class='container-right'>
 				<p>Current version &middot; v2.3.8</p> 
 
-				<p><a href='/download.html'>all versions</a></p> 
+				<p><a rel='anotherFindTest' href='/download.html'>all versions</a></p> 
 			</div> 
 		</div> 
 
@@ -44,11 +44,11 @@
 			<div class='left'> 
 			<h3>Learn by example</h3> 
 
-			<p>I feel the best way for you to get started with Spark is to see it in action. You may have noticed the tweets on the right sneaking in there, well that was Spark, but try clicking this box below for another demonstration.</p> 
+			<p rel='findTest'>I feel the best way for you to get started with Spark is to see it in action. You may have noticed the tweets on the right sneaking in there, well that was Spark, but try clicking this box below for another demonstration.</p> 
 
 			<div id='lbe'><p>Pretty cool, if I do say so my self.</p></div> 
 
-			<p>Impressed? This can be accomplished easily using the <a href='/documentation/animate.html'>animate</a> and <a href='/documentation/event.html'>event</a> functions. Play about, try to recreate it. Once you create a nice effect or function, why not turn it into a plugin and share it with other users.</p> 
+			<p>Impressed? This can be accomplished easily using the <a rel='findTest' href='/documentation/animate.html'>animate</a> and <a href='/documentation/event.html'>event</a> functions. Play about, try to recreate it. Once you create a nice effect or function, why not turn it into a plugin and share it with other users.</p> 
 
 			<h3>So what are you waiting for?</h3> 
 
@@ -57,7 +57,7 @@
 
 		<div class='right'> 
 			<div class='container'> 
-				<h3>Twitter <span class='light'><a href='http://twitter.com/#!/SparkJavaScript'>@SparkJavaScript</a></span></h3> 
+				<h3>Twitter <span class='light'><a rel='findTest' href='http://twitter.com/#!/SparkJavaScript'>@SparkJavaScript</a></span></h3> 
 				<div id='tweetlist'><p>Loading...</p></div> 
 			</div> 
 		</div> 
@@ -90,7 +90,7 @@
 				$({
 					tag: 'a',
 					attribute: {
-						href: ['/download.html', '/documentation.html']
+						rel: ['findTest', 'anotherFindTest']
 					}
 				}).each(function(e) {
 					e.style.color = '#00FF00';

@@ -215,6 +215,49 @@ Spark.extend('find', function(parameters, context) {
 			// Default to returning false
 			return false;
 		}
+		else if(typeof compare === 'object') {
+			// It is an object of attributes, loop through and compare
+			// If any do not match, return false
+			for(i in compare) {
+				// Make sure it has the property and so does the object
+				if(compare.hasOwnProperty(i)) {
+					// If it is empty then all we have to do is see if it exists
+					if(compare[i] === '') {
+						// So now if it has the attribute then continue
+						if(value.hasOwnProperty(i) === false) {
+							// It doesnt
+							return false;
+						}
+					}
+					
+					// So now we check if it has the value again, if it does we compare
+					if(value.hasOwnProperty(i) === true) {
+						// It does, check what it is
+						if(typeof compare[i] === 'string') {
+							if(value[i] !== compare[i]) {
+								return false;
+							}
+						}
+						else if(compare[i] instanceof Array) {
+							// It is an or statement, so we need do a special check
+							if(compare[i].join(' ').match(new RegExp('(^| )' + value[i] + '($| )', 'g'))) {
+								return true;
+							}
+							else {
+								return false;
+							}
+						}
+					}
+					else {
+						// It doesnt
+						return false;
+					}
+				}
+			}
+			
+			// Default to returning true
+			return true;
+		}
 		else {
 			// Default to returning true
 			return true;
