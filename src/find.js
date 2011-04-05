@@ -221,8 +221,8 @@ Spark.extend('find', function(parameters, context) {
 			for(i in compare) {
 				// Make sure it has the property and so does the object
 				if(compare.hasOwnProperty(i)) {
-					// If it is empty then all we have to do is see if it exists
-					if(compare[i] === '') {
+					// If it is true then all we have to do is see if it exists
+					if(compare[i] === true) {
 						// So now if it has the attribute then continue
 						if(value.hasOwnProperty(i) === false) {
 							// It doesnt
