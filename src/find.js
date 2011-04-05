@@ -77,7 +77,20 @@ Spark.extend('find', function(parameters, context) {
 				
 				// Keep looping until the string is gone
 				while(path.length > 0) {
-					if(path.match(/^([a-z0-9*]+\[[a-z_:][\-a-z0-9_:.]+\])/i)) {
+					if(path.match(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i)) {
+						// Check if element has attribute
+						// Make sure the object exists
+						if(typeof parameters[p].attribute === 'undefined') {
+							parameters[p].attribute = {};
+						}
+						
+						// Add the check
+						parameters[p].attribute[path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, "$1")] = path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, "$2");
+						
+						// Remove the selection
+						path = path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, '');
+					}
+					else if(path.match(/^([a-z0-9*]+\[[a-z_:][\-a-z0-9_:.]+\])/i)) {
 						// Check if element has attribute
 						// Make sure the object exists
 						if(typeof parameters[p].attribute === 'undefined') {
