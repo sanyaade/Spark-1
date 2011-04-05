@@ -20,9 +20,10 @@ Spark.extend('find', function(parameters, context) {
 	 * Takes a string, breaks it down into its components and uses them to run the find function
 	 * 
 	 * @param {String} selector The selector string
+	 * @param {Object} offset The instance of Spark already containing elements
 	 * @returns {Object} An instance of Spark containing all of the found elements
 	 */
-	function parseSelector(selector) {
+	function parseSelector(selector, offset) {
 		// Initialise any required variables
 		var selectors = selector.split(/\s*,\s*/g),
 			paths = null,
@@ -30,9 +31,9 @@ Spark.extend('find', function(parameters, context) {
 			i = null,
 			p = null,
 			path = null,
+			found = [],
 			parameters = null,
-			tempFound = null,
-			found = [];
+			tempFound = null;
 		
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
@@ -109,12 +110,13 @@ Spark.extend('find', function(parameters, context) {
 			
 			// So now we have an array of parameter objects
 			// Set up temp found to search with
-			tempFound = Spark.clone();
+			tempFound = offset;
 			
 			// Loop through all of the parameter objects
 			for(p = 0; p < parameters.length; p++) {
 				// Now do the search into tempFound
 				tempFound = tempFound.find(parameters[p]);
+				return tempFound;
 			}
 			
 			// When done concat these results to the found array
@@ -125,10 +127,10 @@ Spark.extend('find', function(parameters, context) {
 		for(i = 0; i < found.length; i++) {
 			built[i] = found[i];
 		}
-
+		
 		// Add the array version
 		built.elements = found;
-
+		
 		// Add the length
 		built.length = found.length;
 		
@@ -231,12 +233,6 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
-	// Check if parameters is a string
-	if(typeof parameters === 'string') {
-		// If so, then return what is found by the parse selector function
-		return parseSelector(parameters);
-	}
-	
 	// Check if this is part of the chain
 	if(this.elements instanceof Array) {
 		// Find from the previously found
@@ -254,6 +250,12 @@ Spark.extend('find', function(parameters, context) {
 	else {
 		// Find from scratch
 		found = findElements(parameters.tag, ctx);
+	}
+	
+	// Check if parameters is a string
+	if(typeof parameters === 'string') {
+		// If so, then return what is found by the parse selector function
+		return parseSelector(parameters, this);
 	}
 	
 	// Loop through all elements
