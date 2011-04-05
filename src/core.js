@@ -34,4 +34,9 @@
 	
 	// Expose the object
 	window.Spark = new Spark();
+	
+	// Set up the alias for the find function
+	window.$ = function(parameters, context) {
+		return window.Spark.find(parameters, context);
+	};
 }());
