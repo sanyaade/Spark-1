@@ -100,6 +100,10 @@ Spark.extend('find', function(parameters, context) {
 						// Remove the selection
 						path = path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i, '');
 					}
+					else {
+						// If it does not match anything return false to stop endless loops
+						return false;
+					}
 				}
 			}
 			
