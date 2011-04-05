@@ -87,13 +87,7 @@
 					e.style.color = '#0000FF';
 				});
 				
-				$({
-					tag: 'a',
-					attribute: {
-						rel: ['findTest', 'anotherFindTest'],
-						href: true
-					}
-				}).each(function(e) {
+				$('a[rel="findTest"], a[rel="anotherFindTest"]').each(function(e) {
 					e.style.color = '#00FF00';
 				});
 			});
