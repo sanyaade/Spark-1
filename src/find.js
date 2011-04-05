@@ -116,7 +116,6 @@ Spark.extend('find', function(parameters, context) {
 			for(p = 0; p < parameters.length; p++) {
 				// Now do the search into tempFound
 				tempFound = tempFound.find(parameters[p]);
-				return tempFound;
 			}
 			
 			// When done concat these results to the found array
