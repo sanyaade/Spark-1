@@ -74,23 +74,9 @@
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				Spark.find({
-					tag: 'div',
-					classes: 'focus',
-					find: {
-						tag: 'div',
-						classes: 'container',
-						find: {
-							tag: ['p', 'h2']
-						}
-					}
-				}).each(function(e) {
+				Spark.find('div.focus div.container').find('p, h2').each(function(e) {
 					e.style.color = '#FF0000';
 				});
-				
-				/*Spark.find('div.focus div.container').find('p, h2').each(function(e) {
-					e.style.color = '#FF0000';
-				});*/
 				
 				Spark.find({
 					id: 'tweetlist',

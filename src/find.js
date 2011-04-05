@@ -52,21 +52,21 @@ Spark.extend('find', function(parameters, context) {
 				
 				// Keep looping until the string is gone
 				while(path.length > 0) {
-					if(path.match(/^([a-z]+)/i)) {
+					if(path.match(/^([a-z0-9]+)/i)) {
 						// Element
 						if(typeof parameters[p].tag === 'undefined') {
-							parameters[p].tag = path.replace(/^([a-z]+).*/i, "$1");
+							parameters[p].tag = path.replace(/^([a-z0-9]+).*/i, "$1");
 						}
 						else {
 							if(typeof parameters[p].tag === 'string') {
 								parameters[p].tag = [parameters[p].tag];
 							}
 							
-							parameters[p].tag.push(path.replace(/^([a-z]+).*/i, "$1"));
+							parameters[p].tag.push(path.replace(/^([a-z0-9]+).*/i, "$1"));
 						}
 						
 						// Remove the selection
-						path = path.replace(/^([a-z]+)/i, '');
+						path = path.replace(/^([a-z0-9]+)/i, '');
 					}
 					else if(path.match(/^#([a-z][a-z0-9-_:]*)/i)) {
 						// ID
