@@ -319,7 +319,7 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Object} ctx The context you wish to search in
 	 * @returns {Array} Returns an array of the found elements
 	 */
-	function findElements(tag, ctx) {
+	function findElements(tag, ctx, child) {
 		// Initialise any required variables
 		var tempFound = null,
 			found = [];
@@ -327,7 +327,22 @@ Spark.extend('find', function(parameters, context) {
 		// Check what the tag filter is
 		if(typeof tag === 'string') {
 			// Perform a basic tag search
-			return ctx.getElementsByTagName(tag);
+			tempFound = ctx.getElementsByTagName(tag);
+			
+			// Loop through the elements
+			for(e = 0; e < tempFound.length; e++) {
+				// Push the found element to found
+				// And check if it is a direct child if we need to
+				if(child === true && tempFound[e].parentNode === ctx) {
+					found.push(tempFound[e]);
+				}
+				else if(!child) {
+					found.push(tempFound[e]);
+				}
+			}
+			
+			// Return the filtered array
+			return found;
 		}
 		else if(tag instanceof Array) {
 			// Perform a looping tag search
@@ -338,7 +353,13 @@ Spark.extend('find', function(parameters, context) {
 				// Loop through the elements
 				for(e = 0; e < tempFound.length; e++) {
 					// Push the found element to found
-					found.push(tempFound[e]);
+					// And check if it is a direct child if we need to
+					if(child === true && tempFound[e].parentNode === ctx) {
+						found.push(tempFound[e]);
+					}
+					else if(!child) {
+						found.push(tempFound[e]);
+					}
 				}
 			}
 			
@@ -347,7 +368,22 @@ Spark.extend('find', function(parameters, context) {
 		}
 		else {
 			// Default to grabbing all tags
-			return ctx.getElementsByTagName('*');
+			tempFound = ctx.getElementsByTagName('*');
+			
+			// Loop through the elements
+			for(e = 0; e < tempFound.length; e++) {
+				// Push the found element to found
+				// And check if it is a direct child if we need to
+				if(child === true && tempFound[e].parentNode === ctx) {
+					found.push(tempFound[e]);
+				}
+				else if(!child) {
+					found.push(tempFound[e]);
+				}
+			}
+			
+			// Return the filtered array
+			return found;
 		}
 	}
 	
@@ -356,7 +392,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(parameters.tag, this.elements[i]);
+			tempFound = findElements(parameters.tag, this.elements[i], parameters.child);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -367,7 +403,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(parameters.tag, ctx);
+		found = findElements(parameters.tag, ctx, parameters.child);
 	}
 	
 	// Check if parameters is a string
