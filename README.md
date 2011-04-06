@@ -10,7 +10,6 @@ You can download it and read up on the functions from the links below.
  * [Downloads](http://sparkjs.co.uk/download.html)
  * [Documentation](http://sparkjs.co.uk/documentation.html)
  * [Twitter](http://twitter.com/#!/SparkJavaScript)
- * [My blog](http://blog.flowdev.co.uk/)
 
 ## Building
 
