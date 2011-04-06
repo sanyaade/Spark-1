@@ -364,7 +364,7 @@ Spark.extend('find', function(parameters, context) {
 			// Perform a looping tag search
 			for(i = 0; i < tag.length; i++) {
 				// Search into the temporary location
-				tempFound = ctx.getElementsByTagName(tag[i]);
+				tempFound = (sibling === true) ? ctx.parentNode.getElementsByTagName(tag[i]) : ctx.getElementsByTagName(tag[i]);
 				
 				// Loop through the elements
 				for(e = 0; e < tempFound.length; e++) {
@@ -373,7 +373,10 @@ Spark.extend('find', function(parameters, context) {
 					if(child === true && tempFound[e].parentNode === ctx) {
 						found.push(tempFound[e]);
 					}
-					else if(!child) {
+					else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
+						found.push(tempFound[e]);
+					}
+					else if(!child && !sibling) {
 						found.push(tempFound[e]);
 					}
 				}
@@ -384,7 +387,7 @@ Spark.extend('find', function(parameters, context) {
 		}
 		else {
 			// Default to grabbing all tags
-			tempFound = ctx.getElementsByTagName('*');
+			tempFound = (sibling === true) ? ctx.parentNode.getElementsByTagName('*') : ctx.getElementsByTagName('*');
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -393,7 +396,10 @@ Spark.extend('find', function(parameters, context) {
 				if(child === true && tempFound[e].parentNode === ctx) {
 					found.push(tempFound[e]);
 				}
-				else if(!child) {
+				else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
+					found.push(tempFound[e]);
+				}
+				else if(!child && !sibling) {
 					found.push(tempFound[e]);
 				}
 			}
