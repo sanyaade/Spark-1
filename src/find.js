@@ -41,6 +41,30 @@ Spark.extend('find', function(parameters, context) {
 	}
 	
 	/**
+	 * Removes duplicate values from an array
+	 * 
+	 * @param {Array} target The target array to have duplicates remove from
+	 * @returns {Array} The cleaned array with no duplicate values
+	 */
+	function unique(target) {
+		var a = [],
+			l = target.length,
+			j = null,
+			i = null;
+		
+		for(i = 0; i < l; i++) {
+			for(j = i + 1; j < l; j++) {
+				if(target[i] === target[j]) {
+					j = ++i;
+				}
+			}
+			
+			a.push(target[i]);
+		}
+		return a;
+	}
+	
+	/**
 	 * Takes a string, breaks it down into its components and uses them to run the find function
 	 * 
 	 * @param {String} selector The selector string
@@ -198,6 +222,9 @@ Spark.extend('find', function(parameters, context) {
 			// When done concat these results to the found array
 			found = found.concat(tempFound.elements);
 		}
+		
+		// Clean the array
+		found = unique(found);
 		
 		// Loop through the found adding them to the object
 		for(i = 0; i < found.length; i++) {
@@ -448,6 +475,9 @@ Spark.extend('find', function(parameters, context) {
 			filtered.push(e);
 		}
 	}
+	
+	// Clean the array
+	filtered = unique(filtered);
 	
 	// Loop through the filtered adding them to the object
 	for(i = 0; i < filtered.length; i++) {
