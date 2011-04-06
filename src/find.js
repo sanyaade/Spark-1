@@ -274,12 +274,12 @@ Spark.extend('find', function(parameters, context) {
 					// If it is true then all we have to do is see if it exists
 					if(compare[i] === true) {
 						// So now if it has the attribute then continue
-						if(value.hasOwnProperty(i) === false) {
+						if(value.getAttribute(i) === null) {
 							// It doesnt
 							return false;
 						}
 						else {
-							if(value[i] === '') {
+							if(value.getAttribute(i) === '') {
 								// It is empty
 								return false;
 							}
@@ -287,16 +287,16 @@ Spark.extend('find', function(parameters, context) {
 					}
 					
 					// So now we check if it has the value again, if it does we compare
-					if(value.hasOwnProperty(i) === true) {
+					if(value.getAttribute(i) !== null) {
 						// It does, check what it is
 						if(typeof compare[i] === 'string') {
-							if(value[i] !== compare[i]) {
+							if(value.getAttribute(i) !== compare[i]) {
 								return false;
 							}
 						}
 						else if(compare[i] instanceof Array) {
 							// It is an or statement, so we need do a special check
-							if(compare[i].join(' ').match(new RegExp('(^| )' + value[i] + '($| )', 'g'))) {
+							if(compare[i].join(' ').match(new RegExp('(^| )' + value.getAttribute(i) + '($| )', 'g'))) {
 								return true;
 							}
 							else {
