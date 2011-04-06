@@ -349,8 +349,13 @@ Spark.extend('find', function(parameters, context) {
 				if(child === true && tempFound[e].parentNode === ctx) {
 					found.push(tempFound[e]);
 				}
-				else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
-					found.push(tempFound[e]);
+				else if(sibling === true) {
+					if(tempFound[e] === ctx.nextElementSibling) {
+						found.push(tempFound[e]);
+					}
+					else if(tempFound[e] === ctx.nextSibling) {
+						found.push(tempFound[e].nextSibling.nextSibling);
+					}
 				}
 				else if(!child && !sibling) {
 					found.push(tempFound[e]);
@@ -373,8 +378,13 @@ Spark.extend('find', function(parameters, context) {
 					if(child === true && tempFound[e].parentNode === ctx) {
 						found.push(tempFound[e]);
 					}
-					else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
-						found.push(tempFound[e]);
+					else if(sibling === true) {
+						if(tempFound[e] === ctx.nextElementSibling) {
+							found.push(tempFound[e]);
+						}
+						else if(tempFound[e] === ctx.nextSibling) {
+							found.push(tempFound[e].nextSibling.nextSibling);
+						}
 					}
 					else if(!child && !sibling) {
 						found.push(tempFound[e]);
@@ -396,8 +406,13 @@ Spark.extend('find', function(parameters, context) {
 				if(child === true && tempFound[e].parentNode === ctx) {
 					found.push(tempFound[e]);
 				}
-				else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
-					found.push(tempFound[e]);
+				else if(sibling === true) {
+					if(tempFound[e] === ctx.nextElementSibling) {
+						found.push(tempFound[e]);
+					}
+					else if(tempFound[e] === ctx.nextSibling) {
+						found.push(tempFound[e].nextSibling.nextSibling);
+					}
 				}
 				else if(!child && !sibling) {
 					found.push(tempFound[e]);
