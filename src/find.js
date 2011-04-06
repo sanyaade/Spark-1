@@ -326,9 +326,10 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {String} tag The name of the tag you wish to find
 	 * @param {Object} ctx The context you wish to search in
 	 * @param {Boolean} child Only find direct children
+	 * @param {Boolean} sibling Only find the next sibling element
 	 * @returns {Array} Returns an array of the found elements
 	 */
-	function findElements(tag, ctx, child) {
+	function findElements(tag, ctx, child, sibling) {
 		// Initialise any required variables
 		var tempFound = null,
 			found = [];
@@ -336,7 +337,7 @@ Spark.extend('find', function(parameters, context) {
 		// Check what the tag filter is
 		if(typeof tag === 'string') {
 			// Perform a basic tag search
-			tempFound = ctx.getElementsByTagName(tag);
+			tempFound = (sibling === true) ? ctx.parentNode.getElementsByTagName(tag) : ctx.getElementsByTagName(tag);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -345,7 +346,10 @@ Spark.extend('find', function(parameters, context) {
 				if(child === true && tempFound[e].parentNode === ctx) {
 					found.push(tempFound[e]);
 				}
-				else if(!child) {
+				else if(sibling === true && (tempFound[e] === ctx.nextSibling || tempFound[e] === ctx.nextSibling.nextSibling) ) {
+					found.push(tempFound[e]);
+				}
+				else if(!child && !sibling) {
 					found.push(tempFound[e]);
 				}
 			}
@@ -401,7 +405,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(parameters.tag, this.elements[i], parameters.child);
+			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -412,7 +416,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(parameters.tag, ctx, parameters.child);
+		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling);
 	}
 	
 	// Check if parameters is a string
