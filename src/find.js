@@ -59,8 +59,8 @@ Spark.extend('find', function(parameters, context) {
 			parameters = null,
 			tempFound = null,
 			regexs = [
-				'^[a-z0-9*]+\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]',
-				'^[a-z0-9*]+\\[([a-z_:][\\-a-z0-9_:.]+)\\]',
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]',
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\]',
 				'^([a-z0-9*]+)',
 				'^#([a-z][a-z0-9-_:]*)',
 				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)'
@@ -282,28 +282,29 @@ Spark.extend('find', function(parameters, context) {
 							return false;
 						}
 					}
-					
-					// So now we check if it has the value again, if it does we compare
-					if(value.getAttribute(i) !== null) {
-						// It does, check what it is
-						if(typeof compare[i] === 'string') {
-							if(value.getAttribute(i) !== compare[i]) {
-								return false;
-							}
-						}
-						else if(compare[i] instanceof Array) {
-							// It is an or statement, so we need do a special check
-							if(compare[i].join(' ').match(new RegExp('(^| )' + value.getAttribute(i) + '($| )', 'g'))) {
-								return true;
-							}
-							else {
-								return false;
-							}
-						}
-					}
 					else {
-						// It doesnt
-						return false;
+						// So now we check if it has the value again, if it does we compare
+						if(value.getAttribute(i) !== null) {
+							// It does, check what it is
+							if(typeof compare[i] === 'string') {
+								if(value.getAttribute(i) !== compare[i]) {
+									return false;
+								}
+							}
+							else if(compare[i] instanceof Array) {
+								// It is an or statement, so we need do a special check
+								if(compare[i].join(' ').match(new RegExp('(^| )' + value.getAttribute(i) + '($| )', 'g'))) {
+									return true;
+								}
+								else {
+									return false;
+								}
+							}
+						}
+						else {
+							// It doesnt
+							return false;
+						}
 					}
 				}
 			}
