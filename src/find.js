@@ -78,7 +78,7 @@ Spark.extend('find', function(parameters, context) {
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
 			// Grab the paths
-			paths = selectors[i].replace('>', ' > ').replace(/\s+>\s+/g, ' >').split(/\s+/g);
+			paths = selectors[i].replace(/(>|\+)/g, " $1 ").replace(/\s+(>|\+)\s+/g, " $1").split(/\s+/g);
 			
 			// Reset the parameters
 			parameters = [];
@@ -93,10 +93,13 @@ Spark.extend('find', function(parameters, context) {
 				
 				// Keep looping until the string is gone
 				while(path.length > 0) {
-					// Check if it is a direct child selector
+					// Check if it is a direct child selector or direct sibling
 					if(path.indexOf('>') === 0) {
-						// It is so we need to set the property and remove the character
 						parameters[p].child = true;
+						path = path.substr(1);
+					}
+					else if(path.indexOf('+') === 0) {
+						parameters[p].sibling = true;
 						path = path.substr(1);
 					}
 					
