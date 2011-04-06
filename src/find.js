@@ -57,7 +57,23 @@ Spark.extend('find', function(parameters, context) {
 			path = null,
 			found = [],
 			parameters = null,
-			tempFound = null;
+			tempFound = null,
+			regexs = [
+				'^[a-z0-9*]+\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]',
+				'^[a-z0-9*]+\\[([a-z_:][\\-a-z0-9_:.]+)\\]',
+				'^([a-z0-9*]+)',
+				'^#([a-z][a-z0-9-_:]*)',
+				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)'
+			],
+			finders = [];
+		
+		// Set up all the RegExps
+		for(i = 0; i < regexs.length; i++) {
+			finders.push({
+				search: new RegExp(regexs[i], 'i'),
+				remove: new RegExp(regexs[i] + '.*', 'i')
+			});
+		}
 		
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
@@ -77,7 +93,7 @@ Spark.extend('find', function(parameters, context) {
 				
 				// Keep looping until the string is gone
 				while(path.length > 0) {
-					if(path.match(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i)) {
+					if(path.match(finders[0].search)) {
 						// Check if element has attribute
 						// Make sure the object exists
 						if(typeof parameters[p].attribute === 'undefined') {
@@ -85,12 +101,12 @@ Spark.extend('find', function(parameters, context) {
 						}
 						
 						// Add the check
-						parameters[p].attribute[path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, "$1")] = path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, "$2");
+						parameters[p].attribute[path.replace(finders[0].remove, "$1")] = path.replace(finders[0].remove, "$2");
 						
 						// Remove the selection
-						path = path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)=['"](.*)['"]\]/i, '');
+						path = path.replace(finders[0].search, '');
 					}
-					else if(path.match(/^([a-z0-9*]+\[[a-z_:][\-a-z0-9_:.]+\])/i)) {
+					else if(path.match(finders[1].search)) {
 						// Check if element has attribute
 						// Make sure the object exists
 						if(typeof parameters[p].attribute === 'undefined') {
@@ -98,58 +114,58 @@ Spark.extend('find', function(parameters, context) {
 						}
 						
 						// Add the check
-						parameters[p].attribute[path.replace(/^[a-z0-9*]+\[([a-z_:][\-a-z0-9_:.]+)\].*/i, "$1")] = true;
+						parameters[p].attribute[path.replace(finders[1].remove, "$1")] = true;
 						
 						// Remove the selection
-						path = path.replace(/^([a-z0-9*]+\[[a-z_:][\-a-z0-9_:.]+\])/i, '');
+						path = path.replace(finders[1].search, '');
 					}
-					else if(path.match(/^([a-z0-9*]+)/i)) {
+					else if(path.match(finders[2].search)) {
 						// Element
 						if(typeof parameters[p].tag === 'undefined') {
-							parameters[p].tag = path.replace(/^([a-z0-9*]+).*/i, "$1");
+							parameters[p].tag = path.replace(finders[2].remove, "$1");
 						}
 						else {
 							if(typeof parameters[p].tag === 'string') {
 								parameters[p].tag = [parameters[p].tag];
 							}
 							
-							parameters[p].tag.push(path.replace(/^([a-z0-9*]+).*/i, "$1"));
+							parameters[p].tag.push(path.replace(finders[2].remove, "$1"));
 						}
 						
 						// Remove the selection
-						path = path.replace(/^([a-z0-9*]+)/i, '');
+						path = path.replace(finders[2].search, '');
 					}
-					else if(path.match(/^#([a-z][a-z0-9-_:]*)/i)) {
+					else if(path.match(finders[3].search)) {
 						// ID
 						if(typeof parameters[p].id === 'undefined') {
-							parameters[p].id = path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1");
+							parameters[p].id = path.replace(finders[3].remove, "$1");
 						}
 						else {
 							if(typeof parameters[p].id === 'string') {
 								parameters[p].id = [parameters[p].id];
 							}
 							
-							parameters[p].id.push(path.replace(/^#([a-z][a-z0-9-_:]*).*/i, "$1"));
+							parameters[p].id.push(path.replace(finders[3].remove, "$1"));
 						}
 						
 						// Remove the selection
-						path = path.replace(/^#([a-z][a-z0-9-_:]*)/i, '');
+						path = path.replace(finders[3].search, '');
 					}
-					else if(path.match(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i)) {
+					else if(path.match(finders[4].search)) {
 						// Class
 						if(typeof parameters[p].classes === 'undefined') {
-							parameters[p].classes = path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1");
+							parameters[p].classes = path.replace(finders[4].remove, "$1");
 						}
 						else {
 							if(typeof parameters[p].classes === 'string') {
 								parameters[p].classes = [parameters[p].classes];
 							}
 							
-							parameters[p].classes.push(path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*).*/i, "$1"));
+							parameters[p].classes.push(path.replace(finders[4].remove, "$1"));
 						}
 						
 						// Remove the selection
-						path = path.replace(/^\.(-?[_a-z]+[_a-z0-9\-]*)/i, '');
+						path = path.replace(finders[4].search, '');
 					}
 					else {
 						// If it does not match anything return false to stop endless loops
