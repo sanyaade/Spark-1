@@ -326,10 +326,9 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {String} tag The name of the tag you wish to find
 	 * @param {Object} ctx The context you wish to search in
 	 * @param {Boolean} child Only find direct children
-	 * @param {Boolean} sibling Only find elements that are the next sibling to the context
 	 * @returns {Array} Returns an array of the found elements
 	 */
-	function findElements(tag, ctx, child, sibling) {
+	function findElements(tag, ctx, child) {
 		// Initialise any required variables
 		var tempFound = null,
 			found = [];
@@ -402,7 +401,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling);
+			tempFound = findElements(parameters.tag, this.elements[i], parameters.child);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -413,7 +412,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling);
+		found = findElements(parameters.tag, ctx, parameters.child);
 	}
 	
 	// Check if parameters is a string
