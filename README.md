@@ -1,6 +1,6 @@
 Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/), a 17 year old web developer from Essex, England.
 
-It incorporates animation, DOM control, AJAX and JSON manipulation. It can be extended with plugins to accomplish more.
+It incorporates animation, DOM control, AJAX and JSON manipulation and many more functions to control your web page. It can be extended with plugins to accomplish more.
 
 You can download it and read up on the functions from the links below.
 
