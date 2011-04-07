@@ -91,7 +91,7 @@ Spark.extend('find', function(parameters, context) {
 				'^\\[([a-z_][\\-a-z0-9_]+)~=[\'"](.*)[\'"]\\]', // Whitespace seperated attribute
 				'^\\[([a-z_][\\-a-z0-9_]+)\\|=[\'"](.*)[\'"]\\]', // Beginning of attribute with optional hyphen after
 				'^:first-child', // Element must be the first child of it's parent
-				'^:lang\\(([\\-a-z0-9])\\)' // Element is decendent of an element with the specified lang
+				'^:lang\\((.*)\\)' // Element is decendent of an element with the specified lang
 			],
 			finders = [];
 		
@@ -416,6 +416,16 @@ Spark.extend('find', function(parameters, context) {
 		for(i = 0; i < elements.length; i++) {
 			// Grab the current element
 			e = elements[i];
+			
+			// Keep looping up the dom til we can loop no more
+			while(e.parentNode) {
+				if(e.getAttribute('lang') === lang) {
+					found.push(elements[i]);
+					break;
+				}
+				
+				e = e.parentNode;
+			}
 		}
 		
 		// Return the found elements
