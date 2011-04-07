@@ -83,13 +83,14 @@ Spark.extend('find', function(parameters, context) {
 			parameters = null,
 			tempFound = null,
 			regexs = [
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]', // Attribute comparison
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\]', // Has attribute
+				'^\\[([a-z_][\\-a-z0-9_]+)=[\'"](.*)[\'"]\\]', // Attribute comparison
+				'^\\[([a-z_][\\-a-z0-9_]+)\\]', // Has attribute
 				'^([a-z0-9*]+)', // Tag name comparison
-				'^#([a-z][a-z0-9-_:]*)', // ID comparison
+				'^#([a-z][a-z0-9-_]*)', // ID comparison
 				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)', // Class comparison
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)~=[\'"](.*)[\'"]\\]', // Whitespace seperated attribute
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\|=[\'"](.*)[\'"]\\]' // Beginning of attribute with optional hyphen after
+				'^\\[([a-z_][\\-a-z0-9_]+)~=[\'"](.*)[\'"]\\]', // Whitespace seperated attribute
+				'^\\[([a-z_][\\-a-z0-9_]+)\\|=[\'"](.*)[\'"]\\]', // Beginning of attribute with optional hyphen after
+				'^:first-child' // Element must be the first child of it's parent
 			],
 			finders = [];
 		
@@ -229,6 +230,13 @@ Spark.extend('find', function(parameters, context) {
 						
 						// Remove the selection
 						path = path.replace(finders[4].search, '');
+					}
+					else if(path.match(finders[7].search)) {
+						// First child
+						parameters[p].first = true;
+						
+						// Remove the selection
+						path = path.replace(finders[7].search, '');
 					}
 					else {
 						// If it does not match anything return false to stop endless loops
@@ -397,9 +405,10 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Object} ctx The context you wish to search in
 	 * @param {Boolean} child Only find direct children
 	 * @param {Boolean} sibling Only find the next sibling element
+	 * @param {Boolean} first Only find elements that are the first child
 	 * @returns {Array} Returns an array of the found elements
 	 */
-	function findElements(tag, ctx, child, sibling) {
+	function findElements(tag, ctx, child, sibling, first) {
 		// Initialise any required variables
 		var tempFound = null,
 			found = [];
@@ -412,15 +421,30 @@ Spark.extend('find', function(parameters, context) {
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
 				// Push the found element to found
-				// And check if it is a direct child if we need to
-				if(child === true && tempFound[e].parentNode === ctx) {
-					found.push(tempFound[e]);
+				// Check if it needs to be the first child
+				if(first === true && tempFound[e] === (tempFound[e].parentNode.firstElementChild || tempFound[e].parentNode.firstChild)) {
+					// And check if it is a direct child if we need to
+					if(child === true && tempFound[e].parentNode === ctx) {
+						found.push(tempFound[e]);
+					}
+					else if(sibling === true && (tempFound[e] === ctx.nextElementSibling || tempFound[e] === ctx.nextSibling)) {
+						found.push(tempFound[e]);
+					}
+					else if(!child && !sibling) {
+						found.push(tempFound[e]);
+					}
 				}
-				else if(sibling === true && (tempFound[e] === ctx.nextElementSibling || tempFound[e] === ctx.nextSibling)) {
-					found.push(tempFound[e]);
-				}
-				else if(!child && !sibling) {
-					found.push(tempFound[e]);
+				else if(!first) {
+					// And check if it is a direct child if we need to
+					if(child === true && tempFound[e].parentNode === ctx) {
+						found.push(tempFound[e]);
+					}
+					else if(sibling === true && (tempFound[e] === ctx.nextElementSibling || tempFound[e] === ctx.nextSibling)) {
+						found.push(tempFound[e]);
+					}
+					else if(!child && !sibling) {
+						found.push(tempFound[e]);
+					}
 				}
 			}
 			
@@ -481,7 +505,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling);
+			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling, parameters.first);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -492,7 +516,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling);
+		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling, parameters.first);
 	}
 	
 	// Check if parameters is a string
