@@ -83,11 +83,11 @@ Spark.extend('find', function(parameters, context) {
 			parameters = null,
 			tempFound = null,
 			regexs = [
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]',
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\]',
-				'^([a-z0-9*]+)',
-				'^#([a-z][a-z0-9-_:]*)',
-				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)'
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)=[\'"](.*)[\'"]\\]', // Attribute comparison
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\]', // Has attribute
+				'^([a-z0-9*]+)', // Tag name comparison
+				'^#([a-z][a-z0-9-_:]*)', // ID comparison
+				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)' // Class comparison
 			],
 			finders = [];
 		
