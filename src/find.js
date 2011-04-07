@@ -88,7 +88,8 @@ Spark.extend('find', function(parameters, context) {
 				'^([a-z0-9*]+)', // Tag name comparison
 				'^#([a-z][a-z0-9-_:]*)', // ID comparison
 				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)', // Class comparison
-				'^\\[([a-z_:][\\-a-z0-9_:.]+)~=[\'"](.*)[\'"]\\]' // Whitespace seperated attribute
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)~=[\'"](.*)[\'"]\\]', // Whitespace seperated attribute
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\|=[\'"](.*)[\'"]\\]' // Beginning of attribute with optional hyphen after
 			],
 			finders = [];
 		
@@ -137,10 +138,23 @@ Spark.extend('find', function(parameters, context) {
 						}
 						
 						// Add the check
-						parameters[p].whiteSpaceAttribute[path.replace(finders[5].remove, "$1")] = path.replace(finders[5].remove, "$2").replace(/\s+/g, '').split('').join(' ');
+						parameters[p].whiteSpaceAttribute[path.replace(finders[5].remove, "$1")] = path.replace(finders[5].remove, "$2");
 						
 						// Remove the selection
 						path = path.replace(finders[5].search, '');
+					}
+					else if(path.match(finders[6].search)) {
+						// Check if element attribute begins with a string, potentially followed by a hyphen
+						// Make sure the object exists
+						if(typeof parameters[p].hyphenAttribute === 'undefined') {
+							parameters[p].hyphenAttribute = {};
+						}
+						
+						// Add the check
+						parameters[p].hyphenAttribute[path.replace(finders[6].remove, "$1")] = path.replace(finders[6].remove, "$2");
+						
+						// Remove the selection
+						path = path.replace(finders[6].search, '');
 					}
 					else if(path.match(finders[0].search)) {
 						// Check if element has attribute
@@ -262,9 +276,10 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {String|Array} compare The string or array of values to check against
 	 * @param {Boolean} tag If true, the values are converted to uppercase on comparison
 	 * @param {Boolean} space If true, the values are whitespace seperated before comparison
+	 * @param {Boolean} hyphen If true, the value must exactly match or start with followed by a hyphen
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
 	 */
-	function compareValue(value, compare, tag, space) {
+	function compareValue(value, compare, tag, space, hyphen) {
 		// Initialise any required variables
 		var i = null,
 			e = null,
@@ -331,15 +346,29 @@ Spark.extend('find', function(parameters, context) {
 						if(value.getAttribute(i) !== null) {
 							// It does, check what it is
 							if(typeof compare[i] === 'string') {
-								if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i].replace(/\s+/g, '').split('').join(' ') : compare[i])) {
-									return false;
+								if(hyphen) {
+									if(value.getAttribute(i) !== compare[i] && value.getAttribute(i).indexOf(compare[i] + '-') !== 0) {
+										return false;
+									}
+								}
+								else {
+									if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i].replace(/\s+/g, '').split('').join(' ') : compare[i])) {
+										return false;
+									}
 								}
 							}
 							else if(compare[i] instanceof Array) {
 								// It is an or statement, so we need do a special check
 								for(e = 0; e < compare[i].length; e++) {
-									if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i][e].replace(/\s+/g, '').split('').join(' ') : compare[i][e])) {
-										return false;
+									if(hyphen) {
+										if(value.getAttribute(i) !== compare[i][e] && value.getAttribute(i).indexOf(compare[i][e] + '-') !== 0) {
+											return false;
+										}
+									}
+									else {
+										if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i))!==((space) ? compare[i][e].replace(/\s+/g, '').split('').join(' ') : compare[i][e])) {
+											return false;
+										}
 									}
 								}
 							}
@@ -486,7 +515,8 @@ Spark.extend('find', function(parameters, context) {
 			compareValue(classes, parameters.classes) === true &&
 			compareValue(e.id, parameters.id) === true &&
 			compareValue(e, parameters.attribute) === true &&
-			compareValue(e, parameters.whiteSpaceAttribute, false, true)
+			compareValue(e, parameters.whiteSpaceAttribute, false, true) &&
+			compareValue(e, parameters.hyphenAttribute, false, false, true)
 			) {
 			// Add the found element to the filtered array
 			filtered.push(e);

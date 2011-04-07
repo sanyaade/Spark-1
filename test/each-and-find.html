@@ -67,7 +67,7 @@
 					<br class='clear' /> 
 
 					<footer> 
-						<p>&copy; 2011 <a href='http://flowdev.co.uk/'>Oliver Caldwell</a> &middot; <a href='/sitemap.xml'>Sitemap</a></p> 
+						<p>&copy; 2011 <a rel='foo-bar' href='http://flowdev.co.uk/'>Oliver Caldwell</a> &middot; <a href='/sitemap.xml'>Sitemap</a></p> 
 					</footer>
 				</div>
 		
@@ -87,7 +87,7 @@
 					e.style.color = '#0000FF';
 				});
 				
-				$('a[rel~="findTest"], p[rel="findTest"], a[rel="anotherFindTest"]').each(function(e) {
+				$('a[rel~="findTest"], p[rel="findTest"], a[rel="anotherFindTest"], a[rel|="foo"]').each(function(e) {
 					e.style.color = '#00FF00';
 				});
 				
