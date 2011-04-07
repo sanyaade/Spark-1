@@ -65,6 +65,26 @@ Spark.extend('find', function(parameters, context) {
 	}
 	
 	/**
+	 * Turns a node list into an array
+	 * 
+	 * @param {NodeList} list The node list you wish to be converted
+	 * @returns {Array} The array version of the NodeList
+	 */
+	function toArray(list) {
+		// Initialise any required variables
+		var i = null,
+			built = [];
+		
+		// Loop through the passed nodes adding them to the array
+		for(i = 0; i < list.length; i++) {
+			built.push(list[i]);
+		}
+		
+		// Return the found elements
+		return built;
+	}
+	
+	/**
 	 * Takes a string, breaks it down into its components and uses them to run the find function
 	 * 
 	 * @param {String} selector The selector string
@@ -253,19 +273,33 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			// So now we have an array of parameter objects
-			// Set up temp found to search with
-			tempFound = offset;
-			
-			// Loop through all of the parameter objects
-			for(p = 0; p < parameters.length; p++) {
-				// Now do the search into tempFound
-				tempFound = tempFound.find(parameters[p]);
-			}
-			
-			// When done concat these results to the found array
-			found = found.concat(tempFound.elements);
+			//if(typeof document.querySelectorAll === 'undefined') {
+				// So now we have an array of parameter objects
+				// Set up temp found to search with
+				tempFound = offset;
+				
+				// Loop through all of the parameter objects
+				for(p = 0; p < parameters.length; p++) {
+					// Now do the search into tempFound
+					tempFound = tempFound.find(parameters[p]);
+				}
+				
+				// When done concat these results to the found array
+				found = found.concat(tempFound.elements);
+			//}
 		}
+		/*
+		// Check if we can perform a querySelector all search
+		if(typeof document.querySelectorAll === 'function') {
+			if(typeof offset.elements === 'undefined') {
+				found = found.concat(toArray(document.querySelectorAll(selector)));
+			}
+			else {
+				for(i = 0; i < offset.length; i++) {
+					found = found.concat(toArray(offset[i].querySelectorAll(selector)));
+				}
+			}
+		}*/
 		
 		// Clean the array
 		found = unique(found);
@@ -406,6 +440,13 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
+	/**
+	 * Check if the element has inherited the specified lang attribute
+	 * 
+	 * @param {Array} elements A list of elements to check the lang attributes of
+	 * @param {String} lang The lang you wish to check for
+	 * @returns {Array} The array of elements that inherit the specified lang
+	 */
 	function checkLang(elements, lang) {
 		// Initialise any required variables
 		var e = null,
