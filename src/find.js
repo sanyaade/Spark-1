@@ -87,7 +87,8 @@ Spark.extend('find', function(parameters, context) {
 				'^\\[([a-z_:][\\-a-z0-9_:.]+)\\]', // Has attribute
 				'^([a-z0-9*]+)', // Tag name comparison
 				'^#([a-z][a-z0-9-_:]*)', // ID comparison
-				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)' // Class comparison
+				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)', // Class comparison
+				'^\\[([a-z_:][\\-a-z0-9_:.]+)~=[\'"](.*)[\'"]\\]' // Whitespace seperated attribute
 			],
 			finders = [];
 		
@@ -128,7 +129,20 @@ Spark.extend('find', function(parameters, context) {
 					}
 					
 					// Do the checks
-					if(path.match(finders[0].search)) {
+					if(path.match(finders[5].search)) {
+						// Check if element has whitespace seperated attribute
+						// Make sure the object exists
+						if(typeof parameters[p].whiteSpaceAttribute === 'undefined') {
+							parameters[p].whiteSpaceAttribute = {};
+						}
+						
+						// Add the check
+						parameters[p].whiteSpaceAttribute[path.replace(finders[5].remove, "$1")] = path.replace(finders[5].remove, "$2").replace(/\s+/g, '').split('').join(' ');
+						
+						// Remove the selection
+						path = path.replace(finders[5].search, '');
+					}
+					else if(path.match(finders[0].search)) {
 						// Check if element has attribute
 						// Make sure the object exists
 						if(typeof parameters[p].attribute === 'undefined') {
@@ -246,11 +260,14 @@ Spark.extend('find', function(parameters, context) {
 	 * 
 	 * @param {String|Array} value Either an ID, an array of classes or a tag name to compare
 	 * @param {String|Array} compare The string or array of values to check against
+	 * @param {Boolean} tag If true, the values are converted to uppercase on comparison
+	 * @param {Boolean} space If true, the values are whitespace seperated before comparison
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
 	 */
-	function compareValue(value, compare, tag) {
+	function compareValue(value, compare, tag, space) {
 		// Initialise any required variables
 		var i = null,
+			e = null,
 			classes = ((value instanceof Array) ? value.join(' ') : false);
 		
 		// Check what type of search we need to do
@@ -314,17 +331,16 @@ Spark.extend('find', function(parameters, context) {
 						if(value.getAttribute(i) !== null) {
 							// It does, check what it is
 							if(typeof compare[i] === 'string') {
-								if(value.getAttribute(i) !== compare[i]) {
+								if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i].replace(/\s+/g, '').split('').join(' ') : compare[i])) {
 									return false;
 								}
 							}
 							else if(compare[i] instanceof Array) {
 								// It is an or statement, so we need do a special check
-								if(compare[i].join(' ').match(new RegExp('(^| )' + value.getAttribute(i) + '($| )', 'g'))) {
-									return true;
-								}
-								else {
-									return false;
+								for(e = 0; e < compare[i].length; e++) {
+									if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i][e].replace(/\s+/g, '').split('').join(' ') : compare[i][e])) {
+										return false;
+									}
 								}
 							}
 						}
@@ -469,7 +485,8 @@ Spark.extend('find', function(parameters, context) {
 			compareValue(e.nodeName, parameters.tag, true) === true &&
 			compareValue(classes, parameters.classes) === true &&
 			compareValue(e.id, parameters.id) === true &&
-			compareValue(e, parameters.attribute) === true
+			compareValue(e, parameters.attribute) === true &&
+			compareValue(e, parameters.whiteSpaceAttribute, false, true)
 			) {
 			// Add the found element to the filtered array
 			filtered.push(e);
