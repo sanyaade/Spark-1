@@ -90,7 +90,8 @@ Spark.extend('find', function(parameters, context) {
 				'^\\.(-?[_a-z]+[_a-z0-9\\-]*)', // Class comparison
 				'^\\[([a-z_][\\-a-z0-9_]+)~=[\'"](.*)[\'"]\\]', // Whitespace seperated attribute
 				'^\\[([a-z_][\\-a-z0-9_]+)\\|=[\'"](.*)[\'"]\\]', // Beginning of attribute with optional hyphen after
-				'^:first-child' // Element must be the first child of it's parent
+				'^:first-child', // Element must be the first child of it's parent
+				'^:lang\\(([\\-a-z0-9])\\)' // Element is decendent of an element with the specified lang
 			],
 			finders = [];
 		
@@ -237,6 +238,13 @@ Spark.extend('find', function(parameters, context) {
 						
 						// Remove the selection
 						path = path.replace(finders[7].search, '');
+					}
+					else if(path.match(finders[8].search)) {
+						// First child
+						parameters[p].lang = path.replace(finders[8].remove, "$1");
+						
+						// Remove the selection
+						path = path.replace(finders[8].search, '');
 					}
 					else {
 						// If it does not match anything return false to stop endless loops
@@ -398,6 +406,22 @@ Spark.extend('find', function(parameters, context) {
 		}
 	}
 	
+	function checkLang(elements, lang) {
+		// Initialise any required variables
+		var e = null,
+			found = [],
+			i = null;
+		
+		// Loop through all the elements
+		for(i = 0; i < elements.length; i++) {
+			// Grab the current element
+			e = elements[i];
+		}
+		
+		// Return the found elements
+		return found;
+	}
+	
 	/**
 	 * Find elements from a context
 	 * 
@@ -406,9 +430,10 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Boolean} child Only find direct children
 	 * @param {Boolean} sibling Only find the next sibling element
 	 * @param {Boolean} first Only find elements that are the first child
+	 * @param {String} lang Only find elements that are under the specified lang
 	 * @returns {Array} Returns an array of the found elements
 	 */
-	function findElements(tag, ctx, child, sibling, first) {
+	function findElements(tag, ctx, child, sibling, first, lang) {
 		// Initialise any required variables
 		var tempFound = null,
 			found = [];
@@ -448,8 +473,14 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			// Return the filtered array
-			return found;
+			if(lang) {
+				// Return the filtered array
+				return checkLang(found, lang);
+			}
+			else {
+				// Return the filtered array
+				return found;
+			}
 		}
 		else if(tag instanceof Array) {
 			// Perform a looping tag search
@@ -473,8 +504,14 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			// Return the found ones
-			return found;
+			if(lang) {
+				// Return the filtered array
+				return checkLang(found, lang);
+			}
+			else {
+				// Return the filtered array
+				return found;
+			}
 		}
 		else {
 			// Default to grabbing all tags
@@ -495,8 +532,14 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			// Return the filtered array
-			return found;
+			if(lang) {
+				// Return the filtered array
+				return checkLang(found, lang);
+			}
+			else {
+				// Return the filtered array
+				return found;
+			}
 		}
 	}
 	
@@ -505,7 +548,7 @@ Spark.extend('find', function(parameters, context) {
 		// Find from the previously found
 		// Loop through the elements
 		for(i = 0; i < this.length; i++) {
-			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling, parameters.first);
+			tempFound = findElements(parameters.tag, this.elements[i], parameters.child, parameters.sibling, parameters.first, parameters.lang);
 			
 			// Loop through the elements
 			for(e = 0; e < tempFound.length; e++) {
@@ -516,7 +559,7 @@ Spark.extend('find', function(parameters, context) {
 	}
 	else {
 		// Find from scratch
-		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling, parameters.first);
+		found = findElements(parameters.tag, ctx, parameters.child, parameters.sibling, parameters.first, parameters.lang);
 	}
 	
 	// Check if parameters is a string
