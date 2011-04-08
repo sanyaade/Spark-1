@@ -57,7 +57,7 @@ Spark.extend('ajax', {
 		// Loop through the parameters appending them to the filename
 		for(p in parameters) {
 			// Make sure it is not a prototype
-			if(parameters.hasOwnProperty(p) === true) {
+			if(parameters.hasOwnProperty(p)) {
 				// Add the parameter
 				built += encodeURIComponent(p) + '=' + encodeURIComponent(parameters[p]) + '&';
 			}
@@ -117,7 +117,7 @@ Spark.extend('ajax', {
 		}
 		
 		// Open the request, if the callback is set then make it asyncronous
-		req.open('GET', file, (typeof callback === 'function') ? true : false);
+		req.open('GET', file, typeof callback === 'function');
 		
 		// Send the request
 		req.send();
@@ -154,7 +154,7 @@ Spark.extend('ajax', {
 		}
 		
 		// Open the request, if the callback is set then make it asyncronous
-		req.open('POST', file, (typeof callback === 'function') ? true : false);
+		req.open('POST', file, typeof callback === 'function');
 		
 		// Set the headers
 		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
