@@ -74,8 +74,8 @@
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				Spark.find('div.focus div.container').find('p, h2').each(function(e) {
-					e.style.color = '#FF0000';
+				Spark.find('div.focus div.container').find('p, h2').each(function() {
+					this.style.color = '#FF0000';
 				});
 				
 				Spark.find({
@@ -83,24 +83,24 @@
 					find: {
 						tag: 'p'
 					}
-				}).each(function(e) {
-					e.style.color = '#0000FF';
+				}).each(function() {
+					this.style.color = '#0000FF';
 				});
 				
-				$('a[rel~="findTest"], p[rel="findTest"], a[rel="anotherFindTest"], a[rel|="foo"]').each(function(e) {
-					e.style.color = '#00FF00';
+				$('a[rel~="findTest"], p[rel="findTest"], a[rel="anotherFindTest"], a[rel|="foo"]').each(function() {
+					this.style.color = '#00FF00';
 				});
 				
-				$('div.focus + div, h3 + p').each(function(e) {
-					e.style.border = '3px solid #000000';
+				$('div.focus + div, h3 + p').each(function() {
+					this.style.border = '3px solid #000000';
 				});
 				
-				$('li:first-child').each(function(e) {
-					e.style.textTransform = 'uppercase';
+				$('li:first-child').each(function() {
+					this.style.textTransform = 'uppercase';
 				});
 				
-				$('a:lang(en)').each(function(e) {
-					e.style.backgroundColor = '#FF0000';
+				$('a:lang(en)').each(function() {
+					this.style.backgroundColor = '#FF0000';
 				});
 			});
 		</script>
