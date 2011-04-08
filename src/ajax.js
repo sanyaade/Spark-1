@@ -27,7 +27,7 @@ Spark.extend('ajax', {
 			// Make sure it is not a prototype
 			if(parameters.hasOwnProperty(p) === true) {
 				// Add the parameter
-				built += escape(p) + '=' + escape(parameters[p]) + '&';
+				built += encodeURIComponent(p) + '=' + encodeURIComponent(parameters[p]) + '&';
 			}
 		}
 		
