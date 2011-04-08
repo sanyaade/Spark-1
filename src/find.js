@@ -65,6 +65,45 @@ Spark.extend('find', function(parameters, context) {
 	}
 	
 	/**
+	 * Splits CSS selectors with quotes in mind
+	 * 
+	 * @param {String} selector The CSS selector string (without commas, just spaces)
+	 * @returns {Array} The array of selectors
+	 */
+	function splitSelector(selector) {
+		// Initialise any required variables
+		var i = null,
+			split = [],
+			inString = false;
+		
+		// Loop through all of the characters
+		for(i = 0; i < selector.length; i++) {
+			// If we find a quote then toggle inString
+			if(selector[i] === "'" || selector[i] === '"') {
+				if(inString === true) {
+					inString = false;
+				}
+				else if(inString === false) {
+					inString = true;
+				}
+			}
+			else if(selector[i] === ' ' && inString === false) {
+				split.push(selector.substring(0, i));
+			}
+		}
+		
+		// Make sure we found something
+		if(split.length === 0) {
+			// Return the selector in an array
+			return [selector];
+		}
+		else {
+			// Return the split selector
+			return split;
+		}
+	}
+	
+	/**
 	 * Turns a node list into an array
 	 * 
 	 * @param {NodeList} list The node list you wish to be converted
@@ -126,7 +165,7 @@ Spark.extend('find', function(parameters, context) {
 		// Loop through the selectors
 		for(i = 0; i < selectors.length; i++) {
 			// Grab the paths
-			paths = selectors[i].replace(/(>|\+)/g, " $1 ").replace(/\s+(>|\+)\s+/g, " $1").split(/\s+/g);
+			paths = splitSelector(selectors[i].replace(/(>|\+)/g, " $1 ").replace(/\s+(>|\+)\s+/g, " $1"));
 			
 			// Reset the parameters
 			parameters = [];
