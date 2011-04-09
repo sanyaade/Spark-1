@@ -14,10 +14,8 @@
 				
 				alert('Set the p tags foo data to bar');
 				
-				alert('Got the p tags foo data as ' + $('p').data.get('foo'));
-				
 				$('p').data.get('foo', function(e) {
-					alert('Got the p tags foo data as ' + e + ' via a callback function');
+					alert('Got the p tags foo data as ' + e);
 				});
 			});
 		</script>
