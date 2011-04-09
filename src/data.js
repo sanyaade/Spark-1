@@ -9,7 +9,20 @@ Spark.extend('data', {
 	 * @param {Mixed} data The variable you wish to assign, it can be anything
 	 */
 	set: function(name, data) {
+		// Initialise any required variables
+		var i = null,
+			e = null;
 		
+		// Check that we have some elements to work with
+		if(typeof this.elements === 'array') {
+			// Loop through all of the elements grabbing the current one
+			for(i = 0; i < this.length; i++) {
+				e = this[i];
+			}
+		}
+		
+		// Return the Spark object for chaining
+		return this;
 	},
 	
 	/**
