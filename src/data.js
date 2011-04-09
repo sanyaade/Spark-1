@@ -1,5 +1,7 @@
 /**
  * This is used to store the keys and data
+ * 
+ * @private
  */
 Spark.extend('dataMeta', {
 	keys: [],
@@ -7,7 +9,16 @@ Spark.extend('dataMeta', {
 });
 
 /**
- * Assigns data to an element via keys
+ * The data function assigns data to the first element returned by find. It does not add anything to the actual element object but stores references in keys.
+ * To assign data to an element simply select an element and call the data function with the name and data arguments, like so.
+ * 
+ *     // You can use the Spark.find(...) or $(...)
+ *     // $ is just an alias
+ *     $('p').data('foo', 'bar');
+ * 
+ * You can retrieve that data by using the same line, just without the data you wish to assign. The function either returns the assigned data or false if something is not found.
+ * 
+ *     $('p').data('foo'); // Returns 'bar'
  * 
  * @param {String} name The name of the data you wish to get or set
  * @param {Mixed} data The data you wish to assign, if not provided then the data is returned
@@ -68,6 +79,6 @@ Spark.extend('data', function(name, data) {
 		}
 	}
 	
-	// Return false bacause there is nothing to use
+	// Return false because there is nothing to use
 	return false;
 });
