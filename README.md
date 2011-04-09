@@ -13,7 +13,9 @@ You can download it and read up on the functions from the links below.
 
 ## Building
 
-To build Spark you will need GNU make, NodeJS and Java installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
+To build Spark you will need [GNU make](http://www.gnu.org/software/make/), [NodeJS](http://nodejs.org/) and [Java](http://www.java.com/en/) installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
+
+To document Spark you will need [dox](https://github.com/visionmedia/dox) installed too.
 
 If you have all three of these then you can build Spark with the following commands.
 

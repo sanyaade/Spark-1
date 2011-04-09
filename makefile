@@ -38,12 +38,13 @@ validate:
 # Generate documentation
 document:
 	@@echo 'Documenting...'
-	@@java -jar build/jsdoc/jsrun.jar build/jsdoc/app/run.js -a -t=build/jsdoc/templates/jsdoc -d=documentation spark.js
+	@@dox src/* > documentation/index.html -t 'Spark' -d 'A lightweight yet powerful JavaScript library' -i 'documentation/introduction.md'
 	@@echo 'Done!'
 
 # Clean the files
 clean:
 	@@echo 'Cleaning...'
-	@@rm spark.js spark.min.js
-	@@rm -rf documentation
+	@@rm spark.js
+	@@rm spark.min.js
+	@@rm documentation/index.html
 	@@echo 'Done!'
