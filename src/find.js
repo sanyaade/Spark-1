@@ -80,7 +80,7 @@ Spark.extend('find', function(parameters, context) {
 		// Loop through all of the characters
 		for(i = 0; i < selector.length; i++) {
 			// If we find a quote then toggle inString
-			if(selector[i] === '\'' || selector[i] === '"') {
+			if(selector.indexOf('\'') === i || selector.indexOf('"') === i) {
 				if(inString === true) {
 					inString = false;
 				}
