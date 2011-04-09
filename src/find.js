@@ -80,7 +80,7 @@ Spark.extend('find', function(parameters, context) {
 		// Loop through all of the characters
 		for(i = 0; i < selector.length; i++) {
 			// If we find a quote then toggle inString
-			if(selector.indexOf('\'') === i || selector.indexOf('"') === i) {
+			if(selector.indexOf('\'', i) === i || selector.indexOf('"', i) === i) {
 				if(inString === true) {
 					inString = false;
 				}
@@ -88,7 +88,7 @@ Spark.extend('find', function(parameters, context) {
 					inString = true;
 				}
 			}
-			else if(selector[i] === ' ' && inString === true) {
+			else if(selector.indexOf(' ', i) === i && inString === true) {
 				// So we are in a string, we have a space, log its location
 				points.push(i);
 			}
