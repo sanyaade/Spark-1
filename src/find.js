@@ -448,8 +448,13 @@ Spark.extend('find', function(parameters, context) {
 										return false;
 									}
 								}
+								else if(space) {
+									if(value.getAttribute(i) !== compare[i] && value.getAttribute(i).indexOf(compare[i] + ' ') !== 0) {
+										return false;
+									}
+								}
 								else {
-									if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i)) !== ((space) ? compare[i].replace(/\s+/g, '').split('').join(' ') : compare[i])) {
+									if(value.getAttribute(i) !== compare[i]) {
 										return false;
 									}
 								}
@@ -462,8 +467,13 @@ Spark.extend('find', function(parameters, context) {
 											return false;
 										}
 									}
+									else if(space) {
+										if(value.getAttribute(i) !== compare[i][e] && value.getAttribute(i).indexOf(compare[i][e] + ' ') !== 0) {
+											return false;
+										}
+									}
 									else {
-										if(((space) ? value.getAttribute(i).replace(/\s+/g, '').split('').join(' ') : value.getAttribute(i))!==((space) ? compare[i][e].replace(/\s+/g, '').split('').join(' ') : compare[i][e])) {
+										if(value.getAttribute(i) !== compare[i][e]) {
 											return false;
 										}
 									}
