@@ -10,13 +10,11 @@
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				$('p').data.set('foo', 'bar');
+				$('p').data('foo', 'bar');
 				
 				alert('Set the p tags foo data to bar');
 				
-				$('p').data.get('foo', function(e) {
-					alert('Got the p tags foo data as ' + e);
-				});
+				alert('Got the p tags foo data as ' + $('p').data('foo'));
 			});
 		</script>
 	</body>
