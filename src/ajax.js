@@ -29,12 +29,12 @@
 
 /** @private */
 Spark.extend('ajax', {
-/**
- * Selects what AJAX object to use
- * 
- * @returns {Object} The correct AJAX object for this browser
- * @private
- */
+	/**
+	 * Selects what AJAX object to use
+	 * 
+	 * @returns {Object} The correct AJAX object for this browser
+	 * @private
+	 */
 	initialise: function() {
 		// Pass back the correct object
 		return (typeof XMLHttpRequest === 'undefined') ? 
@@ -42,13 +42,13 @@ Spark.extend('ajax', {
 			new XMLHttpRequest();
 	},
 	
-/**
- * Turns an object of parameters into a string
- * 
- * @param {Object} parameters An object of parameters
- * @returns {String} The combined string, ready to be appended to a filename
- * @private
- */
+	/**
+	 * Turns an object of parameters into a string
+	 * 
+	 * @param {Object} parameters An object of parameters
+	 * @returns {String} The combined string, ready to be appended to a filename
+	 * @private
+	 */
 	buildParameterString: function(parameters) {
 		// Initialise any required variables
 		var p = null,
@@ -67,13 +67,13 @@ Spark.extend('ajax', {
 		return built.slice(0, built.length - 1);
 	},
 	
-/**
- * Pass the data to the callback when the request is complete
- * 
- * @param {Object} req The AJAX request object
- * @param {Function} callback The callback function that the data should be passed to
- * @private
- */
+	/**
+	 * Pass the data to the callback when the request is complete
+	 * 
+	 * @param {Object} req The AJAX request object
+	 * @param {Function} callback The callback function that the data should be passed to
+	 * @private
+	 */
 	handleCallback: function(req, callback) {
 		// Listen for the change in state
 		req.onreadystatechange = function() {
@@ -92,14 +92,14 @@ Spark.extend('ajax', {
 		};
 	},
 	
-/**
- * Perform a get request with optional parameters either synchronously or asynchronously
- * 
- * @param {String} file Path of the target file
- * @param {Object} parameters The arguments you wish to pass to the file
- * @param {Function} callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed
- * @returns {String|Boolean} The data retrieved from the file if it is a synchronous call, returns false if it failed
- */
+    /**
+     * Perform a get request with optional parameters either synchronously or asynchronously
+     * 
+     * @param {String} file Path of the target file
+     * @param {Object} parameters The arguments you wish to pass to the file
+     * @param {Function} callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed
+     * @returns {String|Boolean} The data retrieved from the file if it is a synchronous call, returns false if it failed
+     */
 	get: function(file, parameters, callback) {
 		// Set up the AJAX object
 		var req = this.initialise();
@@ -135,14 +135,14 @@ Spark.extend('ajax', {
 		}
 	},
 	
-/**
- * Perform a post request with optional parameters either synchronously or asynchronously
- * 
- * @param {String} file Path of the target file
- * @param {Object} parameters The arguments you wish to pass to the file
- * @param {Function} callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed
- * @returns {String|Boolean} The data retrieved from the file if it is a synchronous call, returns false if it failed
- */
+    /**
+     * Perform a post request with optional parameters either synchronously or asynchronously
+     * 
+     * @param {String} file Path of the target file
+     * @param {Object} parameters The arguments you wish to pass to the file
+     * @param {Function} callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed
+     * @returns {String|Boolean} The data retrieved from the file if it is a synchronous call, returns false if it failed
+     */
 	post: function(file, parameters, callback) {
 		// Set up the AJAX object
 		var req = this.initialise();
