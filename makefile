@@ -11,7 +11,7 @@ files = ${src}core.js\
 		${src}data.js
 
 # Set the default files to be built
-default: spark.js spark.min.js validate document
+default: spark.js spark.min.js validate
 
 # Set up the develop list of files
 # Basically without the compressed version
@@ -36,7 +36,7 @@ validate:
 	@@echo 'Done!'
 
 # Generate documentation
-document: spark.js validate
+document:
 	@@echo 'Documenting...'
 	@@java -jar build/jsdoc/jsrun.jar build/jsdoc/app/run.js -a -t=build/jsdoc/templates/jsdoc -d=documentation spark.js
 	@@echo 'Done!'

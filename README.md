@@ -20,7 +20,7 @@ If you have all three of these then you can build Spark with the following comma
  * Combine source files, compress and validate - `make`
  * Combine source files and validate - `make develop`
  * Just validate the already present files - `make validate`
- * Combine source files, validate and generate documentation - `make document`
+ * Generate documentation - `make document`
  * Remove generated files - `make clean`
 
 ## Licences
