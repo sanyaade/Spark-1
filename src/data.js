@@ -1,7 +1,6 @@
 Spark.extend('data', {
 	keys: [],
 	data: [],
-	instance: this,
 	
 	/**
 	 * Get the key id for the specified element
@@ -35,14 +34,13 @@ Spark.extend('data', {
 		// Initialise any required variables
 		var i = null,
 			e = null,
-			target = null,
-			instance = this.instance;
+			target = null;
 		
 		// Check that we have some elements to work with
-		if(instance.elements instanceof Array) {
+		if(this.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
-			for(i = 0; i < instance.length; i++) {
-				e = instance[i];
+			for(i = 0; i < this.length; i++) {
+				e = this[i];
 				
 				// Search for the element
 				target = this.search(e);
@@ -62,7 +60,7 @@ Spark.extend('data', {
 		}
 		
 		// Return the Spark object for chaining
-		return instance;
+		return this;
 	},
 	
 	/**
@@ -76,14 +74,13 @@ Spark.extend('data', {
 		var i = null,
 			e = null,
 			target = null,
-			found = null,
-			instance = this.instance;
+			found = null;
 		
 		// Check that we have some elements to work with
-		if(instance.elements instanceof Array) {
+		if(this.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
-			for(i = 0; i < instance.length; i++) {
-				e = instance[i];
+			for(i = 0; i < this.length; i++) {
+				e = this[i];
 				
 				// Search for the element
 				target = this.search(e);
@@ -104,6 +101,6 @@ Spark.extend('data', {
 		}
 		
 		// Return the Spark object for chaining
-		return instance;
+		return this;
 	}
 });
