@@ -11,13 +11,38 @@ Spark.extend('data', {
 	set: function(name, data) {
 		// Initialise any required variables
 		var i = null,
-			e = null;
+			j = null,
+			e = null,
+			target = null;
 		
 		// Check that we have some elements to work with
 		if(typeof this.elements === 'array') {
 			// Loop through all of the elements grabbing the current one
 			for(i = 0; i < this.length; i++) {
 				e = this[i];
+				
+				// Start the target as false
+				target = false;
+				
+				// Loop through all of the keys checking for our element
+				for(j = 0; j < this.keys.length; j++) {
+					if(this.keys[j] === e) {
+						// Found it, set the target position
+						target = j;
+					}
+				}
+				
+				// Check if we have not found our element in the keys
+				if(target === false) {
+					// Set the target to the new location
+					target = this.keys.length;
+					
+					// Add the element to the keys
+					this.keys.push(e);
+				}
+				
+				// Assign the data
+				this.data[target] = data;
 			}
 		}
 		
