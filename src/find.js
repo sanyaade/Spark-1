@@ -27,17 +27,6 @@ Spark.extend('find', function(parameters, context) {
 			// Return the object with the adopted value
 			return built;
 		}
-		else if(parameters instanceof Array) {
-			// They passed an array, this needs to be adopted into the chain
-			for(i = 0; i < parameters.length; i++) {
-				built[i] = parameters[i];
-			}
-			
-			built.length = parameters.length;
-			
-			// Return the object with the adopted values
-			return built;
-		}
 	}
 	
 	/**
