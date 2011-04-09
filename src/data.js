@@ -42,7 +42,7 @@ Spark.extend('data', {
 				}
 				
 				// Assign the data
-				this.data[target] = data;
+				this.data[target][name] = data;
 			}
 		}
 		
@@ -55,9 +55,45 @@ Spark.extend('data', {
 	 * 
 	 * @param {String} name The name of the data you wish to retrieve
 	 * @param {Function} fn A function you wish the retrieved data to be passed to, if not found it will pass false
-	 * @returns {Mixed} Returns either the data you specified or false if you have not provided a function for the data to be passed to
 	 */
 	get: function(name, fn) {
+		// Initialise any required variables
+		var i = null,
+			j = null,
+			e = null,
+			target = null,
+			found = null;
 		
+		// Check that we have some elements to work with
+		if(typeof this.elements === 'array') {
+			// Loop through all of the elements grabbing the current one
+			for(i = 0; i < this.length; i++) {
+				e = this[i];
+				
+				// Start the target as false
+				target = false;
+				
+				// Loop through all of the keys checking for our element
+				for(j = 0; j < this.keys.length; j++) {
+					if(this.keys[j] === e) {
+						// Found it, set the target position
+						target = j;
+					}
+				}
+				
+				// Check if we have not found our element in the keys
+				if(target === false) {
+					// Prepare to pass false back to the callback
+					found = false;
+				}
+				else {
+					// We found it, so prepare to pass the found data to the callback
+					found = this.data[target][name];
+				}
+				
+				// Pass what we found to the callback
+				fn(found);
+			}
+		}
 	}
 });
