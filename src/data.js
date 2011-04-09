@@ -88,7 +88,7 @@ Spark.extend('data', {
 				}
 				else {
 					// We found it, so prepare to pass the found data to the callback
-					found = this.data[target][name];
+					found = (this.data[target][name]) ? this.data[target][name] : false;
 				}
 				
 				// Pass what we found to the callback
