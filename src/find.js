@@ -689,10 +689,10 @@ Spark.extend('find', function(parameters, context) {
 		
 		// Check if the element matches
 		if(
-			compareValue(e.nodeName, parameters.tag, true) === true &&
-			compareValue(classes, parameters.classes) === true &&
-			compareValue(e.id, parameters.id) === true &&
-			compareValue(e, parameters.attribute) === true &&
+			compareValue(e.nodeName, parameters.tag, true) &&
+			compareValue(classes, parameters.classes) &&
+			compareValue(e.id, parameters.id) &&
+			compareValue(e, parameters.attribute) &&
 			compareValue(e, parameters.whiteSpaceAttribute, false, true) &&
 			compareValue(e, parameters.hyphenAttribute, false, false, true)
 			) {
