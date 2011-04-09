@@ -1,6 +1,29 @@
 Spark.extend('data', {
 	keys: [],
 	data: [],
+	instance: this,
+	
+	/**
+	 * Get the key id for the specified element
+	 * 
+	 * @param {Object} e The element you need to search for
+	 * @returns {Boolean|Number} It will return false if not found or the key ID if successful
+	 */
+	search: function(e) {
+		// Initialise any required variables
+		var i = null;
+		
+		// Loop through all of the keys checking for our element
+		for(i = 0; i < this.keys.length; i++) {
+			if(this.keys[i] === e) {
+				// Found it, return the location
+				return i;
+			}
+		}
+		
+		// Default to returning false
+		return false;
+	},
 	
 	/**
 	 * Assigns data to the elements located in the Spark instance
@@ -11,28 +34,20 @@ Spark.extend('data', {
 	set: function(name, data) {
 		// Initialise any required variables
 		var i = null,
-			j = null,
 			e = null,
-			target = null;
+			target = null,
+			instance = this.instance;
 		
 		// Check that we have some elements to work with
-		if(this.elements instanceof Array) {
+		if(instance.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
-			for(i = 0; i < this.length; i++) {
-				e = this[i];
+			for(i = 0; i < instance.length; i++) {
+				e = instance[i];
 				
-				// Start the target as false
-				target = false;
+				// Search for the element
+				target = this.search(e);
 				
-				// Loop through all of the keys checking for our element
-				for(j = 0; j < this.keys.length; j++) {
-					if(this.keys[j] === e) {
-						// Found it, set the target position
-						target = j;
-					}
-				}
-				
-				// Check if we have not found our element in the keys
+				// Check if we have not found our element
 				if(target === false) {
 					// Set the target to the new location
 					target = this.keys.length;
@@ -47,7 +62,7 @@ Spark.extend('data', {
 		}
 		
 		// Return the Spark object for chaining
-		return this;
+		return instance;
 	},
 	
 	/**
@@ -59,27 +74,19 @@ Spark.extend('data', {
 	get: function(name, fn) {
 		// Initialise any required variables
 		var i = null,
-			j = null,
 			e = null,
 			target = null,
-			found = null;
+			found = null,
+			instance = this.instance;
 		
 		// Check that we have some elements to work with
-		if(this.elements instanceof Array) {
+		if(instance.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
-			for(i = 0; i < this.length; i++) {
-				e = this[i];
+			for(i = 0; i < instance.length; i++) {
+				e = instance[i];
 				
-				// Start the target as false
-				target = false;
-				
-				// Loop through all of the keys checking for our element
-				for(j = 0; j < this.keys.length; j++) {
-					if(this.keys[j] === e) {
-						// Found it, set the target position
-						target = j;
-					}
-				}
+				// Search for the element
+				target = this.search(e);
 				
 				// Check if we have not found our element in the keys
 				if(target === false) {
@@ -97,6 +104,6 @@ Spark.extend('data', {
 		}
 		
 		// Return the Spark object for chaining
-		return this;
+		return instance;
 	}
 });
