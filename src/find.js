@@ -1,7 +1,23 @@
 /**
- * Find elements that match the specified parameters
+ * The find function is Spark's selector engine. It supports all of the [CSS2 selectors](http://www.w3.org/TR/CSS2/selector.html) apart from the link and dynamic pseudo selectors.
+ * Say you wanted to find all p tags that where within a div, you would use the following line.
  * 
- * @param {Object} parameters The criteria the element must meet to be selected
+ *     Spark.find('div p');
+ * 
+ * You can also used the dollar alias for the find function like so.
+ * 
+ *     $('div p');
+ * 
+ * This saves a few characters and helps you distinguish lines that involve elements from ones that do not.
+ * 
+ * You can also pass a context to search within, for example.
+ * 
+ *     var el = $('div#contactForm');
+ *     $('div p', el);
+ * 
+ * The elements are placed within the Spark object. The object is then assigned a length so you can treat it as an array. There is also an array of elements located in the `elements` section of the object.
+ * 
+ * @param {String|Object} parameters The criteria the element must meet to be selected
  * @param {Object} context The place you wish to start the search from, defaults to document
  * @returns {Object} Returns the Spark object to allow chaining
  */
@@ -34,6 +50,7 @@ Spark.extend('find', function(parameters, context) {
 	 * 
 	 * @param {Array} target The target array to have duplicates remove from
 	 * @returns {Array} The cleaned array with no duplicate values
+	 * @private
 	 */
 	function unique(target) {
 		var a = [],
@@ -58,6 +75,7 @@ Spark.extend('find', function(parameters, context) {
 	 * 
 	 * @param {String} selector The CSS selector string (without commas, just spaces)
 	 * @returns {Array} The array of selectors
+	 * @private
 	 */
 	function splitSelector(selector) {
 		// Initialise any required variables
@@ -105,6 +123,7 @@ Spark.extend('find', function(parameters, context) {
 	 * 
 	 * @param {NodeList} list The node list you wish to be converted
 	 * @returns {Array} The array version of the NodeList
+	 * @private
 	 */
 	function toArray(list) {
 		// Initialise any required variables
@@ -126,6 +145,7 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {String} selector The selector string
 	 * @param {Object} offset The instance of Spark already containing elements
 	 * @returns {Object} An instance of Spark containing all of the found elements
+	 * @private
 	 */
 	function parseSelector(selector, offset) {
 		// Initialise any required variables
@@ -364,6 +384,7 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Boolean} space If true, the values are whitespace seperated before comparison
 	 * @param {Boolean} hyphen If true, the value must exactly match or start with followed by a hyphen
 	 * @returns {Boolean} Returns true if it can not be compared or if they match
+	 * @private
 	 */
 	function compareValue(value, compare, tag, space, hyphen) {
 		// Initialise any required variables
@@ -492,6 +513,7 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Array} elements A list of elements to check the lang attributes of
 	 * @param {String} lang The lang you wish to check for
 	 * @returns {Array} The array of elements that inherit the specified lang
+	 * @private
 	 */
 	function checkLang(elements, lang) {
 		// Initialise any required variables
@@ -529,6 +551,7 @@ Spark.extend('find', function(parameters, context) {
 	 * @param {Boolean} first Only find elements that are the first child
 	 * @param {String} lang Only find elements that are under the specified lang
 	 * @returns {Array} Returns an array of the found elements
+	 * @private
 	 */
 	function findElements(tag, ctx, child, sibling, first, lang) {
 		// Initialise any required variables
