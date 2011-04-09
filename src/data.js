@@ -95,5 +95,8 @@ Spark.extend('data', {
 				fn(found);
 			}
 		}
+		
+		// Return the Spark object for chaining
+		return this;
 	}
 });
