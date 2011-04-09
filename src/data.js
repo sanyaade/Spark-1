@@ -1,8 +1,17 @@
+/**
+ * This is used to store the keys and data
+ */
 Spark.extend('dataMeta', {
 	keys: [],
 	data: []
 });
 
+/**
+ * Assigns data to an element via keys
+ * 
+ * @param {String} name The name of the data you wish to get or set
+ * @param {Mixed} data The data you wish to assign, if not provided then the data is returned
+ */
 Spark.extend('data', function(name, data) {
 	// Initialise any required variables
 	var i = null,
