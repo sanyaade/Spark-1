@@ -1,0 +1,575 @@
+<html>
+	<head>
+		<title>Spark</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+		<style>body {
+    margin: 0;
+    padding: 0;
+    font: 14px/1.5 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    color: #252519;
+}
+a {
+    color: #252519;
+}
+a:hover {
+    text-decoration: underline;
+    color: #19469D;
+}
+p {
+    margin: 12px 0;
+}
+h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+table#source {
+    width: 100%;
+    border-collapse: collapse;
+}
+table#source td:first-child {
+    padding: 30px 40px 30px 40px;
+    vertical-align: top;
+}
+table#source td:first-child,
+table#source td:first-child pre {
+    width: 450px;
+}
+table#source td:last-child {
+    padding: 30px 0 30px 40px;
+    border-left: 1px solid #E5E5EE;
+    background: #F5F5FF;
+}
+table#source tr {
+    border-bottom: 1px solid #E5E5EE;
+}
+table#source tr.filename {
+    padding-top: 40px;
+    border-top: 1px solid #E5E5EE;
+}
+table#source tr.filename td:first-child {
+    text-transform: capitalize;
+}
+table#source tr.filename td:last-child {
+    font-size: 12px;
+}
+table#source tr.filename h2 {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+table#source tr.code h1,
+table#source tr.code h2,
+table#source tr.code h3 {
+    margin-top: 30px;
+    font-family: "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
+    font-size: 18px;
+}
+table#source tr.code h2 {
+    font-size: 16px;
+}
+table#source tr.code h3 {
+    font-size: 14px;
+}
+table#source tr.code ul {
+    margin: 15px 0 15px 35px;
+    padding: 0;
+}
+table#source tr.code ul li {
+    margin: 0;
+    padding: 1px 0;
+}
+table#source tr.code ul li p {
+    margin: 0;
+    padding: 0;
+}
+table#source tr.code td:first-child pre {
+    padding: 20px;
+}
+#ribbon {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+code .string { color: #219161; }
+code .regexp { color: #219161; }
+code .keyword { color: #954121; }
+code .number { color: #19469D; }
+code .comment { color: #bbb; }
+code .this { color: #19469D; }</style>
+		<script>
+			$(function(){
+				$('tr.code').hide();
+				$('tr.filename').toggle(function(){
+					$(this).nextUntil('.filename').fadeIn();
+				}, function(){
+					$(this).nextUntil('.filename').fadeOut();
+				});
+			});
+		</script>
+	</head>
+	<body>
+<table id="source"><tbody><tr><td><h1>Spark</h1><p><a href="http://sparkjs.co.uk/">Spark</a> is a lightweight JavaScript library written by <a href="http://flowdev.co.uk/">Oliver Caldwell</a>. The repository is located on GitHub at <a href="https://github.com/SparkJS/Spark">SparkJS/Spark</a>.</p>
+
+<p>Below you will find documentation for all of the functions.</p></td><td></td></tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
+<td class="docs">
+<p>The AJAX object contains two functions, <code>get</code> and <code>post</code>.
+You can call these functions like so.</p>
+
+<pre><code>Spark.ajax.get('foo.json');
+Spark.ajax.post('foo.json');</code></pre>
+
+<p>The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so.</p>
+
+<pre><code>Spark.ajax.post('foo.json', false, function(data) {
+    console.log(data);
+});</code></pre>
+
+<p>The argument passed to the callback, in this case data, contains the data retrieved from the specified file. If the request failed then the passed variable will be false. The same goes for synchronous requests, if the request fails, it will return false.</p>
+
+<p>The second argument is for the parameters, if false no parameters will be sent. Here is an example of getting a file asynchronously with a parameter and a check to make sure the request worked.</p>
+
+<pre><code>Spark.ajax.get('foo.json', {
+    foo: 'bar'
+}, function(data) {
+    if(data) {
+        console.log(data);
+    }
+    else {
+        console.log('An error occurred.');
+    }
+});</code></pre>
+
+<p> </p>
+</td>
+<td class="code">
+
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Perform a get request with optional parameters either synchronously or asynchronously</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">get</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
+		<span class="comment">// Set up the AJAX object</span>
+		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
+		
+		<span class="comment">// Make sure parameters is an object</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span> === <span class="string">'object'</span>) {
+			<span class="comment">// Add the parameters to the file name</span>
+			<span class="variable">file</span> += <span class="string">'?'</span> + <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
+		}
+		
+		<span class="comment">// Check for the callback</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
+			<span class="comment">// It exists, so pass it to the callback handling function</span>
+			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
+		}
+		
+		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'GET'</span>, <span class="variable">file</span>, (<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) ? <span class="variable">true</span> : <span class="variable">false</span>);
+		
+		<span class="comment">// Send the request</span>
+		<span class="variable">req</span>.<span class="variable">send</span>();
+		
+		<span class="comment">// Check if the callback has not been passed</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'undefined'</span>) {
+			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
+				<span class="comment">// Just return the content because it was a syncronous request</span>
+				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// There was an error so return false</span>
+				<span class="keyword">return</span> <span class="variable">false</span>;
+			}
+		}
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Perform a post request with optional parameters either synchronously or asynchronously</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">post</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
+		<span class="comment">// Set up the AJAX object</span>
+		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
+		
+		<span class="comment">// Check for the callback</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
+			<span class="comment">// It exists, so pass it to the callback handling function</span>
+			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
+		}
+		
+		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'POST'</span>, <span class="variable">file</span>, (<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) ? <span class="variable">true</span> : <span class="variable">false</span>);
+		
+		<span class="comment">// Set the headers</span>
+		<span class="variable">req</span>.<span class="variable">setRequestHeader</span>(<span class="string">'Content-type'</span>, <span class="string">'application/x-www-form-urlencoded'</span>);
+		
+		<span class="comment">// Only send the data if it is set</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span> === <span class="string">'object'</span>) {
+			<span class="variable">req</span>.<span class="variable">send</span>(<span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>));
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">req</span>.<span class="variable">send</span>();
+		}
+		
+		<span class="comment">// Check if the callback has not been passed</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'undefined'</span>) {
+			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
+				<span class="comment">// Just return the content because it was a syncronous request</span>
+				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// There was an error so return false</span>
+				<span class="keyword">return</span> <span class="variable">false</span>;
+			}
+		}
+	}
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/cookie.js"><a href="#">cookie</a></h2></td><td>src/cookie.js</td></tr><tr class="code">
+<td class="docs">
+<p>The cookie function is used to set or get cookies. To get the contents of a cookie simply call the function and provide the name of the cookie you wish to get the contents of. For example.</p>
+
+<pre><code>// Returns the content of the cookie 'foo'
+Spark.cookie('foo');</code></pre>
+
+<p>To set a cookie you just have to pass some content along with a name, like so.</p>
+
+<pre><code>// Sets the cookie 'foo' to 'bar'
+Spark.cookie('foo', 'bar');</code></pre>
+
+<p>You can also provide an optional duration which is how long the cookie should last for in milliseconds. If you do not provide a duration it will expire when the session ends. Say you wanted to set the previous cookie and make it last for five seconds, you would use the following line.</p>
+
+<pre><code>// Sets a cookie that lasts five seconds
+Spark.cookie('foo', 'bar', 5000);</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the cookie you wish to get or set</p></li><li><p><strong>param</strong>: <em>String</em>  content If passed the cookie will be set with this as it's content</p></li><li><p><strong>param</strong>: <em>Number</em>  duration The amount of milliseconds you wish the cookie to last for, if not set then it will last for the session</p></li><li><p><strong>returns</strong>: <em>String</em>  The content of the cookie who's name you specified</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'cookie'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">content</span>, <span class="variable">duration</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">cookies</span> = <span class="variable">document</span>.<span class="variable">cookie</span>.<span class="variable">split</span>(<span class="string">';'</span>),
+		<span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">cookie</span> = <span class="keyword">null</span>,
+		<span class="variable">date</span> = <span class="keyword">new</span> <span class="class">Date</span>();
+	
+	<span class="comment">// Check if we need to get or set</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">content</span> === <span class="string">'undefined'</span>) {
+		<span class="comment">// Get the cookie</span>
+		<span class="comment">// Loop through all the cookies</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="variable">cookies</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+			<span class="comment">// Grab the current cookie and trim any whitespace</span>
+			<span class="variable">cookie</span> = <span class="variable">cookies</span>[<span class="variable">i</span>].<span class="variable">replace</span>(<span class="regexp">/^\s+/g</span>, <span class="string">''</span>);
+			
+			<span class="comment">// Check if the cookie contains the name</span>
+			<span class="keyword">if</span>(<span class="variable">cookie</span>.<span class="variable">indexOf</span>(<span class="variable">name</span> + <span class="string">'='</span>) === <span class="number integer">0</span>) {
+				<span class="keyword">return</span> <span class="variable">cookie</span>.<span class="variable">substring</span>(<span class="variable">name</span>.<span class="variable">length</span> + <span class="number integer">1</span>, <span class="variable">cookie</span>.<span class="variable">length</span>);
+			}
+		}
+		
+		<span class="comment">// Return false if we did not find it</span>
+		<span class="keyword">return</span> <span class="variable">false</span>;
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Set the cookie</span>
+		<span class="comment">// Check for a passed duration</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">duration</span> !== <span class="string">'undefined'</span>) {
+			<span class="comment">// Add on the duration</span>
+			<span class="variable">date</span>.<span class="variable">setTime</span>(<span class="variable">date</span>.<span class="variable">getTime</span>() + <span class="variable">duration</span>);
+			<span class="variable">expires</span> = <span class="string">'; expires='</span> + <span class="variable">date</span>.<span class="variable">toGMTString</span>();
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Otherwise set the expires to nothing</span>
+			<span class="variable">expires</span> = <span class="string">''</span>;
+		}
+		
+		<span class="comment">// Set the cookie</span>
+		<span class="variable">document</span>.<span class="variable">cookie</span> = <span class="variable">name</span> + <span class="string">'='</span> + <span class="variable">escape</span>(<span class="variable">content</span>) + <span class="variable">expires</span> + <span class="string">'; path=/'</span>;
+	}
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/core.js"><a href="#">core</a></h2></td><td>src/core.js</td></tr><tr class="code">
+<td class="docs">
+<p>Adds a variable to Spark's prototype.
+This is used to extend Spark with plugins.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name Name you wish to add your variable under</p></li><li><p><strong>param</strong>: <em>toAdd</em>
+Variable you wish to add
+ </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">prototype</span>.<span class="variable">extend</span> = <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">toAdd</span>) {
+		<span class="comment">// Add the object</span>
+		<span class="class">Spark</span>.<span class="variable">prototype</span>[<span class="variable">name</span>] = <span class="variable">toAdd</span>;
+	};</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Create a clone of the object. This should be done when anything is being stored in it for chaining.
+Otherwise added variables will be there for ever.
+This way they only exist within that chain.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>returns</strong>: <em>Object</em>  The copy of the object</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">prototype</span>.<span class="variable">clone</span> = <span class="keyword">function</span>() {
+		<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Spark</span>();
+	};</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/data.js"><a href="#">data</a></h2></td><td>src/data.js</td></tr><tr class="code">
+<td class="docs">
+<p>The data function assigns data to the first element returned by find. It does not add anything to the actual element object but stores references in keys.
+To assign data to an element simply select an element and call the data function with the name and data arguments, like so.</p>
+
+<pre><code>// You can use the Spark.find(...) or $(...)
+// $ is just an alias
+$('p').data('foo', 'bar');</code></pre>
+
+<p>You can retrieve that data by using the same line, just without the data you wish to assign. The function either returns the assigned data or false if something is not found.</p>
+
+<pre><code>$('p').data('foo'); // Returns 'bar'</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the data you wish to get or set</p></li><li><p><strong>param</strong>: <em>Mixed</em>  data The data you wish to assign, if not provided then the data is returned</p></li><li><p><strong>returns</strong>: <em>Mixed</em>  If it fails, it will return false, if it succeeds it will return true. If it succeeds in finding data it will return that data</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'data'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">data</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">e</span> = <span class="keyword">null</span>,
+		<span class="variable">target</span> = <span class="keyword">null</span>,
+		<span class="variable">found</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check that we have an element to work with</span>
+	<span class="keyword">if</span>(<span class="this">this</span>.<span class="variable">elements</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">elements</span>[<span class="number integer">0</span>] === <span class="string">'object'</span>) {
+			<span class="comment">// Grab the element</span>
+			<span class="variable">e</span> = <span class="this">this</span>.<span class="variable">elements</span>[<span class="number integer">0</span>];
+			
+			<span class="comment">// Start the target as false</span>
+			<span class="variable">target</span> = <span class="variable">false</span>;
+			
+			<span class="comment">// Loop through all of the keys checking for our element</span>
+			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+				<span class="keyword">if</span>(<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>[<span class="variable">i</span>] === <span class="variable">e</span>) {
+					<span class="comment">// Found it, assign it to the target</span>
+					<span class="variable">target</span> = <span class="variable">i</span>;
+				}
+			}
+			
+			<span class="comment">// Check if data was passed</span>
+			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">data</span> !== <span class="string">'undefined'</span>) {
+				<span class="comment">// We have data</span>
+				<span class="comment">// Check if we found an element</span>
+				<span class="keyword">if</span>(<span class="variable">target</span> === <span class="variable">false</span>) {
+					<span class="comment">// We did not, create it and set the target</span>
+					<span class="variable">target</span> = <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">length</span>;
+					<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">push</span>(<span class="variable">e</span>);
+					<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>.<span class="variable">push</span>({});
+				}
+				
+				<span class="comment">// Assign the data</span>
+				<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>] = <span class="variable">data</span>;
+				
+				<span class="comment">// Return true because it worked</span>
+				<span class="keyword">return</span> <span class="variable">true</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// We do not have data</span>
+				<span class="comment">// Check if we found an element</span>
+				<span class="keyword">if</span>(<span class="variable">target</span> === <span class="variable">false</span>) {
+					<span class="comment">// We did not, return false</span>
+					<span class="keyword">return</span> <span class="variable">false</span>;
+				}
+				
+				<span class="comment">// We now return the found data</span>
+				<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>];
+			}
+		}
+	}
+	
+	<span class="comment">// Return false because there is nothing to use</span>
+	<span class="keyword">return</span> <span class="variable">false</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/each.js"><a href="#">each</a></h2></td><td>src/each.js</td></tr><tr class="code">
+<td class="docs">
+<p>Loops through all of the elements contained in the Spark object passing them to a specified callback function.
+You can also pass an array or object as the second argument and it will loop through that instead.</p>
+
+<p>This basically handles looping for you, if you pass it an object then it will perform a <code>hasOwnProperty</code> check before passing it to your callback function.</p>
+
+<p>To loop through all of the p tags on the page and turn them red, you would use the following code.</p>
+
+<pre><code>$('p').each(function(e) {
+    e.style.color = '#FF0000';
+});</code></pre>
+
+<p>To loop through an array or object you just pass the variable in question to the each function as the second argument. Here is an example of passing an array.</p>
+
+<pre><code>Spark.each(function(e) {
+    console.log(e);
+}, ['hello', 'world']);</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Function</em>  fn Function for the current element to be passed to</p></li><li><p><strong>param</strong>: <em>Array | Object</em>  data Optional data to be looped over, if not passed then it uses the elements</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'each'</span>, <span class="keyword">function</span>(<span class="variable">fn</span>, <span class="variable">data</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">target</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check if there is any data</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">data</span> === <span class="string">'undefined'</span>) {
+		<span class="comment">// Theres no data, check for elements</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">elements</span> === <span class="string">'undefined'</span>) {
+			<span class="comment">// There is nothing to use, return false</span>
+			<span class="keyword">return</span> <span class="variable">false</span>;
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// There are some elelements, assign it to target</span>
+			<span class="variable">target</span> = <span class="this">this</span>.<span class="variable">elements</span>;
+		}
+	}
+	<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">data</span> === <span class="string">'object'</span>) {
+		<span class="comment">// We have data! Assign it to target</span>
+		<span class="variable">target</span> = <span class="variable">data</span>;
+	}
+	
+	<span class="comment">// Check if target is an array or object</span>
+	<span class="keyword">if</span>(<span class="variable">target</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+		<span class="comment">// Loop through as an array</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="variable">target</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+			<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>]);
+		}
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Loop through as an object</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> <span class="keyword">in</span> <span class="variable">target</span>) {
+			<span class="keyword">if</span>(<span class="variable">target</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">i</span>) === <span class="variable">true</span>) {
+				<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>]);
+			}
+		}
+	}
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/find.js"><a href="#">find</a></h2></td><td>src/find.js</td></tr><tr class="code">
+<td class="docs">
+<p>The find function is Spark's selector engine. It supports all of the <a href="http://www.w3.org/TR/CSS2/selector.html">CSS2 selectors</a> apart from the link and dynamic pseudo selectors.
+Say you wanted to find all p tags that where within a div, you would use the following line.</p>
+
+<pre><code>Spark.find('div p');</code></pre>
+
+<p>You can also used the dollar alias for the find function like so.</p>
+
+<pre><code>$('div p');</code></pre>
+
+<p>This saves a few characters and helps you distinguish lines that involve elements from ones that do not.</p>
+
+<p>You can also pass a context to search within, for example.</p>
+
+<pre><code>var el = $('div#contactForm');
+$('div p', el);</code></pre>
+
+<p>The elements are placed within the Spark object. The object is then assigned a length so you can treat it as an array. There is also an array of elements located in the <code>elements</code> section of the object.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  parameters The criteria the element must meet to be selected</p></li><li><p><strong>param</strong>: <em>Object</em>  context The place you wish to start the search from, defaults to document</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object to allow chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'find'</span>, <span class="keyword">function</span>(<span class="variable">parameters</span>, <span class="variable">context</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">found</span> = [],
+		<span class="variable">filtered</span> = [],
+		<span class="variable">ctx</span> = (<span class="keyword">typeof</span> <span class="variable">context</span> !== <span class="string">'undefined'</span>) ? <span class="variable">context</span> : <span class="variable">document</span>,
+		<span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">e</span> = <span class="keyword">null</span>,
+		<span class="variable">tempFound</span> = <span class="keyword">null</span>,
+		<span class="variable">classes</span> = <span class="keyword">null</span>,
+		<span class="variable">built</span> = <span class="this">this</span>.<span class="variable">clone</span>();
+	
+	<span class="comment">// Check if parameters is not an actual search object</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span> === <span class="string">'object'</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span>.<span class="variable">nodeName</span> === <span class="string">'string'</span>) {
+			<span class="comment">// They passed an element, this needs to be adopted into the chain</span>
+			<span class="variable">built</span>[<span class="number integer">0</span>] = <span class="variable">parameters</span>;
+			<span class="variable">built</span>.<span class="variable">elements</span> = [<span class="variable">parameters</span>];
+			<span class="variable">built</span>.<span class="variable">length</span> = <span class="number integer">1</span>;
+			
+			<span class="comment">// Return the object with the adopted value</span>
+			<span class="keyword">return</span> <span class="variable">built</span>;
+		}
+	}</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/ready.js"><a href="#">ready</a></h2></td><td>src/ready.js</td></tr><tr class="code">
+<td class="docs">
+<p>Runs the specified function when the DOM is ready. This is the staple diet of any script using Spark.
+For best results across all browsers always wrap your code within the ready function like so.</p>
+
+<pre><code>Spark.ready(function() {
+    // Your code goes here
+});</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Function</em>  fn Function to be run when the DOM is ready</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'ready'</span>, <span class="keyword">function</span>(<span class="variable">fn</span>) {
+	<span class="comment">// Check if we can use addEventListener</span>
+	<span class="keyword">if</span>(<span class="variable">window</span>.<span class="variable">addEventListener</span>) {
+		<span class="comment">// For all browsers except IE</span>
+		<span class="variable">document</span>.<span class="variable">addEventListener</span>(<span class="string">'DOMContentLoaded'</span>, <span class="variable">fn</span>, <span class="variable">false</span>);
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// For IE</span>
+		(<span class="keyword">function</span>(){
+			<span class="comment">// Create the custom tag</span>
+			<span class="keyword">var</span> <span class="variable">tempNode</span> = <span class="variable">document</span>.<span class="variable">createElement</span>(<span class="string">'document:ready'</span>);
+			
+			<span class="keyword">try</span> {
+				<span class="comment">// See if it throws errors until after it is ready</span>
+				<span class="variable">tempNode</span>.<span class="variable">doScroll</span>(<span class="string">'left'</span>);
+				
+				<span class="comment">// Call the function</span>
+				<span class="variable">fn</span>();
+			}
+			<span class="keyword">catch</span>(<span class="variable">err</span>) {
+				<span class="variable">setTimeout</span>(<span class="variable">arguments</span>.<span class="variable">callee</span>, <span class="number integer">0</span>);
+			}
+		})();
+	}
+});
+</code></pre>
+</td>
+</tr>	</body>
+</html></tbody></table>
