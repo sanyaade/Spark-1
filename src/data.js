@@ -49,6 +49,9 @@ Spark.extend('data', function(name, data) {
 				
 				// Assign the data
 				this.dataMeta.data[target][name] = data;
+				
+				// Return true because it worked
+				return true;
 			}
 			else {
 				// We do not have data
