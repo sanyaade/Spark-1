@@ -16,7 +16,7 @@ Spark.extend('data', {
 			target = null;
 		
 		// Check that we have some elements to work with
-		if(typeof this.elements === 'array') {
+		if(this.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
 			for(i = 0; i < this.length; i++) {
 				e = this[i];
@@ -65,7 +65,7 @@ Spark.extend('data', {
 			found = null;
 		
 		// Check that we have some elements to work with
-		if(typeof this.elements === 'array') {
+		if(this.elements instanceof Array) {
 			// Loop through all of the elements grabbing the current one
 			for(i = 0; i < this.length; i++) {
 				e = this[i];
