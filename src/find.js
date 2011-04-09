@@ -74,12 +74,13 @@ Spark.extend('find', function(parameters, context) {
 		// Initialise any required variables
 		var i = null,
 			split = [],
+			points = [],
 			inString = false;
 		
 		// Loop through all of the characters
 		for(i = 0; i < selector.length; i++) {
 			// If we find a quote then toggle inString
-			if(selector[i] === "'" || selector[i] === '"') {
+			if(selector[i] === '\'' || selector[i] === '"') {
 				if(inString === true) {
 					inString = false;
 				}
@@ -87,20 +88,27 @@ Spark.extend('find', function(parameters, context) {
 					inString = true;
 				}
 			}
-			else if(selector[i] === ' ' && inString === false) {
-				split.push(selector.substring(0, i));
+			else if(selector[i] === ' ' && inString === true) {
+				// So we are in a string, we have a space, log its location
+				points.push(i);
 			}
 		}
 		
-		// Make sure we found something
-		if(split.length === 0) {
-			// Return the selector in an array
-			return [selector];
+		// Loop through all the points replacing the spaces
+		for(i = 0; i < points.length; i++) {
+			selector = selector.substr(0, points[i] + i) + '\\s' + selector.substr(points[i] + 1 + i);
 		}
-		else {
-			// Return the split selector
-			return split;
+		
+		// Split the string
+		split = selector.split(/\s+/g);
+		
+		// Loop through the split unescaping the string
+		for(i = 0; i < split.length; i++) {
+			split[i] = split[i].replace(/\\s/g, ' ');
 		}
+		
+		// Return the split selector
+		return split;
 	}
 	
 	/**
