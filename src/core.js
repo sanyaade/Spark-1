@@ -1,5 +1,5 @@
 /**
- * @preserve Spark JavaScript Library v3.0.0
+ * @private @preserve Spark JavaScript Library v3.0.0
  * http://sparkjs.co.uk/
  * 
  * Copyright 2011, Oliver Caldwell
@@ -11,7 +11,8 @@
 	function Spark(){}
 	
     /**
-     * Adds a variable to Spark's prototype
+     * Adds a variable to Spark's prototype.
+     * This is used to extend Spark with plugins.
      * 
      * @param {String} name Name you wish to add your variable under
      * @param toAdd Variable you wish to add
@@ -24,7 +25,7 @@
     /**
      * Create a clone of the object. This should be done when anything is being stored in it for chaining.
      * Otherwise added variables will be there for ever.
-     * This way they only exist within that chain
+     * This way they only exist within that chain.
      * 
      * @returns {Object} The copy of the object
      */
@@ -32,6 +33,7 @@
 		return new Spark();
 	};
 	
+	/** @private */
 	// Expose the object
 	window.Spark = new Spark();
 	
