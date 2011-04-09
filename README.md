@@ -15,6 +15,12 @@ You can download it and read up on the functions from the links below.
 
 To build Spark you will need GNU make, NodeJS and Java installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
 
+If you have all three of these then you can build Spark with the following commands.
+
+ * Combine source files, compress and validate with JSHint - `make`
+ * Combine source files and validate with JSHint - `make develop`
+ * Just validate the already present `spark.js` - `make validate`
+
 ## Licences
 
 ### MIT
