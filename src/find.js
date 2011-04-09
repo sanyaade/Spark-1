@@ -320,7 +320,7 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			//if(typeof document.querySelectorAll === 'undefined') {
+			if(typeof document.querySelectorAll === 'undefined') {
 				// So now we have an array of parameter objects
 				// Set up temp found to search with
 				tempFound = offset;
@@ -333,20 +333,20 @@ Spark.extend('find', function(parameters, context) {
 				
 				// When done concat these results to the found array
 				found = found.concat(tempFound.elements);
-			//}
+			}
 		}
-		/*
+		
 		// Check if we can perform a querySelector all search
-		if(typeof document.querySelectorAll === 'function') {
+		if(typeof document.querySelectorAll !== 'undefined') {
 			if(typeof offset.elements === 'undefined') {
-				found = found.concat(toArray(document.querySelectorAll(selector)));
+				found = toArray(document.querySelectorAll(selector));
 			}
 			else {
 				for(i = 0; i < offset.length; i++) {
-					found = found.concat(toArray(offset[i].querySelectorAll(selector)));
+					found = toArray(offset[i].querySelectorAll(selector));
 				}
 			}
-		}*/
+		}
 		
 		// Clean the array
 		found = unique(found);
