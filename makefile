@@ -38,7 +38,7 @@ validate:
 # Generate documentation
 document:
 	@@echo 'Documenting...'
-	@@dox src/* > documentation/index.html -t 'Spark' -d 'A lightweight yet powerful JavaScript library' -i 'documentation/introduction.md'
+	@@dox src/* > documentation/index.html -t 'Spark' -i 'documentation/introduction.md'
 	@@echo 'Done!'
 
 # Clean the files
