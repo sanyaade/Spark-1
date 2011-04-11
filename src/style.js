@@ -26,18 +26,36 @@ Spark.extend('style', function(name, value) {
 	var i = null,
 		n = null;
 	
+	/**
+	 * Turns a hyphen seperated style name into a camel case one
+	 * 
+	 * @param {String} style The style name to convert
+	 * @returns {String} The camel case version of the string
+	 * @private
+	 */
+	function camelStyle(style) {
+		// Check if we need to camel case
+		if(style.indexOf('-') !== -1) {
+			// Return the camel cased string
+			return style.replace(/-([a-z])/gi, function(s, g1) { return g1.toUpperCase(); });
+		}
+		
+		// Default to returning the string back just as it was
+		return style;
+	}
+	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
 		if(typeof value === 'string') {
 			// Loop through all elements and assign the style
 			for(i = 0; i < this.length; i++) {
-				this[i].style[name] = value;
+				this[i].style[camelStyle(name)] = value;
 			}
 		}
 		else {
 			// Get the style
-			return this[0].style[name];
+			return this[0].style[camelStyle(name)];
 		}
 	}
 	else if(typeof name === 'object') {
@@ -47,7 +65,7 @@ Spark.extend('style', function(name, value) {
 			if(name.hasOwnProperty(n)) {
 				// Loop through all elements and assign the style
 				for(i = 0; i < this.length; i++) {
-					this[i].style[n] = name[n];
+					this[i].style[camelStyle(n)] = name[n];
 				}
 			}
 		}
