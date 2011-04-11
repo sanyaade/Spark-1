@@ -5,7 +5,7 @@
  * 
  *     var parsed = Spark.json.parse(json);
  * 
- * This will then return what ever is contained in the JSON string. If the string is invalid then it will return false.
+ * This will then return what ever is contained in the JSON string. If the string is invalid then it will throw an `Invalid JSON` syntax error.
  * 
  * To turn the parsed data back into a JSON string you can use the following line.
  * 
