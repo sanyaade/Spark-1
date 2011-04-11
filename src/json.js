@@ -1,12 +1,20 @@
 /**
- * The JSON object can strigify or parse JSON.
+ * The JSON object can stringify or parse JSON.
  */
 
 /** @private */
 Spark.extend('json', {
+    /**
+     * Checks that the string is valid JSON and then parses it
+     * 
+     * @param {String} json The JSON string that you want to parse
+     * @returns {Mixed|Boolean} Will return the parsed data on success or false on failure
+     */
 	parse: function(json) {
 		// Check that the JSON string is okay
-		if(/^[\],:{}\s]*$/.test(json.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+		if(/^[\],:{}\s]*$/.test(json.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+			.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+			.replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 			// It is, parse and return
 		    return eval('(' + json + ')');
 		}
@@ -16,6 +24,12 @@ Spark.extend('json', {
 		}
 	},
 	
+    /**
+     * Checks that the string is valid JSON and then parses it
+     * 
+     * @param {String} json The JSON string that you want to parse
+     * @returns {Mixed|Boolean} Will return the parsed data on success or false on failure
+     */
 	stringify: function(data, key) {
 		// Initialise any required variables
 		var i = null,
