@@ -38,13 +38,19 @@ Spark.extend('data', function(name, data) {
 			e = this.elements[0];
 			
 			// Start the target as false
-			target = false;
+			target = -1;
 			
-			// Loop through all of the keys checking for our element
-			for(i = 0; i < this.dataMeta.keys.length; i++) {
-				if(this.dataMeta.keys[i] === e) {
-					// Found it, assign it to the target
-					target = i;
+			// Check if we can use indexOf
+			if(typeof this.dataMeta.keys.indexOf !== 'undefined') {
+				target = this.dataMeta.keys.indexOf(e);
+			}
+			else {
+				// Loop through all of the keys checking for our element
+				for(i = 0; i < this.dataMeta.keys.length; i++) {
+					if(this.dataMeta.keys[i] === e) {
+						// Found it, assign it to the target
+						target = i;
+					}
 				}
 			}
 			
@@ -52,7 +58,7 @@ Spark.extend('data', function(name, data) {
 			if(typeof data !== 'undefined') {
 				// We have data
 				// Check if we found an element
-				if(target === false) {
+				if(target === -1) {
 					// We did not, create it and set the target
 					target = this.dataMeta.keys.length;
 					this.dataMeta.keys.push(e);
@@ -68,7 +74,7 @@ Spark.extend('data', function(name, data) {
 			else {
 				// We do not have data
 				// Check if we found an element
-				if(target === false) {
+				if(target === -1) {
 					// We did not, return false
 					return false;
 				}
