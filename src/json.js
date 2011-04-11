@@ -3,6 +3,12 @@
  */
 
 /** @private */
-Spark.extend('json', function(name, value) {
-	
+Spark.extend('json', {
+	parse: function(json) {
+		// Check that the JSON string is okay
+		if(/^[\],:{}\s]*$/.test(json.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+			// It is, parse and return
+		    return eval('(' + text + ')');
+		}
+	}
 });
