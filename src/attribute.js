@@ -23,7 +23,7 @@
 Spark.extend('attribute', function(name, value) {
 	// Initialise any required variables
 	var i = null,
-		e = null;
+		n = null;
 	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
@@ -40,7 +40,16 @@ Spark.extend('attribute', function(name, value) {
 		}
 	}
 	else if(typeof name === 'object') {
-		// Loop through the object assigning the attributes
+		// Loop through all the attributes
+		for(n in name) {
+			// Check that it is not a prototype
+			if(name.hasOwnProperty(n)) {
+				// Loop through all elements and assign the attribute
+				for(i = 0; i < this.length; i++) {
+					this[i].setAttribute(n, name[n]);
+				}
+			}
+		}
 	}
 	
 	// Return the Spark object to allow chaining
