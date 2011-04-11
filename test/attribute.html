@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	</head>
+	
+	<body>
+		<p class='person'>Hello, World!</p>
+		
+		<p class='world'>Oh hi there!</p>
+		
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			Spark.ready(function() {
+				$('p.person').attribute('title', 'Person');
+				
+				$('p.world').attribute({
+					title: 'World',
+					rel: 'Response'
+				});
+				
+				alert('Person: Title = ' + $('p.person').attribute('title'));
+				alert('World: Title = ' + $('p.world').attribute('title'));
+				alert('World: Rel = ' + $('p.world').attribute('rel'));
+			});
+		</script>
+	</body>
+</html>
