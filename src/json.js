@@ -1,5 +1,15 @@
 /**
  * The JSON object can stringify or parse JSON.
+ * 
+ * To parse a JSON string back into its respective object / array / string etc, simply use the following line. Where `json` equals your JSON string.
+ * 
+ *     var parsed = Spark.json.parse(json);
+ * 
+ * This will then return what ever is contained in the JSON string. If the string is invalid then it will return false.
+ * 
+ * To turn the parsed data back into a JSON string you can use the following line.
+ * 
+ *     Spark.json.stringify(parsed);
  */
 
 /** @private */
@@ -25,10 +35,11 @@ Spark.extend('json', {
 	},
 	
     /**
-     * Checks that the string is valid JSON and then parses it
+     * Turns a mixed variable into a JSON string
      * 
-     * @param {String} json The JSON string that you want to parse
-     * @returns {Mixed|Boolean} Will return the parsed data on success or false on failure
+     * @param {Mixed} data The mixed variable to encode
+     * @param {String} key An optional key for encoding objects, used internally
+     * @returns {String} The JSON string
      */
 	stringify: function(data, key) {
 		// Initialise any required variables
