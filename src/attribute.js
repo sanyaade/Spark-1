@@ -33,6 +33,7 @@ Spark.extend('attribute', function(name, value) {
 		}
 		else {
 			// Get the attribute
+			return this[0].getAttribute(name);
 		}
 	}
 	else if(typeof name === 'object') {
