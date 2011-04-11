@@ -19,6 +19,7 @@
  * 
  * @param {String|Object} name Either an object of attributes or the name of the required attribute
  * @param {String} value The value to assign to the name if you passed a string, if not passed then it returns the value of the previous name
+ * @returns {Object|String} If you are setting it will return the Spark object for chaining, if you are getting then it will return the retrieved value
  */
 Spark.extend('attribute', function(name, value) {
 	// Initialise any required variables
