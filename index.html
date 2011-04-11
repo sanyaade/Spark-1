@@ -171,7 +171,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		}
 		
 		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
-		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'GET'</span>, <span class="variable">file</span>, (<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) ? <span class="variable">true</span> : <span class="variable">false</span>);
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'GET'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
 		
 		<span class="comment">// Send the request</span>
 		<span class="variable">req</span>.<span class="variable">send</span>();
@@ -210,7 +210,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		}
 		
 		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
-		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'POST'</span>, <span class="variable">file</span>, (<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) ? <span class="variable">true</span> : <span class="variable">false</span>);
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'POST'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
 		
 		<span class="comment">// Set the headers</span>
 		<span class="variable">req</span>.<span class="variable">setRequestHeader</span>(<span class="string">'Content-type'</span>, <span class="string">'application/x-www-form-urlencoded'</span>);
@@ -368,13 +368,19 @@ $('p').data('foo', 'bar');</code></pre>
 			<span class="variable">e</span> = <span class="this">this</span>.<span class="variable">elements</span>[<span class="number integer">0</span>];
 			
 			<span class="comment">// Start the target as false</span>
-			<span class="variable">target</span> = <span class="variable">false</span>;
+			<span class="variable">target</span> = -<span class="number integer">1</span>;
 			
-			<span class="comment">// Loop through all of the keys checking for our element</span>
-			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
-				<span class="keyword">if</span>(<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>[<span class="variable">i</span>] === <span class="variable">e</span>) {
-					<span class="comment">// Found it, assign it to the target</span>
-					<span class="variable">target</span> = <span class="variable">i</span>;
+			<span class="comment">// Check if we can use indexOf</span>
+			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">indexOf</span> !== <span class="string">'undefined'</span>) {
+				<span class="variable">target</span> = <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">indexOf</span>(<span class="variable">e</span>);
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// Loop through all of the keys checking for our element</span>
+				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+					<span class="keyword">if</span>(<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>[<span class="variable">i</span>] === <span class="variable">e</span>) {
+						<span class="comment">// Found it, assign it to the target</span>
+						<span class="variable">target</span> = <span class="variable">i</span>;
+					}
 				}
 			}
 			
@@ -382,7 +388,7 @@ $('p').data('foo', 'bar');</code></pre>
 			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">data</span> !== <span class="string">'undefined'</span>) {
 				<span class="comment">// We have data</span>
 				<span class="comment">// Check if we found an element</span>
-				<span class="keyword">if</span>(<span class="variable">target</span> === <span class="variable">false</span>) {
+				<span class="keyword">if</span>(<span class="variable">target</span> === -<span class="number integer">1</span>) {
 					<span class="comment">// We did not, create it and set the target</span>
 					<span class="variable">target</span> = <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">length</span>;
 					<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">keys</span>.<span class="variable">push</span>(<span class="variable">e</span>);
@@ -398,7 +404,7 @@ $('p').data('foo', 'bar');</code></pre>
 			<span class="keyword">else</span> {
 				<span class="comment">// We do not have data</span>
 				<span class="comment">// Check if we found an element</span>
-				<span class="keyword">if</span>(<span class="variable">target</span> === <span class="variable">false</span>) {
+				<span class="keyword">if</span>(<span class="variable">target</span> === -<span class="number integer">1</span>) {
 					<span class="comment">// We did not, return false</span>
 					<span class="keyword">return</span> <span class="variable">false</span>;
 				}
