@@ -15,15 +15,23 @@
 /** @private */
 Spark.extend('json', {
     /**
-     * Checks that the string is valid JSON and then parses it
+     * Checks that the string is valid JSON and then parses it.
+     * On error, it will throw a 'Invalid JSON' syntax error
      * 
      * @param {String} json The JSON string that you want to parse
-     * @returns {Mixed|Boolean} Will return the parsed data on success or false on failure
+     * @returns {Mixed|Boolean} Will return the parsed data on success
      */
 	parse: function(json) {
 		// Check if we can use native method
 		if(typeof JSON !== 'undefined') {
-			return JSON.parse(json);
+			try {
+				// Try to parse the JSON
+				return JSON.parse(json);
+			}
+			catch(err) {
+				// Parsing failed throw an error
+				throw new SyntaxError('Invalid JSON');
+			}
 		}
 		
 		// Check that the JSON string is okay
@@ -34,8 +42,8 @@ Spark.extend('json', {
 		    return eval('(' + json + ')');
 		}
 		else {
-			// It is not, return false
-			return false;
+			// It is not, throw an error
+			throw new SyntaxError('Invalid JSON');
 		}
 	},
 	
