@@ -598,6 +598,92 @@ $('div p', el);</code></pre>
 		}
 	}</code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/json.js"><a href="#">json</a></h2></td><td>src/json.js</td></tr><tr class="code">
+<td class="docs">
+<p>The JSON object can stringify or parse JSON.</p>
+
+<p>To parse a JSON string back into its respective object / array / string etc, simply use the following line. Where <code>json</code> equals your JSON string.</p>
+
+<pre><code>var parsed = Spark.json.parse(json);</code></pre>
+
+<p>This will then return what ever is contained in the JSON string. If the string is invalid then it will throw an <code>Invalid JSON</code> syntax error.</p>
+
+<p>To turn the parsed data back into a JSON string you can use the following line.</p>
+
+<pre><code>Spark.json.stringify(parsed);</code></pre>
+
+<p> </p>
+</td>
+<td class="code">
+
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Checks that the string is valid JSON and then parses it.
+On error, it will throw a 'Invalid JSON' syntax error</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  json The JSON string that you want to parse</p></li><li><p><strong>returns</strong>: <em>Mixed</em>  Will return the parsed data on success</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">parse</span>: <span class="keyword">function</span>(<span class="variable">json</span>) {
+		<span class="comment">// Check if we can use native method</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="class">JSON</span> !== <span class="string">'undefined'</span>) {
+			<span class="keyword">try</span> {
+				<span class="comment">// Try to parse the JSON</span>
+				<span class="keyword">return</span> <span class="class">JSON</span>.<span class="variable">parse</span>(<span class="variable">json</span>);
+			}
+			<span class="keyword">catch</span>(<span class="variable">err</span>) {
+				<span class="comment">// Parsing failed throw an error</span>
+				<span class="keyword">throw</span> <span class="keyword">new</span> <span class="class">SyntaxError</span>(<span class="string">'Invalid JSON'</span>);
+			}
+		}
+		
+		<span class="comment">// Check that the JSON string is okay</span>
+		<span class="keyword">if</span>(<span class="regexp">/^[\],:{}\s]*$/</span>.<span class="variable">test</span>(<span class="variable">json</span>.<span class="variable">replace</span>(<span class="regexp">/\\(?:[&quot;\\\/bfnrt</span>]|<span class="variable">u</span>[<span class="number integer">0</span>-<span class="variable">a</span>-<span class="variable">fA</span>-<span class="class">F</span>]{<span class="number integer">4</span>})/<span class="variable">g</span>, <span class="string">'@'</span>)
+			.<span class="variable">replace</span>(<span class="regexp">/&quot;[^&quot;\\\n\r]*&quot;|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g</span>, <span class="string">']'</span>)
+			.<span class="variable">replace</span>(<span class="regexp">/(?:^|:|,)(?:\s*\[)+/g</span>, <span class="string">''</span>))) {
+			<span class="comment">// It is, parse and return</span>
+		    <span class="keyword">return</span> <span class="variable">eval</span>(<span class="string">'('</span> + <span class="variable">json</span> + <span class="string">')'</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// It is not, throw an error</span>
+			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="class">SyntaxError</span>(<span class="string">'Invalid JSON'</span>);
+		}
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Turns a mixed variable into a JSON string</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Mixed</em>  data The mixed variable to encode</p></li><li><p><strong>param</strong>: <em>String</em>  key An optional key for encoding objects, used internally</p></li><li><p><strong>returns</strong>: <em>String</em>  The JSON string</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">stringify</span>: <span class="keyword">function</span>(<span class="variable">data</span>, <span class="variable">key</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+			<span class="variable">built</span> = <span class="string">''</span>,
+			 <span class="variable">meta</span> = {
+				<span class="string">'\b'</span>: <span class="string">'\\b'</span>,
+				<span class="string">'\t'</span>: <span class="string">'\\t'</span>,
+				<span class="string">'\n'</span>: <span class="string">'\\n'</span>,
+				<span class="string">'\f'</span>: <span class="string">'\\f'</span>,
+				<span class="string">'\r'</span>: <span class="string">'\\r'</span>,
+				<span class="string">'&quot;'</span> : <span class="string">'\\&quot;'</span>,
+				<span class="string">'\\'</span>: <span class="string">'\\\\'</span>
+			},
+			<span class="variable">escapable</span> = <span class="regexp">/[\\\&quot;\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g</span>;
+		
+		<span class="comment">// Check if we can use native method</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="class">JSON</span> !== <span class="string">'undefined'</span>) {
+			<span class="keyword">return</span> <span class="class">JSON</span>.<span class="variable">stringify</span>(<span class="variable">data</span>);
+		}</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/ready.js"><a href="#">ready</a></h2></td><td>src/ready.js</td></tr><tr class="code">
 <td class="docs">
 <p>Runs the specified function when the DOM is ready. This is the staple diet of any script using Spark.
