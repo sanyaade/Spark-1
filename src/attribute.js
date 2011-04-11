@@ -21,5 +21,10 @@
  * @param {String} value The value to assign to the name if you passed a string, if not passed then it returns the value of the previous name
  */
 Spark.extend('attribute', function(name, value) {
+	// Initialise any required variables
+	var i = null,
+		e = null;
 	
+	// Return the Spark object to allow chaining
+	return this;
 });
