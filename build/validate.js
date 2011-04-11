@@ -10,7 +10,8 @@ var result = jshint(src, {
 	curly: true,
 	eqeqeq: true,
 	forin: true,
-	browser: true
+	browser: true,
+	evil: true
 });
 
 // Check for errors
