@@ -25,6 +25,20 @@ Spark.extend('attribute', function(name, value) {
 	var i = null,
 		e = null;
 	
+	// Check what kind of variable name is
+	if(typeof name === 'string') {
+		// Check if the passed a value
+		if(typeof value === 'string') {
+			// Assign the attribute
+		}
+		else {
+			// Get the attribute
+		}
+	}
+	else if(typeof name === 'object') {
+		// Loop through the object assigning the attributes
+	}
+	
 	// Return the Spark object to allow chaining
 	return this;
 });
