@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	</head>
+	
+	<body>
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			Spark.ready(function() {
+				var json = Spark.json.stringify({
+				    someArray: ['foo', 'bar', 123],
+				    someObject: { foo: 'bar', embedded: { eleet: 1337 } },
+				    someString: '"Hi there!"',
+				    someNumber: 123,
+				    someBoolean: true
+				});
+				
+				alert(Spark.json.parse(json).someObject.embedded.eleet);
+			});
+		</script>
+	</body>
+</html>
