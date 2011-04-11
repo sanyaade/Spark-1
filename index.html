@@ -238,6 +238,68 @@ Spark.ajax.post('foo.json');</code></pre>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/attribute.js"><a href="#">attribute</a></h2></td><td>src/attribute.js</td></tr><tr class="code">
+<td class="docs">
+<p>The attribute function is used to get or set attributes.
+It takes either one or two arguments, if you pass a name and a value like so.</p>
+
+<pre><code>$('img').attribute('alt', 'An image');</code></pre>
+
+<p>Then it will assign 'An image' to the alt attribute of all img tags on the page.</p>
+
+<p>You can then retrieve the alt value of the first image on the page like so.</p>
+
+<pre><code>$('img').attribute('alt');</code></pre>
+
+<p>If you have multiple values to set then you can use an object like so.</p>
+
+<pre><code>$('img').attribute({
+    alt: 'An image',
+    title: 'Image title'
+});</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  name Either an object of attributes or the name of the required attribute</p></li><li><p><strong>param</strong>: <em>String</em>  value The value to assign to the name if you passed a string, if not passed then it returns the value of the previous name</p></li><li><p><strong>returns</strong>: <em>Object | String</em>  If you are setting it will return the Spark object for chaining, if you are getting then it will return the retrieved value</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'attribute'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">value</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">n</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check what kind of variable name is</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
+		<span class="comment">// Check if the passed a value</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">value</span> === <span class="string">'string'</span>) {
+			<span class="comment">// Loop through all elements and assign the attribute</span>
+			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+				<span class="this">this</span>[<span class="variable">i</span>].<span class="variable">setAttribute</span>(<span class="variable">name</span>, <span class="variable">value</span>);
+			}
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Get the attribute</span>
+			<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">getAttribute</span>(<span class="variable">name</span>);
+		}
+	}
+	<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'object'</span>) {
+		<span class="comment">// Loop through all the attributes</span>
+		<span class="keyword">for</span>(<span class="variable">n</span> <span class="keyword">in</span> <span class="variable">name</span>) {
+			<span class="comment">// Check that it is not a prototype</span>
+			<span class="keyword">if</span>(<span class="variable">name</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">n</span>)) {
+				<span class="comment">// Loop through all elements and assign the attribute</span>
+				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
+					<span class="this">this</span>[<span class="variable">i</span>].<span class="variable">setAttribute</span>(<span class="variable">n</span>, <span class="variable">name</span>[<span class="variable">n</span>]);
+				}
+			}
+		}
+	}
+	
+	<span class="comment">// Return the Spark object to allow chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/cookie.js"><a href="#">cookie</a></h2></td><td>src/cookie.js</td></tr><tr class="code">
 <td class="docs">
 <p>The cookie function is used to set or get cookies. To get the contents of a cookie simply call the function and provide the name of the cookie you wish to get the contents of. For example.</p>
