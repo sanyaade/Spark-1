@@ -19,7 +19,7 @@ Spark.extend('json', {
      * On error, it will throw a 'Invalid JSON' syntax error
      * 
      * @param {String} json The JSON string that you want to parse
-     * @returns {Mixed|Boolean} Will return the parsed data on success
+     * @returns {Mixed} Will return the parsed data on success
      */
 	parse: function(json) {
 		// Check if we can use native method
