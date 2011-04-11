@@ -126,8 +126,17 @@ Spark.extend('find', function(parameters, context) {
 	 * @private
 	 */
 	function toArray(list) {
-		// Return the NodeList converted into an Array
-		return [].slice.call(list);
+		// Initialise any required variables
+		var i = null,
+			built = [];
+		
+		// Loop through the passed nodes adding them to the array
+		for(i = 0; i < list.length; i++) {
+			built.push(list[i]);
+		}
+		
+		// Return the found elements
+		return built;
 	}
 	
 	/**
