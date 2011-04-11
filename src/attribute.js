@@ -28,7 +28,7 @@ Spark.extend('attribute', function(name, value) {
 	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
-		// Check if the passed a value
+		// Check if they passed a value
 		if(typeof value === 'string') {
 			// Loop through all elements and assign the attribute
 			for(i = 0; i < this.length; i++) {
