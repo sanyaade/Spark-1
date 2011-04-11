@@ -8,7 +8,8 @@ files = ${src}core.js\
 		${src}cookie.js\
 		${src}find.js\
 		${src}each.js\
-		${src}data.js
+		${src}data.js\
+		${src}attribute.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
