@@ -5,11 +5,13 @@ Spark.extend('classes', function() {
 	// Initialise the object
 	var built = {
 		add: function(name) {
-			
+			// Return the Spark object for chaining
+			return this.that;
 		},
 		
 		remove: function(name) {
-			
+			// Return the Spark object for chaining
+			return this.that;
 		}
 	};
 	
