@@ -10,7 +10,7 @@
  */
 Spark.extend('computed', function(name) {
 	// If we can use getComputedStyle
-	if(getComputedStyle) {
+	if(typeof getComputedStyle !== 'undefined') {
 		// Return getComputedStyle
 		return getComputedStyle(this[0], null)[name];
 	}
