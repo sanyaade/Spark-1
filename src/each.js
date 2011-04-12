@@ -12,9 +12,11 @@
  * 
  * To loop through an array or object you just pass the variable in question to the each function as the second argument. Here is an example of passing an array.
  * 
- *     Spark.each(function(e) {
- *         console.log(e);
+ *     Spark.each(function(e, i) {
+ *         console.log(i + ': ' + e);
  *     }, ['hello', 'world']);
+ * 
+ * As you can see, a second argument is passed to your callback containing the current key
  * 
  * @param {Function} fn Function for the current element to be passed to
  * @param {Array|Object} data Optional data to be looped over, if not passed then it uses the elements
