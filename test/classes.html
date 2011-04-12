@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	</head>
+	
+	<body>
+		<p>This is the test element.</p>
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			Spark.ready(function() {
+				$('p').addClass('foo');
+				$('p').addClass('bar');
+				
+				alert('Added two classes, foo and bar.');
+				
+				alert('foo: ' + $('p').hasClass('foo') + '; bar: ' + $('p').hasClass('bar') + '; shouldNotExist: ' + $('p').hasClass('shouldNotExist'));
+				
+				$('p').removeClass('foo');
+				
+				alert('Removed foo? ' + !$('p').hasClass('foo'));
+				
+				$('p').removeClass('bar');
+				
+				alert('Removed bar? ' + !$('p').hasClass('bar'));
+			});
+		</script>
+	</body>
+</html>
