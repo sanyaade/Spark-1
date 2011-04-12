@@ -44,13 +44,34 @@ Spark.extend('style', function(name, value) {
 		return style;
 	}
 	
+	/**
+	 * Sets the specified style with cross browser adjustments if necessary
+	 * 
+	 * @param {Object} element The element to alter
+	 * @param {String} name The name of the style (can be camel case or hyphen separated)
+	 * @param {String} value The value to set
+	 * @private
+	 */
+	function setStyle(element, name, value) {
+		name = camelStyle(name);
+		
+		element.style[name] = value;
+		
+		if(name === 'opacity') {
+			element.style.filter = 'alpha(opacity=' + (parseFloat(value) * 100) + ')';
+			element.style.zoom = '1';
+			element.style.MozOpacity = value;
+			element.style.KhtmlOpacity = value;
+		}
+	}
+	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
 		if(typeof value === 'string') {
 			// Loop through all elements and assign the style
 			for(i = 0; i < this.length; i++) {
-				this[i].style[camelStyle(name)] = value;
+				setStyle(this[i], name, value);
 			}
 		}
 		else {
@@ -65,7 +86,7 @@ Spark.extend('style', function(name, value) {
 			if(name.hasOwnProperty(n)) {
 				// Loop through all elements and assign the style
 				for(i = 0; i < this.length; i++) {
-					this[i].style[camelStyle(n)] = name[n];
+					setStyle(this[i], n, name[n]);
 				}
 			}
 		}
