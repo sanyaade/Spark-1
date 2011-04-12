@@ -1,5 +1,5 @@
 /**
- * Add a class to the specified element.
+ * Add a class to the specified elements
  * 
  * This will add the class, border, to all the h1 tags on the page.
  * 
