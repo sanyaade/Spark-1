@@ -4,12 +4,16 @@
 Spark.extend('classes', function() {
 	// Set up the functions
 	var built = {
-		add: function() {
+		add: function(name) {
 			return this.that;
 		},
 		
-		remove: function() {
+		remove: function(name) {
 			return this.that;
+		},
+		
+		has: function(name) {
+			
 		}
 	};
 	
