@@ -13,7 +13,7 @@ files = ${src}core.js\
 		${src}style.js\
 		${src}json.js\
 		${src}computed.js\
-		${src}classes.js
+		${src}hasClass.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
