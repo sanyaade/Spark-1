@@ -46,14 +46,14 @@ Spark.extend('each', function(fn, data) {
 	if(target instanceof Array) {
 		// Loop through as an array
 		for(i = 0; i < target.length; i++) {
-			fn(target[i]);
+			fn(target[i], i);
 		}
 	}
 	else {
 		// Loop through as an object
 		for(i in target) {
 			if(target.hasOwnProperty(i) === true) {
-				fn(target[i]);
+				fn(target[i], i);
 			}
 		}
 	}

@@ -22,18 +22,17 @@
  * @returns {Object|String} If you are setting it will return the Spark object for chaining, if you are getting then it will return the retrieved value
  */
 Spark.extend('attribute', function(name, value) {
-	// Initialise any required variables
-	var i = null,
-		n = null;
+	// Set up that to put this in scope
+	var that = this;
 	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
 		if(typeof value === 'string') {
 			// Loop through all elements and assign the attribute
-			for(i = 0; i < this.length; i++) {
-				this[i].setAttribute(name, value);
-			}
+			this.each(function(e) {
+				e.setAttribute(name, value);
+			});
 		}
 		else {
 			// Get the attribute
@@ -42,15 +41,12 @@ Spark.extend('attribute', function(name, value) {
 	}
 	else if(typeof name === 'object') {
 		// Loop through all the attributes
-		for(n in name) {
-			// Check that it is not a prototype
-			if(name.hasOwnProperty(n)) {
-				// Loop through all elements and assign the attribute
-				for(i = 0; i < this.length; i++) {
-					this[i].setAttribute(n, name[n]);
-				}
-			}
-		}
+		this.each(function(value, name) {
+			// Loop through all elements and assign the attribute
+			that.each(function(e) {
+				e.setAttribute(name, value);
+			});
+		}, name);
 	}
 	
 	// Return the Spark object to allow chaining
