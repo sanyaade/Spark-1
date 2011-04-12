@@ -9,12 +9,18 @@
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('addClass', function(name) {
+	// Initialise any required variables
+	var c = null;
+	
 	// Loop through all the elements
 	this.each(function(e) {
 		// Check if it already has the class
 		if(!$(e).hasClass(name)) {
+			// Grab the class
+			c = $(e).attribute('class');
+			
 			// It doesnt, add it and trim off whitespace
-			$(e).attribute('class', ($(e).attribute('class') + ' ' + name).replace(/^\s+|\s+$/i, ''));
+			$(e).attribute('class', ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, ''));
 		}
 	});
 	
