@@ -11,7 +11,8 @@ files = ${src}core.js\
 		${src}data.js\
 		${src}attribute.js\
 		${src}style.js\
-		${src}json.js
+		${src}json.js\
+		${src}computed.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
