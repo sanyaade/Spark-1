@@ -41,10 +41,10 @@ Spark.extend('attribute', function(name, value) {
 	}
 	else if(typeof name === 'object') {
 		// Loop through all the attributes
-		this.each(function(value, name) {
+		this.each(function(v, n) {
 			// Loop through all elements and assign the attribute
 			that.each(function(e) {
-				e.setAttribute(name, value);
+				e.setAttribute(n, v);
 			});
 		}, name);
 	}
