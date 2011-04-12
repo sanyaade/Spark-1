@@ -110,7 +110,41 @@ code .this { color: #19469D; }</style>
 	<body>
 <table id="source"><tbody><tr><td><h1>Spark</h1><p><a href="http://sparkjs.co.uk/">Spark</a> is a lightweight JavaScript library written by <a href="http://flowdev.co.uk/">Oliver Caldwell</a>. The repository is located on GitHub at <a href="https://github.com/SparkJS/Spark">SparkJS/Spark</a>.</p>
 
-<p>Below you will find documentation for all of the functions.</p></td><td></td></tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
+<p>Below you will find documentation for all of the functions.</p></td><td></td></tr><tr class="filename"><td><h2 id="src/addClass.js"><a href="#">addClass</a></h2></td><td>src/addClass.js</td></tr><tr class="code">
+<td class="docs">
+<p>Add a class to the specified elements</p>
+
+<p>This will add the class, border, to all the h1 tags on the page.</p>
+
+<pre><code>$('h1').addClass('border');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to add</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'addClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">c</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Check if it already has the class</span>
+		<span class="keyword">if</span>(!$(<span class="variable">e</span>).<span class="variable">hasClass</span>(<span class="variable">name</span>)) {
+			<span class="comment">// Grab the class</span>
+			<span class="variable">c</span> = $(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>);
+			
+			<span class="comment">// It doesnt, add it and trim off whitespace</span>
+			$(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>, ((<span class="variable">c</span>) ? <span class="variable">c</span> + <span class="string">' '</span> + <span class="variable">name</span> : <span class="variable">name</span>).<span class="variable">replace</span>(<span class="regexp">/^\s+|\s+$/i</span>, <span class="string">''</span>));
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
 <td class="docs">
 <p>The AJAX object contains two functions, <code>get</code> and <code>post</code>.
 You can call these functions like so.</p>
@@ -264,18 +298,17 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'attribute'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">value</span>) {
-	<span class="comment">// Initialise any required variables</span>
-	<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
-		<span class="variable">n</span> = <span class="keyword">null</span>;
+	<span class="comment">// Set up that to put this in scope</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
 	
 	<span class="comment">// Check what kind of variable name is</span>
 	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
 		<span class="comment">// Check if they passed a value</span>
 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">value</span> === <span class="string">'string'</span>) {
 			<span class="comment">// Loop through all elements and assign the attribute</span>
-			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
-				<span class="this">this</span>[<span class="variable">i</span>].<span class="variable">setAttribute</span>(<span class="variable">name</span>, <span class="variable">value</span>);
-			}
+			<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+				<span class="variable">e</span>.<span class="variable">setAttribute</span>(<span class="variable">name</span>, <span class="variable">value</span>);
+			});
 		}
 		<span class="keyword">else</span> {
 			<span class="comment">// Get the attribute</span>
@@ -284,19 +317,41 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 	}
 	<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'object'</span>) {
 		<span class="comment">// Loop through all the attributes</span>
-		<span class="keyword">for</span>(<span class="variable">n</span> <span class="keyword">in</span> <span class="variable">name</span>) {
-			<span class="comment">// Check that it is not a prototype</span>
-			<span class="keyword">if</span>(<span class="variable">name</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">n</span>)) {
-				<span class="comment">// Loop through all elements and assign the attribute</span>
-				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
-					<span class="this">this</span>[<span class="variable">i</span>].<span class="variable">setAttribute</span>(<span class="variable">n</span>, <span class="variable">name</span>[<span class="variable">n</span>]);
-				}
-			}
-		}
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">v</span>, <span class="variable">n</span>) {
+			<span class="comment">// Loop through all elements and assign the attribute</span>
+			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+				<span class="variable">e</span>.<span class="variable">setAttribute</span>(<span class="variable">n</span>, <span class="variable">v</span>);
+			});
+		}, <span class="variable">name</span>);
 	}
 	
 	<span class="comment">// Return the Spark object to allow chaining</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/computed.js"><a href="#">computed</a></h2></td><td>src/computed.js</td></tr><tr class="code">
+<td class="docs">
+<p>Retrieves the specified computed style from the first element in the list.</p>
+
+<p>If you wanted to get the computed height of a specified div you would use the following line.</p>
+
+<pre><code>$('div#chat').computed('height');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the computed style you require</p></li><li><p><strong>returns</strong>: <em>String</em>  The computed style of the first element in the element list</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'computed'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// If we can use getComputedStyle</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
+		<span class="comment">// Return getComputedStyle</span>
+		<span class="keyword">return</span> <span class="variable">getComputedStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="keyword">null</span>)[<span class="variable">name</span>];
+	}
+	
+	<span class="comment">// Otherwise return currentStyle</span>
+	<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">currentStyle</span>[<span class="variable">name</span>];
 });
 </code></pre>
 </td>
@@ -372,9 +427,7 @@ This is used to extend Spark with plugins.</p>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  name Name you wish to add your variable under</p></li><li><p><strong>param</strong>: <em>toAdd</em>
-Variable you wish to add
- </p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  name Name you wish to add your variable under</p></li><li><p><strong>param</strong>: <em>Mixed</em>  toAdd Variable you wish to add</p><p> </p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">prototype</span>.<span class="variable">extend</span> = <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">toAdd</span>) {
@@ -497,9 +550,11 @@ You can also pass an array or object as the second argument and it will loop thr
 
 <p>To loop through an array or object you just pass the variable in question to the each function as the second argument. Here is an example of passing an array.</p>
 
-<pre><code>Spark.each(function(e) {
-    console.log(e);
+<pre><code>Spark.each(function(e, i) {
+    console.log(i + ': ' + e);
 }, ['hello', 'world']);</code></pre>
+
+<p>As you can see, a second argument is passed to your callback containing the current key</p>
 
 <h2></h2>
 
@@ -532,14 +587,14 @@ You can also pass an array or object as the second argument and it will loop thr
 	<span class="keyword">if</span>(<span class="variable">target</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
 		<span class="comment">// Loop through as an array</span>
 		<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="variable">target</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
-			<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>]);
+			<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>], <span class="variable">i</span>);
 		}
 	}
 	<span class="keyword">else</span> {
 		<span class="comment">// Loop through as an object</span>
 		<span class="keyword">for</span>(<span class="variable">i</span> <span class="keyword">in</span> <span class="variable">target</span>) {
 			<span class="keyword">if</span>(<span class="variable">target</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">i</span>) === <span class="variable">true</span>) {
-				<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>]);
+				<span class="variable">fn</span>(<span class="variable">target</span>[<span class="variable">i</span>], <span class="variable">i</span>);
 			}
 		}
 	}
@@ -597,6 +652,25 @@ $('div p', el);</code></pre>
 			<span class="keyword">return</span> <span class="variable">built</span>;
 		}
 	}</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/hasClass.js"><a href="#">hasClass</a></h2></td><td>src/hasClass.js</td></tr><tr class="code">
+<td class="docs">
+<p>Checks if an element has the specified class.</p>
+
+<p>For example, this will return true, given that there is a div with a class of focus on the page.</p>
+
+<pre><code>$('div.focus').hasClass('focus');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to search for</p></li><li><p><strong>returns</strong>: <em>Boolean</em>  Will return true if it has the class or false if it does not</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hasClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// Check for the class</span>
+	<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'\\b'</span> + <span class="variable">name</span> + <span class="string">'\\b'</span>).<span class="variable">test</span>(<span class="this">this</span>.<span class="variable">attribute</span>(<span class="string">'class'</span>));
+});
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/json.js"><a href="#">json</a></h2></td><td>src/json.js</td></tr><tr class="code">
 <td class="docs">
@@ -722,6 +796,31 @@ For best results across all browsers always wrap your code within the ready func
 			}
 		})();
 	}
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/removeClass.js"><a href="#">removeClass</a></h2></td><td>src/removeClass.js</td></tr><tr class="code">
+<td class="docs">
+<p>Remove a class from the specified elements</p>
+
+<p>This will remove the class, border, from all the h1 tags on the page.</p>
+
+<pre><code>$('h1').removeClass('border');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to remove</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'removeClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Remove the class</span>
+		$(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>, $(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>).<span class="variable">replace</span>(<span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">name</span> + <span class="string">'($|\\s)'</span>), <span class="string">''</span>));
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
 </td>
