@@ -18,17 +18,10 @@
      * 
      * @param {String} name Name you wish to add your variable under
      * @param {Mixed} toAdd Variable you wish to add
-     * @param {Boolean} apply For when your extension has multiple functions but you want to return the Spark object
      */
-	Spark.prototype.extend = function(name, toAdd, apply) {
-		if(apply) {
-			// Add the called object
-			Spark.prototype[name] = toAdd.apply(this);
-		}
-		else {
-			// Add the object
-			Spark.prototype[name] = toAdd;
-		}
+	Spark.prototype.extend = function(name, toAdd) {
+		// Add the object
+		Spark.prototype[name] = toAdd;
 	};
 	
     /**
