@@ -7,6 +7,11 @@
 Spark.extend('on', function(name, fn) {
 	// Initialise any required variables
 	
+	// Loop through all the elements
+	this.each(function(e) {
+		
+	});
+	
 	// Return the Spark object for chaining
 	return this;
 });
