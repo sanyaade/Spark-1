@@ -20,7 +20,7 @@ Spark.extend('on', function(type, fn, stopBubble) {
 		}
 		
 		// Fix Safaris problem with selecting the wrong node type
-		if(targ.nodeType === 3) {
+		if(e.target.nodeType === 3) {
 			e.target = e.target.parentNode;
 		}
 		
