@@ -1,5 +1,21 @@
 /**
- * Add an event listener to the found elements
+ * Add an event listener to the found elements.
+ * 
+ * To set an event you must specify an event type and callback. The callback will be passed the event object as an argument.
+ * 
+ * If you wanted to set a listener for click event on all p tags then you would use the following line.
+ * 
+ *     $('p').addEvent('click', function(e) {
+ *         // Code to handle the click event goes here
+ *     });
+ * 
+ * If you return false from your callback then the default action will be prevented. For instance, this line would cause all links on the page to stop working.
+ * 
+ *     $('a').addEvent('click', function(e) { return false });
+ * 
+ * The function also takes an optional third argument, `stopBubble`.
+ * 
+ * If true then event bubbling will be prevented.
  * 
  * @param {String} type Name of the event you want to listen for
  * @param {Function} fn Function to be run when the event occurs
