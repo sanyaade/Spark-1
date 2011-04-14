@@ -10,17 +10,18 @@
  */
 Spark.extend('addClass', function(name) {
 	// Initialise any required variables
-	var c = null;
+	var c = null,
+		that = this;
 	
 	// Loop through all the elements
 	this.each(function(e) {
 		// Check if it already has the class
-		if(!$(e).hasClass(name)) {
+		if(!that.find(e).hasClass(name)) {
 			// Grab the class
-			c = $(e).attribute('class');
+			c = that.find(e).attribute('class');
 			
 			// It doesnt, add it and trim off whitespace
-			$(e).attribute('class', ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, ''));
+			that.find(e).attribute('class', ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, ''));
 		}
 	});
 	
