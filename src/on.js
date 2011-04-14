@@ -51,6 +51,19 @@ Spark.extend('on', function(name, fn, stopBubble) {
 		return e;
 	}
 	
+	function runCallback(e) {
+		// Run the callback and check if it returned false
+		if(fn(fixEvent(e)) === false) {
+			// If so then prevent default
+			if(e.preventDefault) {
+				e.preventDefault();
+			}
+			else {
+				e.returnValue = false;
+			}
+		}
+	}
+	
 	// Loop through all the elements
 	this.each(function(e) {
 		
