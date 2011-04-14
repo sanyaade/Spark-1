@@ -34,7 +34,7 @@ Spark.extend('addEvent', function(type, fn, stopBubble) {
 			offsetY = 0;
 		
 		// Fix IE's wrong association of the target element
-		if(e.srcElement) {
+		if(typeof e.target === 'undefined') {
 			e.target = e.srcElement;
 		}
 		
@@ -44,19 +44,19 @@ Spark.extend('addEvent', function(type, fn, stopBubble) {
 		}
 		
 		// Make sure we have keyCode, and not which
-		if(e.which) {
+		if(typeof e.keyCode === 'undefined') {
 			e.keyCode = e.which;
 		}
 		
 		// Fix IE's pageX/Y locations
-		if(e.clientX || e.clientY) {
+		if(typeof e.pageX === 'undefined') {
 			e.pageX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 			e.pageY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
 		
 		// Fix the offsetX/Y in Firefox
 		obj = e.target;
-		if(obj.offsetParent) {
+		if(obj.offsetParent && navigator.userAgent.indexOf('Opera') === -1) {
 			do {
 				obj = obj.offsetParent;
 				offsetX += obj.offsetLeft;
