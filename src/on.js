@@ -1,11 +1,11 @@
 /**
  * Add an event listener to the found elements
  * 
- * @param {String} name Name of the event you want to listen for
+ * @param {String} type Name of the event you want to listen for
  * @param {Function} fn Function to be run when the event occurs
  * @param {Boolean} stopBubble If true then event bubbling will be prevented
  */
-Spark.extend('on', function(name, fn, stopBubble) {
+Spark.extend('on', function(type, fn, stopBubble) {
 	function fixEvent(e) {
 		// Initalise any required variables
 		var posx = 0,
@@ -21,7 +21,7 @@ Spark.extend('on', function(name, fn, stopBubble) {
 		
 		// Fix Safaris problem with selecting the wrong node type
 		if(targ.nodeType === 3) {
-			targ = targ.parentNode;
+			e.target = e.target.parentNode;
 		}
 		
 		// Make sure we have keyCode, and not which
@@ -39,9 +39,10 @@ Spark.extend('on', function(name, fn, stopBubble) {
 		obj = e.target;
 		if(obj.offsetParent) {
 			do {
+				obj = obj.offsetParent;
 				offsetX += obj.offsetLeft;
 				offsetY += obj.offsetTop;
-			} while(obj = obj.offsetParent);
+			} while(obj.offsetParent);
 			
 			e.offsetX = offsetX;
 			e.offsetY = offsetY;
@@ -52,6 +53,14 @@ Spark.extend('on', function(name, fn, stopBubble) {
 	}
 	
 	function runCallback(e) {
+		// Stop bubbling if required
+		if(stopBubble) {
+			e.cancelBubble = true;
+			if(e.stopPropagation) {
+				e.stopPropagation();
+			}
+		}
+		
 		// Run the callback and check if it returned false
 		if(fn(fixEvent(e)) === false) {
 			// If so then prevent default
@@ -66,7 +75,15 @@ Spark.extend('on', function(name, fn, stopBubble) {
 	
 	// Loop through all the elements
 	this.each(function(e) {
-		
+		// Check if the browser supports addEventListener or attachEvent and use it
+		if(e.addEventListener) {
+			// Assign event
+			e.addEventListener(type, runCallback, false);
+		}
+		else {
+			// Assign event
+			e.attachEvent('on' + type, runCallback);
+		}
 	});
 	
 	// Return the Spark object for chaining
