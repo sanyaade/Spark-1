@@ -35,6 +35,7 @@ var Spark = (function() {
 		return new Spark();
 	};
 	
+	/** @private */
 	return new Spark();
 }());
 
