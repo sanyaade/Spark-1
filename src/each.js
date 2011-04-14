@@ -44,8 +44,8 @@ Spark.extend('each', function(fn, data) {
 		target = data;
 	}
 	
-	// Check if target is an array or object
-	if(target instanceof Array) {
+	// Check if target is like an array or object
+	if(typeof target.length === 'number') {
 		// Loop through as an array
 		for(i = 0; i < target.length; i++) {
 			fn(target[i], i);
