@@ -5,7 +5,7 @@
  * @param {Function} fn Function to be run when the event occurs
  * @param {Boolean} stopBubble If true then event bubbling will be prevented
  */
-Spark.extend('on', function(type, fn, stopBubble) {
+Spark.extend('addListener', function(type, fn, stopBubble) {
 	function fixEvent(e) {
 		// Initalise any required variables
 		var posx = 0,
