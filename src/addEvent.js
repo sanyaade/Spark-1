@@ -91,6 +91,18 @@ Spark.extend('addEvent', function(type, fn, stopBubble) {
 	
 	// Loop through all the elements
 	this.each(function(e) {
+		// Make sure it has an events array
+		if(!this.find(e).data('SparkEvents')) {
+			this.find(e).data('SparkEvents', []);
+		}
+		
+		// Assign the events data to the array
+		this.find(e).data('SparkEvents').push({
+			type: type,
+			fn: fn,
+			reference: runCallback
+		});
+		
 		// Check if the browser supports addEventListener or attachEvent and use it
 		if(e.addEventListener) {
 			// Assign event
