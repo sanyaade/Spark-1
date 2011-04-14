@@ -56,7 +56,7 @@ Spark.extend('addEvent', function(type, fn, stopBubble) {
 		
 		// Fix the offsetX/Y in Firefox
 		obj = e.target;
-		if(obj.offsetParent && navigator.userAgent.indexOf('Opera') === -1) {
+		if(obj.offsetParent && navigator.userAgent.indexOf('Opera') === -1 && navigator.userAgent.indexOf('MSIE') === -1) {
 			do {
 				obj = obj.offsetParent;
 				offsetX += obj.offsetLeft;
