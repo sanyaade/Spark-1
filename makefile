@@ -16,7 +16,7 @@ files = ${src}core.js\
 		${src}hasClass.js\
 		${src}addClass.js\
 		${src}removeClass.js\
-		${src}addListener.js
+		${src}addEvent.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
