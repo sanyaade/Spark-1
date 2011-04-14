@@ -5,12 +5,20 @@
 	</head>
 	
 	<body>
-		<div></div>
-		
+		<p class='target'>Click and mouse over event registered.</p>
+		<p>This element should do nothing.</p>
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
+				function over(e) {
+					alert('Moused over.');
+				}
 				
+				$('p.target').addEvent('click', function(e) {
+					$(e.target).removeEvent('mouseover', over);
+					
+					alert('Element clicked. The mouse over event has now been removed.');
+				}).addEvent('mouseover', over);
 			});
 		</script>
 	</body>
