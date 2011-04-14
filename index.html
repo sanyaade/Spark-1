@@ -183,7 +183,7 @@ code .this { color: #19469D; }</style>
 			<span class="variable">offsetY</span> = <span class="number integer">0</span>;
 		
 		<span class="comment">// Fix IE's wrong association of the target element</span>
-		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">srcElement</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">target</span> === <span class="string">'undefined'</span>) {
 			<span class="variable">e</span>.<span class="variable">target</span> = <span class="variable">e</span>.<span class="variable">srcElement</span>;
 		}
 		
@@ -193,19 +193,19 @@ code .this { color: #19469D; }</style>
 		}
 		
 		<span class="comment">// Make sure we have keyCode, and not which</span>
-		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">which</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">keyCode</span> === <span class="string">'undefined'</span>) {
 			<span class="variable">e</span>.<span class="variable">keyCode</span> = <span class="variable">e</span>.<span class="variable">which</span>;
 		}
 		
 		<span class="comment">// Fix IE's pageX/Y locations</span>
-		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">clientX</span> || <span class="variable">e</span>.<span class="variable">clientY</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">pageX</span> === <span class="string">'undefined'</span>) {
 			<span class="variable">e</span>.<span class="variable">pageX</span> = <span class="variable">e</span>.<span class="variable">clientX</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollLeft</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollLeft</span>;
 			<span class="variable">e</span>.<span class="variable">pageY</span> = <span class="variable">e</span>.<span class="variable">clientY</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollTop</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollTop</span>;
 		}
 		
 		<span class="comment">// Fix the offsetX/Y in Firefox</span>
 		<span class="variable">obj</span> = <span class="variable">e</span>.<span class="variable">target</span>;
-		<span class="keyword">if</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span>) {
+		<span class="keyword">if</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'Opera'</span>) === -<span class="number integer">1</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'MSIE'</span>) === -<span class="number integer">1</span>) {
 			<span class="keyword">do</span> {
 				<span class="variable">obj</span> = <span class="variable">obj</span>.<span class="variable">offsetParent</span>;
 				<span class="variable">offsetX</span> += <span class="variable">obj</span>.<span class="variable">offsetLeft</span>;
@@ -457,31 +457,6 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 });
 </code></pre>
 </td>
-</tr><tr class="filename"><td><h2 id="src/computed.js"><a href="#">computed</a></h2></td><td>src/computed.js</td></tr><tr class="code">
-<td class="docs">
-<p>Retrieves the specified computed style from the first element in the list.</p>
-
-<p>If you wanted to get the computed height of a specified div you would use the following line.</p>
-
-<pre><code>$('div#chat').computed('height');</code></pre>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the computed style you require</p></li><li><p><strong>returns</strong>: <em>String</em>  The computed style of the first element in the element list</p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'computed'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
-	<span class="comment">// If we can use getComputedStyle</span>
-	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
-		<span class="comment">// Return getComputedStyle</span>
-		<span class="keyword">return</span> <span class="variable">getComputedStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="keyword">null</span>)[<span class="variable">name</span>];
-	}
-	
-	<span class="comment">// Otherwise return currentStyle</span>
-	<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">currentStyle</span>[<span class="variable">name</span>];
-});
-</code></pre>
-</td>
 </tr><tr class="filename"><td><h2 id="src/cookie.js"><a href="#">cookie</a></h2></td><td>src/cookie.js</td></tr><tr class="code">
 <td class="docs">
 <p>The cookie function is used to set or get cookies. To get the contents of a cookie simply call the function and provide the name of the cookie you wish to get the contents of. For example.</p>
@@ -544,6 +519,31 @@ Spark.cookie('foo', 'bar', 5000);</code></pre>
 		<span class="comment">// Set the cookie</span>
 		<span class="variable">document</span>.<span class="variable">cookie</span> = <span class="variable">name</span> + <span class="string">'='</span> + <span class="variable">escape</span>(<span class="variable">content</span>) + <span class="variable">expires</span> + <span class="string">'; path=/'</span>;
 	}
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/computed.js"><a href="#">computed</a></h2></td><td>src/computed.js</td></tr><tr class="code">
+<td class="docs">
+<p>Retrieves the specified computed style from the first element in the list.</p>
+
+<p>If you wanted to get the computed height of a specified div you would use the following line.</p>
+
+<pre><code>$('div#chat').computed('height');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the computed style you require</p></li><li><p><strong>returns</strong>: <em>String</em>  The computed style of the first element in the element list</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'computed'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// If we can use getComputedStyle</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
+		<span class="comment">// Return getComputedStyle</span>
+		<span class="keyword">return</span> <span class="variable">getComputedStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="keyword">null</span>)[<span class="variable">name</span>];
+	}
+	
+	<span class="comment">// Otherwise return currentStyle</span>
+	<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">currentStyle</span>[<span class="variable">name</span>];
 });
 </code></pre>
 </td>
@@ -985,7 +985,7 @@ For best results across all browsers always wrap your code within the ready func
 						<span class="variable">e</span>.<span class="variable">removeEventListener</span>(<span class="variable">type</span>, <span class="variable">r</span>.<span class="variable">reference</span>, <span class="variable">false</span>);
 					}
 					<span class="keyword">else</span> {
-						<span class="variable">e</span>.<span class="variable">detachEvent</span>(<span class="variable">type</span>, <span class="variable">r</span>.<span class="variable">reference</span>);
+						<span class="variable">e</span>.<span class="variable">detachEvent</span>(<span class="string">'on'</span> + <span class="variable">type</span>, <span class="variable">r</span>.<span class="variable">reference</span>);
 					}
 				}
 			}, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>));
