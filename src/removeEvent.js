@@ -11,7 +11,7 @@ Spark.extend('removeEvent', function(type, fn) {
 			e.removeEventListener(type, fn, false);
 		}
 		else {
-			e.detachEvent(type, previousReference);
+			e.detachEvent(type, fn);
 		}
 	});
 	
