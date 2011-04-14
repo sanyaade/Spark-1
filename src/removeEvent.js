@@ -1,6 +1,14 @@
 /**
  * Remove an event listener from the found elements.
  * 
+ * Here is an example of removing the listener for a click event from all p tags.
+ * 
+ *     $('p').removeEvent('click', myFunction);
+ * 
+ * `myFunction` must contain a reference to the function you originally passed to the `addEvent` function.
+ * 
+ * This will not work with anonymous functions.
+ * 
  * @param {String} type Name of the event you want to remove
  * @param {Function} fn Reference to the function which you previously passed
  */
