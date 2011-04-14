@@ -23,7 +23,7 @@
  */
 Spark.extend('addEvent', function(type, fn, stopBubble) {
 	function fixEvent(e) {
-		// Initalise any required variables
+		// Initialise any required variables
 		var posx = 0,
 			posy = 0,
 			obj = null,
