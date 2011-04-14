@@ -22,6 +22,9 @@
  * @param {Boolean} stopBubble If true then event bubbling will be prevented
  */
 Spark.extend('addEvent', function(type, fn, stopBubble) {
+	// Initialise any required variables
+	var that = this;
+	
 	function fixEvent(e) {
 		// Initialise any required variables
 		var posx = 0,
@@ -92,12 +95,12 @@ Spark.extend('addEvent', function(type, fn, stopBubble) {
 	// Loop through all the elements
 	this.each(function(e) {
 		// Make sure it has an events array
-		if(!this.find(e).data('SparkEvents')) {
-			this.find(e).data('SparkEvents', []);
+		if(!that.find(e).data('SparkEvents')) {
+			that.find(e).data('SparkEvents', []);
 		}
 		
 		// Assign the events data to the array
-		this.find(e).data('SparkEvents').push({
+		that.find(e).data('SparkEvents').push({
 			type: type,
 			fn: fn,
 			reference: runCallback

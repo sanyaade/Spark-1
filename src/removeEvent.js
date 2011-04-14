@@ -5,14 +5,26 @@
  * @param {Function} fn Reference to the function which you previously passed
  */
 Spark.extend('removeEvent', function(type, fn) {
+	// Initialise any required variables
+	var found = null,
+		that = this;
+	
 	// Loop through all of the elements
 	this.each(function(e) {
-		// Remove the event in the appropriate way
-		if(e.removeEventListener) {
-			e.removeEventListener(type, fn, false);
-		}
-		else {
-			e.detachEvent(type, fn);
+		// Check we have events
+		if(that.find(e).data('SparkEvents')) {
+			// Loop through the events until we find one
+			that.each(function(r) {
+				if(r.fn === fn && r.type === type) {
+					// Found it! Remove the event in the appropriate way
+					if(e.removeEventListener) {
+						e.removeEventListener(type, r.reference, false);
+					}
+					else {
+						e.detachEvent(type, r.reference);
+					}
+				}
+			}, that.find(e).data('SparkEvents'));
 		}
 	});
 	
