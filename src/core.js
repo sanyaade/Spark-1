@@ -8,7 +8,7 @@
  * 
  * @private
  */
-(function() {
+var Spark = (function() {
 	// Create the object
 	function Spark(){}
 	
@@ -35,12 +35,12 @@
 		return new Spark();
 	};
 	
-	/** @private */
-	// Expose the object
-	window.Spark = new Spark();
-	
-	// Set up the alias for the find function
-	window.$ = function(parameters, context) {
-		return window.Spark.find(parameters, context);
-	};
+	return new Spark();
 }());
+
+// Set up the alias for the find function as long as $ is not already in use
+if(typeof window.$ === 'undefined') {
+	var $ = function(parameters, context) {
+		return Spark.find(parameters, context);
+	};
+}
