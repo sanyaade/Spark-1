@@ -29,7 +29,7 @@ Spark.extend('removeEvent', function(type, fn) {
 						e.removeEventListener(type, r.reference, false);
 					}
 					else {
-						e.detachEvent(type, r.reference);
+						e.detachEvent('on' + type, r.reference);
 					}
 				}
 			}, that.find(e).data('SparkEvents'));
