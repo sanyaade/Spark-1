@@ -7,6 +7,7 @@
 Spark.extend('removeEvent', function(type, fn) {
 	// Loop through all of the elements
 	this.each(function(e) {
+		// Remove the event in the appropriate way
 		if(e.removeEventListener) {
 			e.removeEventListener(type, fn, false);
 		}
