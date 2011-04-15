@@ -172,6 +172,19 @@
 			test('Getting a cookie that does not exist', function() {
 				equals(false, Spark.cookie('doesnotexist'), 'The doesnotexist cookie should equal false because it does not exist');
 			});
+			
+			
+			
+			module('data');
+			
+			test('Setting data', function() {
+				$('p').data('foo', 'bar');
+				equals('bar', $('p').data('foo'), 'The foo data should equal "bar"');
+			});
+			
+			test('Getting data that does not exist', function() {
+				equals(false, $('p').data('doesnotexist'), 'The doesnotexist data should equal false');
+			});
 		</script>
 	</body>
 </html>
