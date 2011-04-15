@@ -12,7 +12,6 @@ files = ${src}core.js\
 		${src}attribute.js\
 		${src}style.js\
 		${src}json.js\
-		${src}computed.js\
 		${src}hasClass.js\
 		${src}addClass.js\
 		${src}removeClass.js\
