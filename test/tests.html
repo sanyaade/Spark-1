@@ -299,6 +299,10 @@
 				ok($('p#test').appendElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
 				ok($('p#test').appendElement(el));
 			});
+			
+			test('Removing an element', function() {
+				ok($('p#test p').removeElement());
+			});
 		</script>
 	</body>
 </html>
