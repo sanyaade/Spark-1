@@ -274,6 +274,31 @@
 					equals('test', e, 'The object item should equal "test"');
 				}, {0: 'test', length: 1});
 			});
+			
+			
+			
+			module('elements');
+			
+			var el = Spark.createElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'});
+			
+			test('Creating an element', function() {
+				equals('Hello, World!', el.innerHTML, 'The elements innerHTML should equal "Hello, World!"');
+			});
+			
+			test('Inserting an element', function() {
+				ok($('p#test').insertElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').insertElement(el));
+			});
+			
+			test('Prepending an element', function() {
+				ok($('p#test').prependElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').prependElement(el));
+			});
+			
+			test('Appending an element', function() {
+				ok($('p#test').appendElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').appendElement(el));
+			});
 		</script>
 	</body>
 </html>
