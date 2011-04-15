@@ -1,6 +1,17 @@
 /**
  * Inserts a new element into the specified elements
  * 
+ * You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.
+ * 
+ *     Spark.insertElement('p', {
+ *         class: 'someClass',
+ *         title: 'Some title'
+ *     }, {
+ *         'background-color': '#FF0000'
+ *     });
+ * 
+ * Passing false for the html, attributes or styles will cause them to be ignored.
+ * 
  * @param {String|Object} name Name of the node you wish to create
  * @param {String|Boolean} html The inner html of the element
  * @param {Object|Boolean} attributes Attributes to assign to the element
