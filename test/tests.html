@@ -154,6 +154,20 @@
 				var has = $('p').removeClass('new').hasClass('new');
 				equals(false, has, 'Has should equal false');
 			});
+			
+			
+			
+			module('cookies');
+			
+			test('Setting a session cookie', function() {
+				Spark.cookie('test1', 'foo');
+				equals('foo', Spark.cookie('test1'), 'The test1 cookie should equal "foo"');
+			});
+			
+			test('Setting a timed cookie', function() {
+				Spark.cookie('test2', 'bar', 100000);
+				equals('bar', Spark.cookie('test2'), 'The test2 cookie should equal "bar"');
+			});
 		</script>
 	</body>
 </html>
