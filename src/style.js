@@ -68,6 +68,7 @@ Spark.extend('style', function(name, value) {
 	/**
 	 * Retrieves the specified computed style from the element
 	 * 
+	 * @param {Object} e Element object to get styles from
 	 * @param {String} name The name of the computed style you require
 	 * @returns {String} The computed style of the first element in the element list
 	 */
