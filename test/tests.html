@@ -207,6 +207,25 @@
 			test('Parsing JSON', function() {
 				equals(123, Spark.json.parse(json).someNumber, 'Object.someNumber should equal this 123');
 			});
+			
+			
+			
+			module('style');
+			
+			test('Setting a style', function() {
+				var style = $('p').style('opacity', '0.5').style('opacity');
+				equals('0.5', style, 'The style (opacity) should equal 0.5');
+			});
+			
+			test('Setting a style with an object', function() {
+				var style = $('p').style({
+					border: '3px solid #0000FF',
+					'border-width': '1px',
+					opacity: '0.7',
+					margin: '10px 0 0 0'
+				}).style('margin-top');
+				equals('10px', style, 'The style (margin-top) should equal "10px"');
+			});
 		</script>
 	</body>
 </html>
