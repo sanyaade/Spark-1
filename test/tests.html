@@ -225,6 +225,27 @@
 				}).style('border-width');
 				equals('1px', style, 'The style (border-width) should equal "1px"');
 			});
+			
+			
+			
+			module('events');
+			
+			function testEvent(e) {
+				start();
+				equals('P', e.target.nodeName, 'The nodeName should equal "P"');
+			}
+			
+			test('Adding an event', function() {
+				ok($('p#test').addEvent('click', testEvent));
+			});
+			
+			asyncTest('Triggering an event', function() {
+				$('p#test').triggerEvent('click');
+			});
+			
+			test('Removing an event', function() {
+				ok($('p#test').removeEvent('click', testEvent));
+			});
 		</script>
 	</body>
 </html>
