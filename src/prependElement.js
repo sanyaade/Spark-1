@@ -12,7 +12,7 @@
  * 
  * Passing false for the html, attributes or styles will cause them to be ignored.
  * 
- * @param {String|Object} name Name of the node you wish to create
+ * @param {String|Object} name Name of the node you wish to create or an already created element
  * @param {String|Boolean} html The inner html of the element
  * @param {Object|Boolean} attributes Attributes to assign to the element
  * @param {Object|Boolean} styles Styles to assign to the element
