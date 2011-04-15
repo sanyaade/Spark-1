@@ -80,7 +80,7 @@ Spark.extend('data', function(name, data) {
 				}
 				
 				// We now return the found data
-				return this.dataMeta.data[target][name];
+				return this.dataMeta.data[target][name] || false;
 			}
 		}
 	}
