@@ -73,14 +73,21 @@ Spark.extend('style', function(name, value) {
 	 * @returns {String} The computed style of the first element in the element list
 	 */
 	function getStyle(e, name) {
+		// Initialise any required variables
+		var style = null;
+		
 		// If we can use getComputedStyle
-		if(typeof getComputedStyle !== 'undefined') {
+		if(getComputedStyle) {
 			// Return getComputedStyle
-			return getComputedStyle(e, null)[name];
+			style = document.defaultView.getComputedStyle(e, null).getPropertyValue(name);
+		}
+		else {
+			// Otherwise return currentStyle
+			style = e.currentStyle[name];
 		}
 		
-		// Otherwise return currentStyle
-		return e.currentStyle[name];
+		// Return the found style, if not found then look in the style property
+		return (style) ? style : e.style[name];
 	}
 	
 	
