@@ -24,13 +24,19 @@
  *     });
  * 
  * @param {String} name Name of the node you wish to create
+ * @param {String} html The inner html of the element
  * @param {Object} attributes Attributes to assign to the element
  * @param {Object} styles Styles to assign to the element
  * @returns {Object} The created element
  */
-Spark.extend('createElement', function(name, attributes, styles) {
+Spark.extend('createElement', function(name, html, attributes, styles) {
 	// Create the new element
 	var built = document.createElement(name);
+	
+	// Assign the inner html if required
+	if(html) {
+		built.innerHTML = html;
+	}
 	
 	// Assign the attributes if required
 	if(attributes) {

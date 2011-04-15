@@ -1,13 +1,13 @@
 /**
  * Inserts a new element into the specified elements
  */
-Spark.extend('insertElement', function(name, attributes, styles) {
+Spark.extend('insertElement', function(name, html, attributes, styles) {
 	// Initialise any required variables
 	var el = null;
 	
 	// Check if we need to create the new element
 	if(typeof name === 'string') {
-		el = this.createElement(name, attributes, styles);
+		el = this.createElement(name, html, attributes, styles);
 	}
 	else {
 		el = name;
