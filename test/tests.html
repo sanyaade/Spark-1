@@ -168,6 +168,10 @@
 				Spark.cookie('test2', 'bar', 100000);
 				equals('bar', Spark.cookie('test2'), 'The test2 cookie should equal "bar"');
 			});
+			
+			test('Getting a cookie that does not exist', function() {
+				equals(false, Spark.cookie('doesnotexist'), 'The doesnotexist cookie should equal false because it does not exist');
+			});
 		</script>
 	</body>
 </html>
