@@ -32,7 +32,7 @@ Spark.extend('prependElement', function(name, html, attributes, styles) {
 	
 	// Loop through the elements
 	this.each(function(e) {
-		e.parentNode.insertBefore(el.cloneNode(true), e)
+		e.parentNode.insertBefore(el.cloneNode(true), e);
 	});
 	
 	// Return the Spark object for chaining
