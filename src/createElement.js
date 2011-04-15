@@ -24,9 +24,9 @@
  *     });
  * 
  * @param {String} name Name of the node you wish to create
- * @param {String} html The inner html of the element
- * @param {Object} attributes Attributes to assign to the element
- * @param {Object} styles Styles to assign to the element
+ * @param {String|Boolean} html The inner html of the element
+ * @param {Object|Boolean} attributes Attributes to assign to the element
+ * @param {Object|Boolean} styles Styles to assign to the element
  * @returns {Object} The created element
  */
 Spark.extend('createElement', function(name, html, attributes, styles) {
