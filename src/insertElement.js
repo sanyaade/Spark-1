@@ -3,7 +3,7 @@
  * 
  * You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.
  * 
- *     Spark.insertElement('p', {
+ *     $('p').insertElement('p', 'Hello, World!', {
  *         class: 'someClass',
  *         title: 'Some title'
  *     }, {

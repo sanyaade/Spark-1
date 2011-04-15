@@ -3,7 +3,7 @@
  * 
  * You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.
  * 
- *     Spark.prependElement('p', {
+ *     $('p').appendElement('p', 'Hello, World!', {
  *         class: 'someClass',
  *         title: 'Some title'
  *     }, {
