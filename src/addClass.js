@@ -21,7 +21,7 @@ Spark.extend('addClass', function(name) {
 			c = that.find(e).attribute('class');
 			
 			// It doesnt, add it and trim off whitespace
-			that.find(e).attribute('class', ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, ''));
+			e.className = ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, '');
 		}
 	});
 	

@@ -10,5 +10,5 @@
  */
 Spark.extend('hasClass', function(name) {
 	// Check for the class
-	return new RegExp('\\b' + name + '\\b').test(this.attribute('class'));
+	return new RegExp('\\b' + name + '\\b').test(this[0].className);
 });

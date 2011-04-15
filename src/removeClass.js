@@ -12,7 +12,7 @@ Spark.extend('removeClass', function(name) {
 	// Loop through all the elements
 	this.each(function(e) {
 		// Remove the class
-		$(e).attribute('class', $(e).attribute('class').replace(new RegExp('(^|\\s)' + name + '($|\\s)'), ''));
+		e.className = e.className.replace(new RegExp('(^|\\s)' + name + '($|\\s)'), '');
 	});
 	
 	// Return the Spark object for chaining

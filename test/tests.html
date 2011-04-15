@@ -6,7 +6,7 @@
 	</head>
 	
 	<body>
-		<p class='original' title='Original'>Test element</p>
+		<p id='test' class='original' title='Original'>Test element</p>
 		
 		<h1 id="qunit-header">QUnit example</h1>
 		<h2 id="qunit-banner"></h2>
@@ -113,22 +113,22 @@
 			module('attribute');
 			
 			test('Getting an attribute', function() {
-				var attribute = $('p').attribute('title');
+				var attribute = $('p#test').attribute('title');
 				equals('Original', attribute, 'Attribute should equal "Original"');
 			});
 			
 			test('Setting an attribute', function() {
-				var attribute = $('p').attribute('title', 'Title set').attribute('title');
+				var attribute = $('p#test').attribute('title', 'Title set').attribute('title');
 				equals('Title set', attribute, 'Attribute should equal "Title set"');
 			});
 			
 			test('Setting multiple attributes with an object', function() {
-				var title = $('p').attribute({
+				var title = $('p#test').attribute({
 					title: 'Title set with object',
 					rel: 'Rel set with object'
 				}).attribute('title');
 				
-				var rel = $('p').attribute('rel');
+				var rel = $('p#test').attribute('rel');
 				
 				equals('Title set with object', title, 'Title should equal "Title set with object"');
 				equals('Rel set with object', rel, 'Rel should equal "Rel set with object"');
@@ -139,19 +139,19 @@
 			module('classes');
 			
 			test('Checking for a class', function() {
-				var has = $('p').hasClass('original');
-				var notHas = $('p').hasClass('nothas');
+				var has = $('p#test').hasClass('original');
+				var notHas = $('p#test').hasClass('nothas');
 				equals(true, has, 'Has should equal true');
 				equals(false, notHas, 'NotHas should equal false');
 			});
 			
 			test('Adding a class', function() {
-				var has = $('p').addClass('new').hasClass('new');
+				var has = $('p#test').addClass('new').hasClass('new');
 				equals(true, has, 'Has should equal true');
 			});
 			
 			test('Removing a class', function() {
-				var has = $('p').removeClass('new').hasClass('new');
+				var has = $('p#test').removeClass('new').hasClass('new');
 				equals(false, has, 'Has should equal false');
 			});
 			
@@ -178,12 +178,12 @@
 			module('data');
 			
 			test('Setting data', function() {
-				$('p').data('foo', 'bar');
-				equals('bar', $('p').data('foo'), 'The foo data should equal "bar"');
+				$('p#test').data('foo', 'bar');
+				equals('bar', $('p#test').data('foo'), 'The foo data should equal "bar"');
 			});
 			
 			test('Getting data that does not exist', function() {
-				equals(false, $('p').data('doesnotexist'), 'The doesnotexist data should equal false');
+				equals(false, $('p#test').data('doesnotexist'), 'The doesnotexist data should equal false');
 			});
 			
 			
@@ -213,12 +213,12 @@
 			module('style');
 			
 			test('Setting a style', function() {
-				var style = $('p').style('opacity', '0.5').style('opacity');
+				var style = $('p#test').style('opacity', '0.5').style('opacity');
 				equals('0.5', style, 'The style (opacity) should equal 0.5');
 			});
 			
 			test('Setting a style with an object', function() {
-				var style = $('p').style({
+				var style = $('p#test').style({
 					border: '3px solid #0000FF',
 					'border-width': '1px',
 					opacity: '0.7',
