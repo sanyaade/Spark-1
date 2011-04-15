@@ -20,6 +20,7 @@
  * @param {String} type Name of the event you want to listen for
  * @param {Function} fn Function to be run when the event occurs
  * @param {Boolean} stopBubble If true then event bubbling will be prevented
+ * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('addEvent', function(type, fn, stopBubble) {
 	// Initialise any required variables

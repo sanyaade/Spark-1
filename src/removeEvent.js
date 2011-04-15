@@ -11,6 +11,7 @@
  * 
  * @param {String} type Name of the event you want to remove
  * @param {Function} fn Reference to the function which you previously passed
+ * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('removeEvent', function(type, fn) {
 	// Initialise any required variables
