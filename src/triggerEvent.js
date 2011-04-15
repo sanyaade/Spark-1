@@ -2,7 +2,7 @@
  * Manually fire events assigned to elements
  * 
  * @param {String} type Name of the event you wish to trigger
- * @returns {Object} An instance of Spark to allow chaining
+ * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('triggerEvent', function(type) {
 	// Loop through all of the elements
