@@ -65,6 +65,24 @@ Spark.extend('style', function(name, value) {
 		}
 	}
 	
+	/**
+	 * Retrieves the specified computed style from the element
+	 * 
+	 * @param {String} name The name of the computed style you require
+	 * @returns {String} The computed style of the first element in the element list
+	 */
+	function getStyle(e, name) {
+		// If we can use getComputedStyle
+		if(typeof getComputedStyle !== 'undefined') {
+			// Return getComputedStyle
+			return getComputedStyle(e, null)[name];
+		}
+		
+		// Otherwise return currentStyle
+		return e.currentStyle[name];
+	}
+	
+	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
@@ -76,7 +94,7 @@ Spark.extend('style', function(name, value) {
 		}
 		else {
 			// Get the style
-			return this[0].style[camelStyle(name)];
+			return getStyle(this[0], camelStyle(name));
 		}
 	}
 	else if(typeof name === 'object') {
