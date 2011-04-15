@@ -246,6 +246,34 @@
 			test('Removing an event', function() {
 				ok($('p#test').removeEvent('click', testEvent));
 			});
+			
+			
+			
+			module('each');
+			
+			test('Looping through elements', function() {
+				$('p#test').each(function(e) {
+					equals('P', e.nodeName, 'The nodeName should equal "P"');
+				});
+			});
+			
+			test('Looping through an array', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The array item should equal "test"');
+				}, ['test']);
+			});
+			
+			test('Looping through an object', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The object item should equal "test"');
+				}, {foo: 'test'});
+			});
+			
+			test('Looping through an array like object', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The object item should equal "test"');
+				}, {0: 'test', length: 1});
+			});
 		</script>
 	</body>
 </html>
