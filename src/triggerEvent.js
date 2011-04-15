@@ -1,6 +1,10 @@
 /**
  * Manually fire events assigned to elements
  * 
+ * For example, to trigger a click event on all p elements you would use the following line
+ * 
+ *     $('p').triggerEvent('click');
+ * 
  * @param {String} type Name of the event you wish to trigger
  * @returns {Object} Returns the Spark object for chaining
  */
