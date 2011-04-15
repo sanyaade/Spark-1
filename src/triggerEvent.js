@@ -9,6 +9,9 @@
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('triggerEvent', function(type) {
+	// Initialise any required variables
+	var trigger = null;
+	
 	// Loop through all of the elements
 	this.each(function(e) {
 		// Check for createEventObject
