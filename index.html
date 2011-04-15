@@ -167,7 +167,7 @@ code .this { color: #19469D; }</style>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to listen for</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Function to be run when the event occurs</p></li><li><p><strong>param</strong>: <em>Boolean</em>  stopBubble If true then event bubbling will be prevented</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to listen for</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Function to be run when the event occurs</p></li><li><p><strong>param</strong>: <em>Boolean</em>  stopBubble If true then event bubbling will be prevented</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'addEvent'</span>, <span class="keyword">function</span>(<span class="variable">type</span>, <span class="variable">fn</span>, <span class="variable">stopBubble</span>) {
@@ -399,6 +399,48 @@ Spark.ajax.post('foo.json');</code></pre>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/appendElement.js"><a href="#">appendElement</a></h2></td><td>src/appendElement.js</td></tr><tr class="code">
+<td class="docs">
+<p>Inserts a new element after the specified elements</p>
+
+<p>You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.</p>
+
+<pre><code>$('p').appendElement('p', 'Hello, World!', {
+    class: 'someClass',
+    title: 'Some title'
+}, {
+    'background-color': '#FF0000'
+});</code></pre>
+
+<p>Passing false for the html, attributes or styles will cause them to be ignored.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  name Name of the node you wish to create or an already created element</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  html The inner html of the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  attributes Attributes to assign to the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  styles Styles to assign to the element</p></li><li><p><strong>returns</strong>: <em>Object</em>  The Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'appendElement'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">el</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check if we need to create the new element</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
+		<span class="variable">el</span> = <span class="this">this</span>.<span class="variable">createElement</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>);
+	}
+	<span class="keyword">else</span> {
+		<span class="variable">el</span> = <span class="variable">name</span>;
+	}
+	
+	<span class="comment">// Loop through the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="variable">e</span>.<span class="variable">parentNode</span>.<span class="variable">insertBefore</span>(<span class="variable">el</span>.<span class="variable">cloneNode</span>(<span class="variable">true</span>), <span class="variable">e</span>.<span class="variable">nextSibling</span>);
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/attribute.js"><a href="#">attribute</a></h2></td><td>src/attribute.js</td></tr><tr class="code">
 <td class="docs">
 <p>The attribute function is used to get or set attributes.
@@ -552,6 +594,61 @@ This way they only exist within that chain.</p>
 <pre><code><span class="class">Spark</span>.<span class="variable">prototype</span>.<span class="variable">clone</span> = <span class="keyword">function</span>() {
 		<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">Spark</span>();
 	};</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/createElement.js"><a href="#">createElement</a></h2></td><td>src/createElement.js</td></tr><tr class="code">
+<td class="docs">
+<p>Creates an element from the passed parameters</p>
+
+<p>To create a basic element such as a p tag, all you need to provide is a tag name.</p>
+
+<pre><code>Spark.createElement('p');</code></pre>
+
+<p>And the new p tag object will be returned.</p>
+
+<p>If you wanted to assign a class and title to this element, you pass the attribute assigning object as the second argument.</p>
+
+<pre><code>Spark.createElement('p', {
+    class: 'someClass',
+    title: 'Some title'
+});</code></pre>
+
+<p>You can also style the element with the third argument.</p>
+
+<pre><code>Spark.createElement('p', {
+    class: 'someClass',
+    title: 'Some title'
+}, {
+    'background-color': '#FF0000'
+});</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name Name of the node you wish to create</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  html The inner html of the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  attributes Attributes to assign to the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  styles Styles to assign to the element</p></li><li><p><strong>returns</strong>: <em>Object</em>  The created element</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'createElement'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>) {
+	<span class="comment">// Create the new element</span>
+	<span class="keyword">var</span> <span class="variable">built</span> = <span class="variable">document</span>.<span class="variable">createElement</span>(<span class="variable">name</span>);
+	
+	<span class="comment">// Assign the inner html if required</span>
+	<span class="keyword">if</span>(<span class="variable">html</span>) {
+		<span class="variable">built</span>.<span class="variable">innerHTML</span> = <span class="variable">html</span>;
+	}
+	
+	<span class="comment">// Assign the attributes if required</span>
+	<span class="keyword">if</span>(<span class="variable">attributes</span>) {
+		<span class="this">this</span>.<span class="variable">find</span>(<span class="variable">built</span>).<span class="variable">attribute</span>(<span class="variable">attributes</span>);
+	}
+	
+	<span class="comment">// Assign the styles if required</span>
+	<span class="keyword">if</span>(<span class="variable">styles</span>) {
+		<span class="this">this</span>.<span class="variable">find</span>(<span class="variable">built</span>).<span class="variable">style</span>(<span class="variable">styles</span>);
+	}
+	
+	<span class="comment">// Return the built element</span>
+	<span class="keyword">return</span> <span class="variable">built</span>;
+});
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/data.js"><a href="#">data</a></h2></td><td>src/data.js</td></tr><tr class="code">
 <td class="docs">
@@ -774,6 +871,48 @@ $('div p', el);</code></pre>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/insertElement.js"><a href="#">insertElement</a></h2></td><td>src/insertElement.js</td></tr><tr class="code">
+<td class="docs">
+<p>Inserts a new element into the specified elements</p>
+
+<p>You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.</p>
+
+<pre><code>$('p').insertElement('p', 'Hello, World!', {
+    class: 'someClass',
+    title: 'Some title'
+}, {
+    'background-color': '#FF0000'
+});</code></pre>
+
+<p>Passing false for the html, attributes or styles will cause them to be ignored.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  name Name of the node you wish to create or an already created element</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  html The inner html of the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  attributes Attributes to assign to the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  styles Styles to assign to the element</p></li><li><p><strong>returns</strong>: <em>Object</em>  The Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'insertElement'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">el</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check if we need to create the new element</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
+		<span class="variable">el</span> = <span class="this">this</span>.<span class="variable">createElement</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>);
+	}
+	<span class="keyword">else</span> {
+		<span class="variable">el</span> = <span class="variable">name</span>;
+	}
+	
+	<span class="comment">// Loop through the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="variable">e</span>.<span class="variable">appendChild</span>(<span class="variable">el</span>.<span class="variable">cloneNode</span>(<span class="variable">true</span>));
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/json.js"><a href="#">json</a></h2></td><td>src/json.js</td></tr><tr class="code">
 <td class="docs">
 <p>The JSON object can stringify or parse JSON.</p>
@@ -860,6 +999,48 @@ On error, it will throw a 'Invalid JSON' syntax error</p>
 			<span class="keyword">return</span> <span class="class">JSON</span>.<span class="variable">stringify</span>(<span class="variable">data</span>);
 		}</code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/prependElement.js"><a href="#">prependElement</a></h2></td><td>src/prependElement.js</td></tr><tr class="code">
+<td class="docs">
+<p>Inserts a new element before the specified elements</p>
+
+<p>You can pass an already created element from the createElement function or pass the parameters for a new one. Like so.</p>
+
+<pre><code>$('p').prependElement('p', 'Hello, World!', {
+    class: 'someClass',
+    title: 'Some title'
+}, {
+    'background-color': '#FF0000'
+});</code></pre>
+
+<p>Passing false for the html, attributes or styles will cause them to be ignored.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  name Name of the node you wish to create or an already created element</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  html The inner html of the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  attributes Attributes to assign to the element</p></li><li><p><strong>param</strong>: <em>Object | Boolean</em>  styles Styles to assign to the element</p></li><li><p><strong>returns</strong>: <em>Object</em>  The Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'prependElement'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">el</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Check if we need to create the new element</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
+		<span class="variable">el</span> = <span class="this">this</span>.<span class="variable">createElement</span>(<span class="variable">name</span>, <span class="variable">html</span>, <span class="variable">attributes</span>, <span class="variable">styles</span>);
+	}
+	<span class="keyword">else</span> {
+		<span class="variable">el</span> = <span class="variable">name</span>;
+	}
+	
+	<span class="comment">// Loop through the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="variable">e</span>.<span class="variable">parentNode</span>.<span class="variable">insertBefore</span>(<span class="variable">el</span>.<span class="variable">cloneNode</span>(<span class="variable">true</span>), <span class="variable">e</span>);
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/ready.js"><a href="#">ready</a></h2></td><td>src/ready.js</td></tr><tr class="code">
 <td class="docs">
 <p>Runs the specified function when the DOM is ready. This is the staple diet of any script using Spark.
@@ -926,6 +1107,30 @@ For best results across all browsers always wrap your code within the ready func
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/removeElement.js"><a href="#">removeElement</a></h2></td><td>src/removeElement.js</td></tr><tr class="code">
+<td class="docs">
+<p>Removes the found elements</p>
+
+<p>To remove all p tags on the page, you would use the following line</p>
+
+<pre><code>$('p').removeElement();</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>returns</strong>: <em>Object</em>  The Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'removeElement'</span>, <span class="keyword">function</span>() {
+	<span class="comment">// Loop through the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="variable">e</span>.<span class="variable">parentNode</span>.<span class="variable">removeChild</span>(<span class="variable">e</span>);
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/removeEvent.js"><a href="#">removeEvent</a></h2></td><td>src/removeEvent.js</td></tr><tr class="code">
 <td class="docs">
 <p>Remove an event listener from the found elements.</p>
@@ -940,7 +1145,7 @@ For best results across all browsers always wrap your code within the ready func
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to remove</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Reference to the function which you previously passed</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to remove</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Reference to the function which you previously passed</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'removeEvent'</span>, <span class="keyword">function</span>(<span class="variable">type</span>, <span class="variable">fn</span>) {
@@ -1014,14 +1219,21 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 </td>
 <td class="code">
 <pre><code><span class="keyword">function</span> <span class="variable">getStyle</span>(<span class="variable">e</span>, <span class="variable">name</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">style</span> = <span class="keyword">null</span>;
+		
 		<span class="comment">// If we can use getComputedStyle</span>
 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
 			<span class="comment">// Return getComputedStyle</span>
-			<span class="keyword">return</span> <span class="variable">getComputedStyle</span>(<span class="variable">e</span>, <span class="keyword">null</span>)[<span class="variable">name</span>];
+			<span class="variable">style</span> = <span class="variable">document</span>.<span class="variable">defaultView</span>.<span class="variable">getComputedStyle</span>(<span class="variable">e</span>, <span class="keyword">null</span>).<span class="variable">getPropertyValue</span>(<span class="variable">name</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Otherwise return currentStyle</span>
+			<span class="variable">style</span> = <span class="variable">e</span>.<span class="variable">currentStyle</span>[<span class="variable">name</span>];
 		}
 		
-		<span class="comment">// Otherwise return currentStyle</span>
-		<span class="keyword">return</span> <span class="variable">e</span>.<span class="variable">currentStyle</span>[<span class="variable">name</span>];
+		<span class="comment">// Return the found style, if not found then look in the style property</span>
+		<span class="keyword">return</span> (<span class="variable">style</span>) ? <span class="variable">style</span> : <span class="variable">e</span>.<span class="variable">style</span>[<span class="variable">name</span>];
 	}
 	
 	
@@ -1053,6 +1265,44 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 	}
 	
 	<span class="comment">// Return the Spark object to allow chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/triggerEvent.js"><a href="#">triggerEvent</a></h2></td><td>src/triggerEvent.js</td></tr><tr class="code">
+<td class="docs">
+<p>Manually fire events assigned to elements</p>
+
+<p>For example, to trigger a click event on all p elements you would use the following line</p>
+
+<pre><code>$('p').triggerEvent('click');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you wish to trigger</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'triggerEvent'</span>, <span class="keyword">function</span>(<span class="variable">type</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">trigger</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Loop through all of the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Check for createEventObject</span>
+		<span class="keyword">if</span>(<span class="variable">document</span>.<span class="variable">createEventObject</span>) {
+			<span class="comment">// Trigger for Internet Explorer</span>
+			<span class="variable">trigger</span> = <span class="variable">document</span>.<span class="variable">createEventObject</span>();
+			<span class="variable">e</span>.<span class="variable">fireEvent</span>(<span class="string">'on'</span> + <span class="variable">type</span>, <span class="variable">trigger</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Trigger for the good browsers</span>
+			<span class="variable">trigger</span> = <span class="variable">document</span>.<span class="variable">createEvent</span>(<span class="string">'HTMLEvents'</span>);
+			<span class="variable">trigger</span>.<span class="variable">initEvent</span>(<span class="variable">type</span>, <span class="variable">true</span>, <span class="variable">true</span>);
+			<span class="variable">e</span>.<span class="variable">dispatchEvent</span>(<span class="variable">trigger</span>);
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
