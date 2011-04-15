@@ -185,6 +185,28 @@
 			test('Getting data that does not exist', function() {
 				equals(false, $('p').data('doesnotexist'), 'The doesnotexist data should equal false');
 			});
+			
+			
+			
+			module('json');
+			
+			var json;
+			var obj = {
+			    someArray: ['foo', 'bar', 123],
+			    someObject: { foo: 'bar', embedded: { eleet: 1337 } },
+			    someString: '"Hi there!"',
+			    someNumber: 123,
+			    someBoolean: true
+			};
+			
+			test('Stringifying an object', function() {
+				json = Spark.json.stringify(obj);
+				equals('{"someArray":["foo","bar",123],"someObject":{"foo":"bar","embedded":{"eleet":1337}},"someString":"\\"Hi there!\\"","someNumber":123,"someBoolean":true}', json, 'The JSON should equal this JSON');
+			});
+			
+			test('Parsing JSON', function() {
+				equals(123, Spark.json.parse(json).someNumber, 'Object.someNumber should equal this 123');
+			});
 		</script>
 	</body>
 </html>
