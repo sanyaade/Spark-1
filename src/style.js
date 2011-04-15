@@ -77,7 +77,7 @@ Spark.extend('style', function(name, value) {
 		var style = null;
 		
 		// If we can use getComputedStyle
-		if(getComputedStyle) {
+		if(typeof getComputedStyle !== 'undefined') {
 			// Return getComputedStyle
 			style = document.defaultView.getComputedStyle(e, null).getPropertyValue(name);
 		}
