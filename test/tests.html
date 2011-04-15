@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<link rel='stylesheet' type='text/css' href='qunit.css' />
+	</head>
+	
+	<body>
+		<p class='original' title='Original'>Test element</p>
+		
+		<h1 id="qunit-header">QUnit example</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture">test markup, will be hidden</div>
+		
+		<script type='text/javascript' src='qunit.js'></script>
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			module('ajax.get');
+			
+			test('Asynchronous request', function() {
+				var data = Spark.ajax.get('ajaxtest.txt');
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			test('Asynchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.get('doesnotexist.txt');
+				equals(false, data, 'Data should equal false');
+			});
+			
+			test('Asynchronous request with parameters', function() {
+				var data = Spark.ajax.get('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				});
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			asyncTest('Synchronous request', function() {
+				var data = Spark.ajax.get('ajaxtest.txt', false, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			asyncTest('Synchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.get('doesnotexist.txt', false, function(data) {
+					start();
+					equals(false, data, 'Data should equal false');
+				});
+			});
+			
+			asyncTest('Synchronous request with parameters', function() {
+				var data = Spark.ajax.get('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				}, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			
+			
+			module('ajax.post');
+			
+			test('Asynchronous request', function() {
+				var data = Spark.ajax.post('ajaxtest.txt');
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			test('Asynchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.post('doesnotexist.txt');
+				equals(false, data, 'Data should equal false');
+			});
+			
+			test('Asynchronous request with parameters', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				});
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			asyncTest('Synchronous request', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', false, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			asyncTest('Synchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.post('doesnotexist.txt', false, function(data) {
+					start();
+					equals(false, data, 'Data should equal false');
+				});
+			});
+			
+			asyncTest('Synchronous request with parameters', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				}, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			
+			
+			module('attribute');
+			
+			test('Getting an attribute', function() {
+				var attribute = $('p').attribute('title');
+				equals('Original', attribute, 'Attribute should equal "Original"');
+			});
+			
+			test('Setting an attribute', function() {
+				var attribute = $('p').attribute('title', 'Title set').attribute('title');
+				equals('Title set', attribute, 'Attribute should equal "Title set"');
+			});
+			
+			test('Setting multiple attributes with an object', function() {
+				var title = $('p').attribute({
+					title: 'Title set with object',
+					rel: 'Rel set with object'
+				}).attribute('title');
+				
+				var rel = $('p').attribute('rel');
+				
+				equals('Title set with object', title, 'Title should equal "Title set with object"');
+				equals('Rel set with object', rel, 'Rel should equal "Rel set with object"');
+			});
+			
+			
+			
+			module('classes');
+			
+			test('Checking for a class', function() {
+				var has = $('p').hasClass('original');
+				var notHas = $('p').hasClass('nothas');
+				equals(true, has, 'Has should equal true');
+				equals(false, notHas, 'NotHas should equal false');
+			});
+			
+			test('Adding a class', function() {
+				var has = $('p').addClass('new').hasClass('new');
+				equals(true, has, 'Has should equal true');
+			});
+			
+			test('Removing a class', function() {
+				var has = $('p').removeClass('new').hasClass('new');
+				equals(false, has, 'Has should equal false');
+			});
+		</script>
+	</body>
+</html>
