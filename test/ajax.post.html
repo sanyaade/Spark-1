@@ -2,18 +2,60 @@
 <html lang='en'>
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<link rel='stylesheet' type='text/css' href='qunit.css' />
 	</head>
 	
 	<body>
+		<h1 id="qunit-header">QUnit example</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture">test markup, will be hidden</div>
+		
+		<script type='text/javascript' src='qunit.js'></script>
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
-			document.write(Spark.ajax.post('../.gitignore', {
-				q: 'something',
-				foo: 'bar'
-			}));
+			test('Asynchronous request', function() {
+				var data = Spark.ajax.post('ajaxtest.txt');
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
 			
-			Spark.ajax.post('../.gitignore', false, function(data) {
-				alert(data);
+			test('Asynchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.post('doesnotexist.txt');
+				equals(false, data, 'Data should equal false');
+			});
+			
+			test('Asynchronous request with parameters', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				});
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			asyncTest('Synchronous request', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', false, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			asyncTest('Synchronous request to a file that does not exist', function() {
+				var data = Spark.ajax.post('doesnotexist.txt', false, function(data) {
+					start();
+					equals(false, data, 'Data should equal false');
+				});
+			});
+			
+			asyncTest('Synchronous request with parameters', function() {
+				var data = Spark.ajax.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				}, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
 			});
 		</script>
 	</body>
