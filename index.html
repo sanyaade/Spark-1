@@ -273,13 +273,16 @@ code .this { color: #19469D; }</style>
 </td>
 </tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
 <td class="docs">
-<p>The AJAX object contains two functions, <code>get</code> and <code>post</code>.
+<p>The AJAX object contains three functions, <code>get</code>, <code>post</code> and <code>getJSON</code>.
 You can call these functions like so.</p>
 
 <pre><code>Spark.ajax.get('foo.json');
-Spark.ajax.post('foo.json');</code></pre>
+Spark.ajax.post('foo.json');
+Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retreve tweets etc)</code></pre>
 
-<p>The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so.</p>
+<p>The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so. This does not apply to the <code>getJSON</code> method. This must always have a callback for the data to be passed to.</p>
+
+<p>Do not make the mistake of passing a function. This must be a string and represent the functions name. Not the function its self.</p>
 
 <pre><code>Spark.ajax.post('foo.json', false, function(data) {
     console.log(data);
@@ -300,7 +303,15 @@ Spark.ajax.post('foo.json');</code></pre>
     }
 });</code></pre>
 
-<p> </p>
+<p>In the <code>getJSON</code> method, these arguments are reversed, you must pass a callback and then an optional parameters object.</p>
+
+<pre><code>Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
+    screen_name: 'SparkJavaScript',
+    count: '5'
+});</code></pre>
+
+<p>The code above would pull the latest five tweets from Spark's twitter account and pass them in an object to a function called <code>handle</code>.
+ </p>
 </td>
 <td class="code">
 
@@ -320,13 +331,13 @@ Spark.ajax.post('foo.json');</code></pre>
 		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
 		
 		<span class="comment">// Make sure parameters is an object</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span> === <span class="string">'object'</span>) {
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
 			<span class="comment">// Add the parameters to the file name</span>
 			<span class="variable">file</span> += <span class="string">'?'</span> + <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
 		}
 		
 		<span class="comment">// Check for the callback</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
+		<span class="keyword">if</span>(<span class="variable">callback</span>) {
 			<span class="comment">// It exists, so pass it to the callback handling function</span>
 			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
 		}
@@ -338,7 +349,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		<span class="variable">req</span>.<span class="variable">send</span>();
 		
 		<span class="comment">// Check if the callback has not been passed</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'undefined'</span>) {
+		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
 			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
 				<span class="comment">// Just return the content because it was a syncronous request</span>
 				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
@@ -365,7 +376,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
 		
 		<span class="comment">// Check for the callback</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
+		<span class="keyword">if</span>(<span class="variable">callback</span>) {
 			<span class="comment">// It exists, so pass it to the callback handling function</span>
 			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
 		}
@@ -377,7 +388,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		<span class="variable">req</span>.<span class="variable">setRequestHeader</span>(<span class="string">'Content-type'</span>, <span class="string">'application/x-www-form-urlencoded'</span>);
 		
 		<span class="comment">// Only send the data if it is set</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span> === <span class="string">'object'</span>) {
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
 			<span class="variable">req</span>.<span class="variable">send</span>(<span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>));
 		}
 		<span class="keyword">else</span> {
@@ -385,7 +396,7 @@ Spark.ajax.post('foo.json');</code></pre>
 		}
 		
 		<span class="comment">// Check if the callback has not been passed</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'undefined'</span>) {
+		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
 			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
 				<span class="comment">// Just return the content because it was a syncronous request</span>
 				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
@@ -395,6 +406,30 @@ Spark.ajax.post('foo.json');</code></pre>
 				<span class="keyword">return</span> <span class="variable">false</span>;
 			}
 		}
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<pre><code> * Load a JSON file and pass it to the callback function
+ * </code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>String</em>  callback Function name to pass the parsed JSON to</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">getJSON</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">callback</span>, <span class="variable">parameters</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">params</span> = <span class="variable">false</span>;
+		
+		<span class="comment">// Get the parameter string if required</span>
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
+			<span class="variable">params</span> = <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
+		}
+		
+		<span class="comment">// Load the file</span>
+		<span class="class">Spark</span>.<span class="variable">load</span>(<span class="variable">file</span> + <span class="string">'?callback='</span> + <span class="variable">callback</span> + ((<span class="variable">params</span>) ? <span class="string">'&amp;'</span> + <span class="variable">params</span> : <span class="string">''</span>));
 	}
 });
 </code></pre>
@@ -998,6 +1033,28 @@ On error, it will throw a 'Invalid JSON' syntax error</p>
 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="class">JSON</span> !== <span class="string">'undefined'</span>) {
 			<span class="keyword">return</span> <span class="class">JSON</span>.<span class="variable">stringify</span>(<span class="variable">data</span>);
 		}</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/load.js"><a href="#">load</a></h2></td><td>src/load.js</td></tr><tr class="code">
+<td class="docs">
+<p>Load external JavaScript files into the document</p>
+
+<p>For example, to load a Spark plugin into the document you would use the following line.</p>
+
+<pre><code>Spark.load('http://somesite/AwesomeSparkPlugin.js');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path to the script you want to load</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'load'</span>, <span class="keyword">function</span>(<span class="variable">file</span>) {
+	<span class="comment">// Add the script tag</span>
+	<span class="this">this</span>.<span class="variable">clone</span>().<span class="variable">find</span>(<span class="string">'head'</span>).<span class="variable">insertElement</span>(<span class="string">'script'</span>, <span class="variable">false</span>, {
+		<span class="variable">type</span>: <span class="string">'text/javascript'</span>,
+		<span class="variable">src</span>: <span class="variable">file</span>
+	});
+});
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/prependElement.js"><a href="#">prependElement</a></h2></td><td>src/prependElement.js</td></tr><tr class="code">
 <td class="docs">
