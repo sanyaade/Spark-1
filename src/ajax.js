@@ -105,13 +105,13 @@ Spark.extend('ajax', {
 		var req = this.initialise();
 		
 		// Make sure parameters is an object
-		if(typeof parameters === 'object') {
+		if(parameters) {
 			// Add the parameters to the file name
 			file += '?' + this.buildParameterString(parameters);
 		}
 		
 		// Check for the callback
-		if(typeof callback === 'function') {
+		if(callback) {
 			// It exists, so pass it to the callback handling function
 			this.handleCallback(req, callback);
 		}
@@ -123,7 +123,7 @@ Spark.extend('ajax', {
 		req.send();
 		
 		// Check if the callback has not been passed
-		if(typeof callback === 'undefined') {
+		if(!callback) {
 			if(req.status === 200) {
 				// Just return the content because it was a syncronous request
 				return req.responseText;
@@ -148,7 +148,7 @@ Spark.extend('ajax', {
 		var req = this.initialise();
 		
 		// Check for the callback
-		if(typeof callback === 'function') {
+		if(callback) {
 			// It exists, so pass it to the callback handling function
 			this.handleCallback(req, callback);
 		}
@@ -160,7 +160,7 @@ Spark.extend('ajax', {
 		req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		
 		// Only send the data if it is set
-		if(typeof parameters === 'object') {
+		if(parameters) {
 			req.send(this.buildParameterString(parameters));
 		}
 		else {
@@ -168,7 +168,7 @@ Spark.extend('ajax', {
 		}
 		
 		// Check if the callback has not been passed
-		if(typeof callback === 'undefined') {
+		if(!callback) {
 			if(req.status === 200) {
 				// Just return the content because it was a syncronous request
 				return req.responseText;
