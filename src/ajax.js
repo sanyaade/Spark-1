@@ -1,11 +1,14 @@
 /**
- * The AJAX object contains two functions, `get` and `post`.
+ * The AJAX object contains three functions, `get`, `post` and `getJSON`.
  * You can call these functions like so.
  * 
  *     Spark.ajax.get('foo.json');
  *     Spark.ajax.post('foo.json');
+ *     Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retreve tweets etc)
  * 
- * The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so.
+ * The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so. This does not apply to the `getJSON` method. This must always have a callback for the data to be passed to.
+ * 
+ * Do not make the mistake of passing a function. This must be a string and represent the functions name. Not the function its self.
  * 
  *     Spark.ajax.post('foo.json', false, function(data) {
  *         console.log(data);
@@ -25,6 +28,15 @@
  *             console.log('An error occurred.');
  *         }
  *     });
+ * 
+ * In the `getJSON` method, these arguments are reversed, you must pass a callback and then an optional parameters object.
+ * 
+ *     Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
+ *         screen_name: 'SparkJavaScript',
+ *         count: '5'
+ *     });
+ * 
+ * The code above would pull the latest five tweets from Spark's twitter account and pass them in an object to a function called `handle`.
  */
 
 /** @private */
