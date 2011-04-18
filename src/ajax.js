@@ -183,7 +183,16 @@ Spark.extend('ajax', {
 	/**
 	 * Load a JSON file and pass it to the callback function
 	 */
-	getJSON: function(file, parameters, callback) {
+	getJSON: function(file, callback, parameters) {
+		// Initialise any required variables
+		var params = false;
 		
+		// Get the parameter string if required
+		if(parameters) {
+			params = this.buildParameterString(parameters);
+		}
+		
+		// Load the file
+		Spark.load(file + '?callback=' + callback + ((params) ? '&' + params : ''));
 	}
 });
