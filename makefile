@@ -22,7 +22,8 @@ files = ${src}core.js\
 		${src}insertElement.js\
 		${src}prependElement.js\
 		${src}appendElement.js\
-		${src}removeElement.js
+		${src}removeElement.js\
+		${src}load.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
