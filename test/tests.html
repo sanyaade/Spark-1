@@ -303,6 +303,21 @@
 			test('Removing an element', function() {
 				ok($('p#test p').removeElement());
 			});
+			
+			
+			
+			module('ajax.getJSON');
+			
+			function handleData(data) {
+				test('Loading a JSON file', function() {
+					ok(data);
+				});
+			}
+			
+			Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handleData', {
+				screen_name: 'SparkJavaScript',
+				count: '5'
+			});
 		</script>
 	</body>
 </html>
