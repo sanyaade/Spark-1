@@ -1,1 +1,1 @@
-var loadTest = true;
+alert('Loaded');

@@ -303,17 +303,6 @@
 			test('Removing an element', function() {
 				ok($('p#test p').removeElement());
 			});
-			
-			
-			
-			module('load');
-			
-			asyncTest('Loading a script', function() {
-				Spark.load('loadtest.js', function() {
-					start();
-					equals(true, loadTest, 'loadTest should equal true');
-				});
-			});
 		</script>
 	</body>
 </html>
