@@ -303,6 +303,16 @@
 			test('Removing an element', function() {
 				ok($('p#test p').removeElement());
 			});
+			
+			
+			
+			module('load');
+			
+			test('Loading a script', function() {
+				Spark.load('loadtest.js', function() {
+					ok();
+				});
+			});
 		</script>
 	</body>
 </html>
