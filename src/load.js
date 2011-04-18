@@ -5,12 +5,27 @@
  * 
  *     Spark.load('http://somesite/AwesomeSparkPlugin.js');
  * 
+ * If you pass a callback then that will be run as soon as the script has loaded.
+ * 
+ *     Spark.load('http://somesite/AwesomeSparkPlugin.js', function() {
+ *         alert('Plugin loaded!');
+ *     });
+ * 
  * @param {String} file Path to the script you want to load
  */
-Spark.extend('load', function(file) {
+Spark.extend('load', function(file, fn) {
+	// Initialise any required variables
+	var time = new Date().getTime();
+	
 	// Add the script tag
 	this.find('head').insertElement('script', false, {
 		type: 'text/javascript',
-		src: file
+		src: file,
+		rel: time
 	});
+	
+	// Add the listener for it being done if they passed the fn argument
+	if(typeof fn === 'function') {
+		this.find('head script[src="' + file + '"][rel="' + time + '"]').addEvent('load', fn);
+	}
 });

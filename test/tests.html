@@ -308,9 +308,10 @@
 			
 			module('load');
 			
-			test('Loading a script', function() {
+			asyncTest('Loading a script', function() {
 				Spark.load('loadtest.js', function() {
-					ok();
+					start();
+					equals(true, loadTest, 'loadTest should equal true');
 				});
 			});
 		</script>

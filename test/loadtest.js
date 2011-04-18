@@ -1,1 +1,1 @@
-loadTest = 'loaded';
+var loadTest = true;
