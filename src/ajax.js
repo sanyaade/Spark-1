@@ -178,5 +178,12 @@ Spark.extend('ajax', {
 				return false;
 			}
 		}
+	},
+	
+	/**
+	 * Load a JSON file and pass it to the callback function
+	 */
+	getJSON: function(file, parameters, callback) {
+		
 	}
 });
