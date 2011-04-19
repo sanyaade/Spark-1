@@ -16,7 +16,7 @@ Spark.extend('ready', function(fn) {
 	}
 	else {
 		// For IE
-		(function(){
+		(function() {
 			// Create the custom tag
 			var tempNode = document.createElement('document:ready');
 			
