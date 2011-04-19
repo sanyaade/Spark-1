@@ -1,5 +1,13 @@
 /**
  * Replace or append text to the specified elements
+ * 
+ * To replace the content of an element you just have to pass a replacement string, like so.
+ * 
+ *     $('p.someClass').text('Replaced');
+ * 
+ * If you pass true as the second argument then it will append the text.
+ * 
+ * If nothing is passed then it returns the first elements content.
  */
 Spark.extend('text', function(content, append) {
 	// Initialise any required variables
