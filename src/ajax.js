@@ -192,13 +192,13 @@ Spark.extend('ajax', {
 		}
 	},
 	
-	/**
-	 * Load a JSON file and pass it to the callback function
-	 * 
+    /**
+     * Load a JSON file and pass it to the callback function
+     * 
      * @param {String} file Path of the target file
      * @param {String} callback Function name to pass the parsed JSON to
      * @param {Object} parameters The arguments you wish to pass to the file
-	 */
+     */
 	getJSON: function(file, callback, parameters) {
 		// Initialise any required variables
 		var params = false;
