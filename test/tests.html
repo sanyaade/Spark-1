@@ -318,6 +318,18 @@
 			
 			
 			
+			module('html');
+			
+			test('Replacing text', function() {
+				equals('Test', $('p#test').text('Test').text(), 'The text should equal test');
+			});
+			
+			test('Appending text', function() {
+				equals('Testing', $('p#test').text('ing', true).text(), 'The text should equal testing');
+			});
+			
+			
+			
 			module('ajax.getJSON');
 			
 			function handleData(data) {
