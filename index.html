@@ -948,6 +948,34 @@ $('div p', el);</code></pre>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/html.js"><a href="#">html</a></h2></td><td>src/html.js</td></tr><tr class="code">
+<td class="docs">
+<p>Replace or append a html string to the specified elements
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'html'</span>, <span class="keyword">function</span>(<span class="variable">content</span>, <span class="variable">append</span>) {
+	<span class="comment">// Check if they just want the innerHTML</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">content</span> === <span class="string">'undefined'</span>) {
+		<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">innerHTML</span>;
+	}
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Append or replace the html</span>
+		<span class="keyword">if</span>(<span class="variable">append</span>) {
+			<span class="variable">e</span>.<span class="variable">innerHTML</span> += <span class="variable">content</span>;
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">e</span>.<span class="variable">innerHTML</span> = <span class="variable">content</span>;
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/json.js"><a href="#">json</a></h2></td><td>src/json.js</td></tr><tr class="code">
 <td class="docs">
 <p>The JSON object can stringify or parse JSON.</p>
@@ -1322,6 +1350,37 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 	}
 	
 	<span class="comment">// Return the Spark object to allow chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/text.js"><a href="#">text</a></h2></td><td>src/text.js</td></tr><tr class="code">
+<td class="docs">
+<p>Replace or append text to the specified elements
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'text'</span>, <span class="keyword">function</span>(<span class="variable">content</span>, <span class="variable">append</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">type</span> = (<span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">innerText</span>) ? <span class="string">'innerText'</span> : <span class="string">'textContent'</span>;
+	
+	<span class="comment">// Check if they just want the text</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">content</span> === <span class="string">'undefined'</span>) {
+		<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>][<span class="variable">type</span>];
+	}
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Append or replace the text</span>
+		<span class="keyword">if</span>(<span class="variable">append</span>) {
+			<span class="variable">e</span>[<span class="variable">type</span>] += <span class="variable">content</span>;
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">e</span>[<span class="variable">type</span>] = <span class="variable">content</span>;
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
