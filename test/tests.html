@@ -306,6 +306,18 @@
 			
 			
 			
+			module('html');
+			
+			test('Replacing html', function() {
+				equals('Test', $('p#test').html('Test').html(), 'The inner html should equal test');
+			});
+			
+			test('Appending html', function() {
+				equals('Testing', $('p#test').html('ing', true).html(), 'The inner html should equal testing');
+			});
+			
+			
+			
 			module('ajax.getJSON');
 			
 			function handleData(data) {
