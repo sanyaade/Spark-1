@@ -145,132 +145,6 @@ code .this { color: #19469D; }</style>
 });
 </code></pre>
 </td>
-</tr><tr class="filename"><td><h2 id="src/addEvent.js"><a href="#">addEvent</a></h2></td><td>src/addEvent.js</td></tr><tr class="code">
-<td class="docs">
-<p>Add an event listener to the found elements.</p>
-
-<p>To set an event you must specify an event type and callback. The callback will be passed the event object as an argument.</p>
-
-<p>If you wanted to set a listener for click event on all p tags then you would use the following line.</p>
-
-<pre><code>$('p').addEvent('click', function(e) {
-    // Code to handle the click event goes here
-});</code></pre>
-
-<p>If you return false from your callback then the default action will be prevented. For instance, this line would cause all links on the page to stop working.</p>
-
-<pre><code>$('a').addEvent('click', function(e) { return false });</code></pre>
-
-<p>The function also takes an optional third argument, <code>stopBubble</code>.</p>
-
-<p>If true then event bubbling will be prevented.</p>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to listen for</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Function to be run when the event occurs</p></li><li><p><strong>param</strong>: <em>Boolean</em>  stopBubble If true then event bubbling will be prevented</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'addEvent'</span>, <span class="keyword">function</span>(<span class="variable">type</span>, <span class="variable">fn</span>, <span class="variable">stopBubble</span>) {
-	<span class="comment">// Initialise any required variables</span>
-	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
-	
-	<span class="keyword">function</span> <span class="variable">fixEvent</span>(<span class="variable">e</span>) {
-		<span class="comment">// Initialise any required variables</span>
-		<span class="keyword">var</span> <span class="variable">posx</span> = <span class="number integer">0</span>,
-			<span class="variable">posy</span> = <span class="number integer">0</span>,
-			<span class="variable">obj</span> = <span class="keyword">null</span>,
-			<span class="variable">offsetX</span> = <span class="number integer">0</span>,
-			<span class="variable">offsetY</span> = <span class="number integer">0</span>;
-		
-		<span class="comment">// Fix IE's wrong association of the target element</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">target</span> === <span class="string">'undefined'</span>) {
-			<span class="variable">e</span>.<span class="variable">target</span> = <span class="variable">e</span>.<span class="variable">srcElement</span>;
-		}
-		
-		<span class="comment">// Fix Safaris problem with selecting the wrong node type</span>
-		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">nodeType</span> === <span class="number integer">3</span>) {
-			<span class="variable">e</span>.<span class="variable">target</span> = <span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">parentNode</span>;
-		}
-		
-		<span class="comment">// Make sure we have keyCode, and not which</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">keyCode</span> === <span class="string">'undefined'</span>) {
-			<span class="variable">e</span>.<span class="variable">keyCode</span> = <span class="variable">e</span>.<span class="variable">which</span>;
-		}
-		
-		<span class="comment">// Fix IE's pageX/Y locations</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">pageX</span> === <span class="string">'undefined'</span>) {
-			<span class="variable">e</span>.<span class="variable">pageX</span> = <span class="variable">e</span>.<span class="variable">clientX</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollLeft</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollLeft</span>;
-			<span class="variable">e</span>.<span class="variable">pageY</span> = <span class="variable">e</span>.<span class="variable">clientY</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollTop</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollTop</span>;
-		}
-		
-		<span class="comment">// Fix the offsetX/Y in Firefox</span>
-		<span class="variable">obj</span> = <span class="variable">e</span>.<span class="variable">target</span>;
-		<span class="keyword">if</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'Opera'</span>) === -<span class="number integer">1</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'MSIE'</span>) === -<span class="number integer">1</span>) {
-			<span class="keyword">do</span> {
-				<span class="variable">obj</span> = <span class="variable">obj</span>.<span class="variable">offsetParent</span>;
-				<span class="variable">offsetX</span> += <span class="variable">obj</span>.<span class="variable">offsetLeft</span>;
-				<span class="variable">offsetY</span> += <span class="variable">obj</span>.<span class="variable">offsetTop</span>;
-			} <span class="keyword">while</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span>);
-			
-			<span class="variable">e</span>.<span class="variable">offsetX</span> = <span class="variable">offsetX</span>;
-			<span class="variable">e</span>.<span class="variable">offsetY</span> = <span class="variable">offsetY</span>;
-		}
-		
-		<span class="comment">// Return the fixed event object</span>
-		<span class="keyword">return</span> <span class="variable">e</span>;
-	}
-	
-	<span class="keyword">function</span> <span class="variable">runCallback</span>(<span class="variable">e</span>) {
-		<span class="comment">// Stop bubbling if required</span>
-		<span class="keyword">if</span>(<span class="variable">stopBubble</span>) {
-			<span class="variable">e</span>.<span class="variable">cancelBubble</span> = <span class="variable">true</span>;
-			<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">stopPropagation</span>) {
-				<span class="variable">e</span>.<span class="variable">stopPropagation</span>();
-			}
-		}
-		
-		<span class="comment">// Run the callback and check if it returned false</span>
-		<span class="keyword">if</span>(<span class="variable">fn</span>(<span class="variable">fixEvent</span>(<span class="variable">e</span>)) === <span class="variable">false</span>) {
-			<span class="comment">// If so then prevent default</span>
-			<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">preventDefault</span>) {
-				<span class="variable">e</span>.<span class="variable">preventDefault</span>();
-			}
-			<span class="keyword">else</span> {
-				<span class="variable">e</span>.<span class="variable">returnValue</span> = <span class="variable">false</span>;
-			}
-		}
-	}
-	
-	<span class="comment">// Loop through all the elements</span>
-	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Make sure it has an events array</span>
-		<span class="keyword">if</span>(!<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>)) {
-			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>, []);
-		}
-		
-		<span class="comment">// Assign the events data to the array</span>
-		<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>).<span class="variable">push</span>({
-			<span class="variable">type</span>: <span class="variable">type</span>,
-			<span class="variable">fn</span>: <span class="variable">fn</span>,
-			<span class="variable">reference</span>: <span class="variable">runCallback</span>
-		});
-		
-		<span class="comment">// Check if the browser supports addEventListener or attachEvent and use it</span>
-		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">addEventListener</span>) {
-			<span class="comment">// Assign event</span>
-			<span class="variable">e</span>.<span class="variable">addEventListener</span>(<span class="variable">type</span>, <span class="variable">runCallback</span>, <span class="variable">false</span>);
-		}
-		<span class="keyword">else</span> {
-			<span class="comment">// Assign event</span>
-			<span class="variable">e</span>.<span class="variable">attachEvent</span>(<span class="string">'on'</span> + <span class="variable">type</span>, <span class="variable">runCallback</span>);
-		}
-	});
-	
-	<span class="comment">// Return the Spark object for chaining</span>
-	<span class="keyword">return</span> <span class="this">this</span>;
-});
-</code></pre>
-</td>
 </tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
 <td class="docs">
 <p>The AJAX object contains three functions, <code>get</code>, <code>post</code> and <code>getJSON</code>.
@@ -431,6 +305,132 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		<span class="comment">// Load the file</span>
 		<span class="class">Spark</span>.<span class="variable">load</span>(<span class="variable">file</span> + <span class="string">'?callback='</span> + <span class="variable">callback</span> + ((<span class="variable">params</span>) ? <span class="string">'&amp;'</span> + <span class="variable">params</span> : <span class="string">''</span>));
 	}
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/addEvent.js"><a href="#">addEvent</a></h2></td><td>src/addEvent.js</td></tr><tr class="code">
+<td class="docs">
+<p>Add an event listener to the found elements.</p>
+
+<p>To set an event you must specify an event type and callback. The callback will be passed the event object as an argument.</p>
+
+<p>If you wanted to set a listener for click event on all p tags then you would use the following line.</p>
+
+<pre><code>$('p').addEvent('click', function(e) {
+    // Code to handle the click event goes here
+});</code></pre>
+
+<p>If you return false from your callback then the default action will be prevented. For instance, this line would cause all links on the page to stop working.</p>
+
+<pre><code>$('a').addEvent('click', function(e) { return false });</code></pre>
+
+<p>The function also takes an optional third argument, <code>stopBubble</code>.</p>
+
+<p>If true then event bubbling will be prevented.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  type Name of the event you want to listen for</p></li><li><p><strong>param</strong>: <em>Function</em>  fn Function to be run when the event occurs</p></li><li><p><strong>param</strong>: <em>Boolean</em>  stopBubble If true then event bubbling will be prevented</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'addEvent'</span>, <span class="keyword">function</span>(<span class="variable">type</span>, <span class="variable">fn</span>, <span class="variable">stopBubble</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
+	
+	<span class="keyword">function</span> <span class="variable">fixEvent</span>(<span class="variable">e</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">posx</span> = <span class="number integer">0</span>,
+			<span class="variable">posy</span> = <span class="number integer">0</span>,
+			<span class="variable">obj</span> = <span class="keyword">null</span>,
+			<span class="variable">offsetX</span> = <span class="number integer">0</span>,
+			<span class="variable">offsetY</span> = <span class="number integer">0</span>;
+		
+		<span class="comment">// Fix IE's wrong association of the target element</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">target</span> === <span class="string">'undefined'</span>) {
+			<span class="variable">e</span>.<span class="variable">target</span> = <span class="variable">e</span>.<span class="variable">srcElement</span>;
+		}
+		
+		<span class="comment">// Fix Safaris problem with selecting the wrong node type</span>
+		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">nodeType</span> === <span class="number integer">3</span>) {
+			<span class="variable">e</span>.<span class="variable">target</span> = <span class="variable">e</span>.<span class="variable">target</span>.<span class="variable">parentNode</span>;
+		}
+		
+		<span class="comment">// Make sure we have keyCode, and not which</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">keyCode</span> === <span class="string">'undefined'</span>) {
+			<span class="variable">e</span>.<span class="variable">keyCode</span> = <span class="variable">e</span>.<span class="variable">which</span>;
+		}
+		
+		<span class="comment">// Fix IE's pageX/Y locations</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">e</span>.<span class="variable">pageX</span> === <span class="string">'undefined'</span>) {
+			<span class="variable">e</span>.<span class="variable">pageX</span> = <span class="variable">e</span>.<span class="variable">clientX</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollLeft</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollLeft</span>;
+			<span class="variable">e</span>.<span class="variable">pageY</span> = <span class="variable">e</span>.<span class="variable">clientY</span> + <span class="variable">document</span>.<span class="variable">body</span>.<span class="variable">scrollTop</span> + <span class="variable">document</span>.<span class="variable">documentElement</span>.<span class="variable">scrollTop</span>;
+		}
+		
+		<span class="comment">// Fix the offsetX/Y in Firefox</span>
+		<span class="variable">obj</span> = <span class="variable">e</span>.<span class="variable">target</span>;
+		<span class="keyword">if</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'Opera'</span>) === -<span class="number integer">1</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">navigator</span>.<span class="variable">userAgent</span>.<span class="variable">indexOf</span>(<span class="string">'MSIE'</span>) === -<span class="number integer">1</span>) {
+			<span class="keyword">do</span> {
+				<span class="variable">obj</span> = <span class="variable">obj</span>.<span class="variable">offsetParent</span>;
+				<span class="variable">offsetX</span> += <span class="variable">obj</span>.<span class="variable">offsetLeft</span>;
+				<span class="variable">offsetY</span> += <span class="variable">obj</span>.<span class="variable">offsetTop</span>;
+			} <span class="keyword">while</span>(<span class="variable">obj</span>.<span class="variable">offsetParent</span>);
+			
+			<span class="variable">e</span>.<span class="variable">offsetX</span> = <span class="variable">offsetX</span>;
+			<span class="variable">e</span>.<span class="variable">offsetY</span> = <span class="variable">offsetY</span>;
+		}
+		
+		<span class="comment">// Return the fixed event object</span>
+		<span class="keyword">return</span> <span class="variable">e</span>;
+	}
+	
+	<span class="keyword">function</span> <span class="variable">runCallback</span>(<span class="variable">e</span>) {
+		<span class="comment">// Stop bubbling if required</span>
+		<span class="keyword">if</span>(<span class="variable">stopBubble</span>) {
+			<span class="variable">e</span>.<span class="variable">cancelBubble</span> = <span class="variable">true</span>;
+			<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">stopPropagation</span>) {
+				<span class="variable">e</span>.<span class="variable">stopPropagation</span>();
+			}
+		}
+		
+		<span class="comment">// Run the callback and check if it returned false</span>
+		<span class="keyword">if</span>(<span class="variable">fn</span>(<span class="variable">fixEvent</span>(<span class="variable">e</span>)) === <span class="variable">false</span>) {
+			<span class="comment">// If so then prevent default</span>
+			<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">preventDefault</span>) {
+				<span class="variable">e</span>.<span class="variable">preventDefault</span>();
+			}
+			<span class="keyword">else</span> {
+				<span class="variable">e</span>.<span class="variable">returnValue</span> = <span class="variable">false</span>;
+			}
+		}
+	}
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Make sure it has an events array</span>
+		<span class="keyword">if</span>(!<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>)) {
+			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>, []);
+		}
+		
+		<span class="comment">// Assign the events data to the array</span>
+		<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkEvents'</span>).<span class="variable">push</span>({
+			<span class="variable">type</span>: <span class="variable">type</span>,
+			<span class="variable">fn</span>: <span class="variable">fn</span>,
+			<span class="variable">reference</span>: <span class="variable">runCallback</span>
+		});
+		
+		<span class="comment">// Check if the browser supports addEventListener or attachEvent and use it</span>
+		<span class="keyword">if</span>(<span class="variable">e</span>.<span class="variable">addEventListener</span>) {
+			<span class="comment">// Assign event</span>
+			<span class="variable">e</span>.<span class="variable">addEventListener</span>(<span class="variable">type</span>, <span class="variable">runCallback</span>, <span class="variable">false</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Assign event</span>
+			<span class="variable">e</span>.<span class="variable">attachEvent</span>(<span class="string">'on'</span> + <span class="variable">type</span>, <span class="variable">runCallback</span>);
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
 </td>
@@ -906,6 +906,42 @@ $('div p', el);</code></pre>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/html.js"><a href="#">html</a></h2></td><td>src/html.js</td></tr><tr class="code">
+<td class="docs">
+<p>Replace or append a html string to the specified elements</p>
+
+<p>To replace the content of an element you just have to pass a replacement string, like so.</p>
+
+<pre><code>$('p.someClass').html('Replaced');</code></pre>
+
+<p>If you pass true as the second argument then it will append the text.</p>
+
+<p>If nothing is passed then it returns the first elements content.
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'html'</span>, <span class="keyword">function</span>(<span class="variable">content</span>, <span class="variable">append</span>) {
+	<span class="comment">// Check if they just want the innerHTML</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">content</span> === <span class="string">'undefined'</span>) {
+		<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">innerHTML</span>;
+	}
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Append or replace the html</span>
+		<span class="keyword">if</span>(<span class="variable">append</span>) {
+			<span class="variable">e</span>.<span class="variable">innerHTML</span> += <span class="variable">content</span>;
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">e</span>.<span class="variable">innerHTML</span> = <span class="variable">content</span>;
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/insertElement.js"><a href="#">insertElement</a></h2></td><td>src/insertElement.js</td></tr><tr class="code">
 <td class="docs">
 <p>Inserts a new element into the specified elements</p>
@@ -941,34 +977,6 @@ $('div p', el);</code></pre>
 	<span class="comment">// Loop through the elements</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
 		<span class="variable">e</span>.<span class="variable">appendChild</span>(<span class="variable">el</span>.<span class="variable">cloneNode</span>(<span class="variable">true</span>));
-	});
-	
-	<span class="comment">// Return the Spark object for chaining</span>
-	<span class="keyword">return</span> <span class="this">this</span>;
-});
-</code></pre>
-</td>
-</tr><tr class="filename"><td><h2 id="src/html.js"><a href="#">html</a></h2></td><td>src/html.js</td></tr><tr class="code">
-<td class="docs">
-<p>Replace or append a html string to the specified elements
- </p>
-</td>
-<td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'html'</span>, <span class="keyword">function</span>(<span class="variable">content</span>, <span class="variable">append</span>) {
-	<span class="comment">// Check if they just want the innerHTML</span>
-	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">content</span> === <span class="string">'undefined'</span>) {
-		<span class="keyword">return</span> <span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">innerHTML</span>;
-	}
-	
-	<span class="comment">// Loop through all the elements</span>
-	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Append or replace the html</span>
-		<span class="keyword">if</span>(<span class="variable">append</span>) {
-			<span class="variable">e</span>.<span class="variable">innerHTML</span> += <span class="variable">content</span>;
-		}
-		<span class="keyword">else</span> {
-			<span class="variable">e</span>.<span class="variable">innerHTML</span> = <span class="variable">content</span>;
-		}
 	});
 	
 	<span class="comment">// Return the Spark object for chaining</span>
@@ -1356,7 +1364,15 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 </td>
 </tr><tr class="filename"><td><h2 id="src/text.js"><a href="#">text</a></h2></td><td>src/text.js</td></tr><tr class="code">
 <td class="docs">
-<p>Replace or append text to the specified elements
+<p>Replace or append text to the specified elements</p>
+
+<p>To replace the content of an element you just have to pass a replacement string, like so.</p>
+
+<pre><code>$('p.someClass').text('Replaced');</code></pre>
+
+<p>If you pass true as the second argument then it will append the text.</p>
+
+<p>If nothing is passed then it returns the first elements content.
  </p>
 </td>
 <td class="code">
