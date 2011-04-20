@@ -73,7 +73,34 @@ Spark.extend('style', function(name, value) {
 	 * @private
 	 */
 	function fixColor(color) {
+		// Initialise any required variables
+		var i = null,
+			hex = [];
 		
+		if(color.indexOf('rgb(') === 0) {
+			// It is already RGB
+			return color;
+		}
+		else if(color.indexOf('#') === 0) {
+			// It is hex, take off the hash
+			color = color.slice(1);
+			
+			// Convert it to the right length if it is the shorthand
+			if(color.length === 3) {
+				color = color.replace(/([0-9a-f])/ig, '$1$1');
+			}
+			
+			// Split the string into its main components and convert them to RGB
+			for(i = 0; i < 3; i++) {
+				hex.push(parseInt(color.slice(i * 2, (i + 1) * 2), 16));
+			}
+			
+			// Return the finished RGB string
+			return 'rgb(' + hex.join(',') + ')';
+		}
+		else {
+			// It is a name
+		}
 	}
 	
 	/**
