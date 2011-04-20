@@ -66,6 +66,17 @@ Spark.extend('style', function(name, value) {
 	}
 	
 	/**
+	 * Converts any type of colour to rgb
+	 * 
+	 * @param {String} color Hex, rgb or name of the colour
+	 * @returns {String} RGB version of the colour
+	 * @private
+	 */
+	function fixColor(color) {
+		
+	}
+	
+	/**
 	 * Retrieves the specified computed style from the element
 	 * 
 	 * @param {Object} e Element object to get styles from
@@ -84,6 +95,11 @@ Spark.extend('style', function(name, value) {
 		else {
 			// Otherwise return currentStyle
 			style = e.currentStyle[name];
+		}
+		
+		// Fix colours
+		if(name.toLowerCase().indexOf('color') !== -1) {
+			fixColor(style);
 		}
 		
 		// Return the found style, if not found then look in the style property
