@@ -226,6 +226,11 @@
 				equals('1px', style, 'The style (border-width) should equal "1px"');
 			});
 			
+			test('Getting a colour', function() {
+				var style = $('p').style('color');
+				equals('rgb(0,0,0)', style, 'The style (color) should equal "rgb(0,0,0)"');
+			});
+			
 			
 			
 			module('events');
