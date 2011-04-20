@@ -329,32 +329,18 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			
-			if(typeof document.querySelectorAll === 'undefined') {
-				// So now we have an array of parameter objects
-				// Set up temp found to search with
-				tempFound = offset;
-				
-				// Loop through all of the parameter objects
-				for(p = 0; p < parameters.length; p++) {
-					// Now do the search into tempFound
-					tempFound = tempFound.find(parameters[p]);
-				}
-				
-				// When done concat these results to the found array
-				found = found.concat(tempFound.elements);
+			// So now we have an array of parameter objects
+			// Set up temp found to search with
+			tempFound = offset;
+			
+			// Loop through all of the parameter objects
+			for(p = 0; p < parameters.length; p++) {
+				// Now do the search into tempFound
+				tempFound = tempFound.find(parameters[p]);
 			}
-		}
-		
-		// Check if we can perform a querySelector all search
-		if(typeof document.querySelectorAll !== 'undefined') {
-			if(typeof offset.elements === 'undefined') {
-				found = toArray(document.querySelectorAll(selector));
-			}
-			else {
-				for(i = 0; i < offset.length; i++) {
-					found = toArray(offset[i].querySelectorAll(selector));
-				}
-			}
+			
+			// When done concat these results to the found array
+			found = found.concat(tempFound.elements);
 		}
 		
 		// Clean the array
