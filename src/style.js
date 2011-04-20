@@ -248,7 +248,13 @@ Spark.extend('style', function(name, value) {
 			return 'rgb(' + hex.join(',') + ')';
 		}
 		else {
-			// It is a name
+			// It is a name, loop through until we find it
+			for(i in colors) {
+				if(colors.hasOwnProperty(i) && i === color.toLowerCase()) {
+					// Found it, return the RGB value
+					return colors[i];
+				}
+			}
 		}
 	}
 	
