@@ -404,7 +404,7 @@ Spark.extend('find', function(parameters, context) {
 				}
 			}
 			else {
-				if(value === ((tag) ? compare.toUpperCase() : compare)) {
+				if(((tag) ? value.toUpperCase() : value) === ((tag) ? compare.toUpperCase() : compare)) {
 					return true;
 				}
 				else {
@@ -425,7 +425,7 @@ Spark.extend('find', function(parameters, context) {
 					}
 				}
 				else {
-					if(value === ((tag) ? compare[i].toUpperCase() : compare[i])) {
+					if(((tag) ? value.toUpperCase() : value) === ((tag) ? compare[i].toUpperCase() : compare[i])) {
 						return true;
 					}
 				}
