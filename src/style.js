@@ -226,7 +226,7 @@ Spark.extend('style', function(name, value) {
 				yellowgreen: 'rgb(154,205,50)'
 			};
 		
-		if(color.indexOf('rgb(') === 0) {
+		if(color.indexOf('rgb') === 0) {
 			// It is already RGB, return the one without spaces
 			return color.replace(/\s/g, '');
 		}
