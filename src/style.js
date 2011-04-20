@@ -227,8 +227,8 @@ Spark.extend('style', function(name, value) {
 			};
 		
 		if(color.indexOf('rgb(') === 0) {
-			// It is already RGB
-			return color;
+			// It is already RGB, return the one without spaces
+			return color.replace(/\s/g, '');
 		}
 		else if(color.indexOf('#') === 0) {
 			// It is hex, take off the hash
@@ -279,13 +279,18 @@ Spark.extend('style', function(name, value) {
 			style = e.currentStyle[name];
 		}
 		
+		// If not found, check the style property
+		if(!style) {
+			style = e.style[name];
+		}
+		
 		// Fix colours
 		if(name.toLowerCase().indexOf('color') !== -1) {
-			fixColor(style);
+			style = fixColor(style);
 		}
 		
 		// Return the found style, if not found then look in the style property
-		return (style) ? style : e.style[name];
+		return style;
 	}
 	
 	
