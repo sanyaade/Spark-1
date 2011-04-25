@@ -8,7 +8,8 @@
 Spark.extend('animate', function(style, target) {
 	// Initialise any required variables
 	var that = this,
-		from = null;
+		from = null,
+		unit = null;
 	
 	// Check if we need to perform multiple animations
 	if(typeof style === 'object') {
@@ -22,6 +23,15 @@ Spark.extend('animate', function(style, target) {
 		this.each(function(e) {
 			// Grab where we need to animate from
 			from = that.find(e).style(style);
+			
+			// Get the unit if the target is a string
+			if(typeof target === 'string') {
+				unit = target.replace(/[^%|in|cm|mm|em|ex|pt|pc|px]/gi, '');
+			}
+			else {
+				// Otherwise set it to an empty string
+				unit = '';
+			}
 		});
 	}
 	
