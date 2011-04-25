@@ -9,7 +9,9 @@ Spark.extend('animate', function(style, to) {
 	// Initialise any required variables
 	var that = this,
 		from = null,
-		unit = null;
+		unit = null,
+		difference = null,
+		fps = 50;
 	
 	// Check if we need to perform multiple animations
 	if(typeof style === 'object') {
@@ -36,6 +38,9 @@ Spark.extend('animate', function(style, to) {
 			// Turn the to and from into an integer
 			to = parseFloat(to);
 			from = parseFloat(from);
+			
+			// Work out the difference per frame
+			difference = (to - from) / fps;
 		});
 	}
 	
