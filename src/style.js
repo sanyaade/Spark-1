@@ -53,8 +53,16 @@ Spark.extend('style', function(name, value) {
 	 * @private
 	 */
 	function setStyle(element, name, value) {
+		// Initialise any required variables
+		var pxNames = 'zIndex fontWeight opacity zoom lineHeight',
+			nameTest = null;
+		
+		// Assign the new regex and fix the name
 		name = camelStyle(name);
-		value = (typeof value === 'string') ? value : value + 'px';
+		nameTest = new RegExp('(^|\\s)' + name + '($|\\s)', 'i');
+		
+		// Assign px to the value if required
+		value = (typeof value === 'string' && !nameTest.test(pxNames)) ? value : value + 'px';
 		
 		element.style[name] = value;
 		
