@@ -54,6 +54,7 @@ Spark.extend('style', function(name, value) {
 	 */
 	function setStyle(element, name, value) {
 		name = camelStyle(name);
+		value = (typeof value === 'string') ? value : value + 'px';
 		
 		element.style[name] = value;
 		
