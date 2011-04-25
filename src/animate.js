@@ -7,7 +7,8 @@
  */
 Spark.extend('animate', function(style, target) {
 	// Initialise any required variables
-	var that = this;
+	var that = this,
+		from = null;
 	
 	// Check if we need to perform multiple animations
 	if(typeof style === 'object') {
@@ -17,7 +18,11 @@ Spark.extend('animate', function(style, target) {
 		}, style);
 	}
 	else {
-		
+		// Loop through all the elements
+		this.each(function(e) {
+			// Grab where we need to animate from
+			from = that.find(e).style(style);
+		});
 	}
 	
 	// Return the Spark object
