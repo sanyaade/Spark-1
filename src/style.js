@@ -62,7 +62,7 @@ Spark.extend('style', function(name, value) {
 		nameTest = new RegExp('(^|\\s)' + name + '($|\\s)', 'i');
 		
 		// Assign px to the value if required
-		value = (typeof value === 'string' && !nameTest.test(pxNames)) ? value : value + 'px';
+		value = (typeof value === 'number' && !nameTest.test(pxNames)) ? value + 'px' : value;
 		
 		element.style[name] = value;
 		
