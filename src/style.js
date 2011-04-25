@@ -306,7 +306,7 @@ Spark.extend('style', function(name, value) {
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
-		if(typeof value === 'string') {
+		if(typeof value === 'string' || typeof value === 'number') {
 			// Loop through all elements and assign the style
 			for(i = 0; i < this.length; i++) {
 				setStyle(this[i], name, value);
