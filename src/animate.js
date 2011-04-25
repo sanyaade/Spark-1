@@ -11,9 +11,11 @@ Spark.extend('animate', function(style, target) {
 		this.each(function(t, s) {
 			that.animate(s, t);
 		}, style);
+	}
+	else {
 		
-		return this;
 	}
 	
+	// Return the Spark object
 	return this;
 });
