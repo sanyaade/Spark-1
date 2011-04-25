@@ -32,6 +32,10 @@ Spark.extend('animate', function(style, target) {
 				// Otherwise set it to an empty string
 				unit = '';
 			}
+			
+			// Turn the target and from into an integer
+			target = parseFloat(target);
+			from = parseFloat(from);
 		});
 	}
 	
