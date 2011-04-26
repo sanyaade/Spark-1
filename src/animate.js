@@ -1,6 +1,30 @@
 /**
  * Animate styles of the specified elements
  * 
+ * The minimal use of this function would be passing an object of animations like so
+ * 
+ *     $('p').animate({
+ *         opacity: .5
+ *     });
+ * 
+ * This will animate all p tags opacity to 0.5 over 600ms using the outQuad easing method.
+ * 
+ * You can pass a timeframe and easing like so.
+ * 
+ *     $('p').animate({
+ *         opacity: .5
+ *     }, 1000, 'inBounce');
+ * 
+ * This will obviously use inBounce as the easing method and will last for one second, or 1000 miliseconds.
+ * 
+ * You can also pass a callback function to be run when the animation completes like so.
+ * 
+ *     $('p').animate({
+ *         opacity: .5
+ *     }, 1000, 'inBounce', function() {
+ *         console.log('Animation complete');
+ *     });
+ * 
  * @param {Object} style Name of the style you wish to animate and then what you want to animate to
  * @param {Number|Boolean} timeframe How many miliseconds you wish the animation to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use, in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad
