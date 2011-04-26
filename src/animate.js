@@ -14,6 +14,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		unit = null,
 		difference = null,
 		fps = 50,
+		fames = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
@@ -239,6 +240,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Work out the difference per frame
 			difference = (to - from) / fps;
+			
+			// Work out how many frames are required
+			frames = timeframe / (1000 / fps);
 		}, animations);
 	});
 	
