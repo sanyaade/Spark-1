@@ -14,7 +14,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		unit = null,
 		difference = null,
 		fps = 50,
-		fames = null,
+		frames = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
