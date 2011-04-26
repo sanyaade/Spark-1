@@ -227,7 +227,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	 * @private
 	 */
 	function animate(instance, element, style, value, time) {
-		
+		setTimeout(function() {
+			instance.find(element).style(style, value);
+		}, time);
 	}
 	
 	// Set up defaults
