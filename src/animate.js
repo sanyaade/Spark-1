@@ -269,6 +269,14 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Loop through all the elements
 	this.each(function(e) {
+		// Add the timeframe to the SparkAnimation data of the element
+		if(that.find(e).data('SparkAnimation') === false) {
+			that.find(e).data('SparkAnimation', timeframe);
+		}
+		else {
+			that.find(e).data('SparkAnimation', that.find(e).data('SparkAnimation') + timeframe);
+		}
+		
 		that.each(function(to, style) {
 			// Grab where we need to animate from
 			from = parseFloat(that.find(e).style(style));
