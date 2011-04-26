@@ -245,7 +245,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			difference = (to - from) / frames;
 			
 			// Loop over all the frames
-			for(i = 0; i < frames; i++) {
+			for(i = 1; i <= frames; i++) {
 				
 			}
 		}, animations);
