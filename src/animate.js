@@ -214,6 +214,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
+	// Set up defaults
+	timeframe = (timeframe) ? timeframe : 600;
+	easing = (easing) ? easing : 'outQuad';
+	
 	// Loop through all the elements
 	this.each(function(e) {
 		that.each(function(to, style) {
