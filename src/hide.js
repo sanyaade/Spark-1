@@ -7,12 +7,9 @@ Spark.extend('hide', function() {
 	
 	// Loop through all the elements
 	this.each(function(e) {
-		// Store the original display type
-		that.find(e).data('SparkDisplayType', that.find(e).style('display'));
+		// Store the original display type and hide the element
+		that.find(e).data('SparkDisplayType', that.find(e).style('display')).style('display', 'none');
 	});
-	
-	// Hide the element
-	this.style('display', 'none');
 	
 	// Return the Spark object for chaining
 	return this;
