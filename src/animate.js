@@ -16,6 +16,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		fps = 50,
 		i = null,
 		frames = null,
+		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
@@ -244,7 +245,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Get the unit if the to is a string
 			if(typeof to === 'string') {
-				unit = to.replace(/[^%|in|cm|mm|em|ex|pt|pc|px]/gi, '');
+				unit = to.replace(onlyUnits, '');
 			}
 			else {
 				// Otherwise set it to an empty string
