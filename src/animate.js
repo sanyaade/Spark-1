@@ -219,13 +219,14 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	/**
 	 * Assigns the style to the element after the specified time
 	 * 
+	 * @param {Object} instance An instance of Spark
 	 * @param {Object} element The element to assign the style to
 	 * @param {String} style Name of the type of style you need to add
 	 * @param {String} value Value to assign
 	 * @param {Number} time Amount of miliseconds to wait
 	 * @private
 	 */
-	function animate(element, style, value, time) {
+	function animate(instance, element, style, value, time) {
 		
 	}
 	
@@ -259,7 +260,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Loop over all the frames
 			for(i = 1; i <= frames; i++) {
-				animate(e, style, easingMethods[easing](i, from, difference, frames) + unit, i * (1000 / fps));
+				animate(that, e, style, easingMethods[easing](i, from, difference, frames) + unit, i * (1000 / fps));
 			}
 		}, animations);
 	});
