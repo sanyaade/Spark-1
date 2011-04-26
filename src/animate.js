@@ -238,11 +238,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			to = parseFloat(to);
 			from = parseFloat(from);
 			
-			// Work out the difference per frame
-			difference = (to - from) / fps;
-			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
+			
+			// Work out the difference per frame
+			difference = (to - from) / frames;
 		}, animations);
 	});
 	
