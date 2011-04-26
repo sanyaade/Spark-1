@@ -291,13 +291,13 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				calculated = easingMethods[easing](i, from, difference, frames) + unit;
 				animate(that, e, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
 			}
-			
-			// Set up the callback if one has been passed
-			if(callback) {
-				setTimeout(callback, timeframe);
-			}
 		}, animations);
 	});
+	
+	// Set up the callback if one has been passed
+	if(callback) {
+		setTimeout(callback, timeframe);
+	}
 	
 	// Return the Spark object
 	return this;
