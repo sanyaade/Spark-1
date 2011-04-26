@@ -248,23 +248,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	/**
-	 * Assigns the style to the element after the specified time
-	 * 
-	 * @param {Object} instance An instance of Spark
-	 * @param {Object} element The element to assign the style to
-	 * @param {String} style Name of the type of style you need to add
-	 * @param {String} value Value to assign
-	 * @param {Number} time Amount of miliseconds to wait
-	 * @private
-	 */
-	function animate(instance, element, style, time, to, frames, unit, frame, from, difference) {
-		setTimeout(function() {
-			calculated = easingMethods[easing](frame, from, difference, frames) + unit;
-			instance.find(element).style(style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated);
-		}, time);
-	}
-	
 	// Set up defaults
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
@@ -287,41 +270,13 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
-			// Get the offset
-			offset = that.find(e).data('SparkAnimation');
+			// Grab where we need to animate from
+			from = parseFloat(that.find(e).style(style));
 			
-			setTimeout(function() {
-				// Grab where we need to animate from
-				from = parseFloat(that.find(e).style(style));
-				
-				// Work out the difference per frame
-				difference = to - from;
-				
-				// Loop over all the frames
-				for(i = 1; i <= frames; i++) {
-					animate(that, e, style, i * (1000 / fps) + ((offset) ? offset : 0), to, frames, unit, i, from, difference);
-				}
-			}, that.find(e).data('SparkAnimation') || 0);
+			// Work out the difference per frame
+			difference = to - from;
 		}, animations);
-		
-		// Add the timeframe to the SparkAnimation data of the element
-		if(that.find(e).data('SparkAnimation') === false) {
-			that.find(e).data('SparkAnimation', timeframe);
-		}
-		else {
-			that.find(e).data('SparkAnimation', that.find(e).data('SparkAnimation') + timeframe);
-		}
-		
-		// Remove the timeframe from the SparkAnimation data of the element
-		setTimeout(function() {
-			that.find(e).data('SparkAnimation', that.find(e).data('SparkAnimation') - timeframe);
-		}, timeframe);
 	});
-	
-	// Set up the callback if one has been passed
-	if(callback) {
-		setTimeout(callback, timeframe);
-	}
 	
 	// Return the Spark object
 	return this;
