@@ -40,10 +40,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		unit = null,
 		difference = null,
 		fps = 50,
-		i = null,
 		frames = null,
-		calculated = null,
-		offset = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -255,6 +252,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Loop through all the elements
 	this.each(function(e) {
 		that.each(function(to, style) {
+			// Make sure the offset exists
+			if(that.find(e).data('SparkOffset') === false) {
+				that.find(e).data('SparkOffset', 0);
+			}
+			
 			// Get the unit if the to is a string
 			if(typeof to === 'string') {
 				unit = to.replace(onlyUnits, '');
