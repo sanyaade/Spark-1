@@ -435,12 +435,253 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 </td>
 </tr><tr class="filename"><td><h2 id="src/animate.js"><a href="#">animate</a></h2></td><td>src/animate.js</td></tr><tr class="code">
 <td class="docs">
-<p>Animate styles of the specified elements
- </p>
+<p>Animate styles of the specified elements</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Object</em>  style Name of the style you wish to animate</p></li><li><p><strong>param</strong>: <em>String | Number</em>  to Only required if style is a string, the target to animate to. If it is a number it will append px as the unit</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>() {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>(<span class="variable">style</span>, <span class="variable">to</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
+		<span class="variable">from</span> = <span class="keyword">null</span>,
+		<span class="variable">unit</span> = <span class="keyword">null</span>,
+		<span class="variable">difference</span> = <span class="keyword">null</span>,
+		<span class="variable">fps</span> = <span class="number integer">50</span>,
+		<span class="variable">easingMethods</span> = {
+			<span class="variable">inQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">outQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> -<span class="variable">c</span> *(<span class="variable">t</span>/=<span class="variable">d</span>)*(<span class="variable">t</span>-<span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> -<span class="variable">c</span>/<span class="number integer">2</span> * ((--<span class="variable">t</span>)*(<span class="variable">t</span>-<span class="number integer">2</span>) - <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inCubic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">outCubic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*((<span class="variable">t</span>=<span class="variable">t</span>/<span class="variable">d</span>-<span class="number integer">1</span>)*<span class="variable">t</span>*<span class="variable">t</span> + <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutCubic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*((<span class="variable">t</span>-=<span class="number integer">2</span>)*<span class="variable">t</span>*<span class="variable">t</span> + <span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inQuart</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">outQuart</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> -<span class="variable">c</span> * ((<span class="variable">t</span>=<span class="variable">t</span>/<span class="variable">d</span>-<span class="number integer">1</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> - <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutQuart</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> -<span class="variable">c</span>/<span class="number integer">2</span> * ((<span class="variable">t</span>-=<span class="number integer">2</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> - <span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inQuint</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">outQuint</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span>*((<span class="variable">t</span>=<span class="variable">t</span>/<span class="variable">d</span>-<span class="number integer">1</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutQuint</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*((<span class="variable">t</span>-=<span class="number integer">2</span>)*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span>*<span class="variable">t</span> + <span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inSine</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> -<span class="variable">c</span> * <span class="class">Math</span>.<span class="variable">cos</span>(<span class="regexp">/d * (Math.PI/</span><span class="number integer">2</span>)) + <span class="variable">c</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">outSine</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span> * <span class="class">Math</span>.<span class="variable">sin</span>(<span class="regexp">/d * (Math.PI/</span><span class="number integer">2</span>)) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutSine</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> -<span class="regexp">/2 * (Math.cos(Math.PI*t/d</span>) - <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inExpo</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> (<span class="variable">t</span> === <span class="number integer">0</span>) ? <span class="variable">b</span> : <span class="variable">c</span> * <span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>, <span class="number integer">10</span> * (<span class="variable">t</span>/<span class="variable">d</span> - <span class="number integer">1</span>)) + <span class="variable">b</span>;
+			},
+			<span class="variable">outExpo</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> (<span class="variable">t</span> === <span class="variable">d</span>) ? <span class="variable">b</span>+<span class="variable">c</span> : <span class="variable">c</span> * (-<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>, -<span class="number integer">10</span> * <span class="variable">t</span>/<span class="variable">d</span>) + <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutExpo</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span>(<span class="variable">t</span> === <span class="number integer">0</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">t</span> === <span class="variable">d</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span> + <span class="variable">c</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span>((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span> * <span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>, <span class="number integer">10</span> * (<span class="variable">t</span> - <span class="number integer">1</span>)) + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span> * (-<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>, -<span class="number integer">10</span> * --<span class="variable">t</span>) + <span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inCirc</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> -<span class="variable">c</span> * (<span class="class">Math</span>.<span class="variable">sqrt</span>(<span class="number integer">1</span> - (<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span>) - <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">outCirc</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span> * <span class="class">Math</span>.<span class="variable">sqrt</span>(<span class="number integer">1</span> - (<span class="variable">t</span>=<span class="variable">t</span>/<span class="variable">d</span>-<span class="number integer">1</span>)*<span class="variable">t</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutCirc</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> -<span class="variable">c</span>/<span class="number integer">2</span> * (<span class="class">Math</span>.<span class="variable">sqrt</span>(<span class="number integer">1</span> - <span class="variable">t</span>*<span class="variable">t</span>) - <span class="number integer">1</span>) + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span> * (<span class="class">Math</span>.<span class="variable">sqrt</span>(<span class="number integer">1</span> - (<span class="variable">t</span>-=<span class="number integer">2</span>)*<span class="variable">t</span>) + <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inElastic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">a</span>, <span class="variable">p</span>) {
+				<span class="keyword">var</span> <span class="variable">s</span> = <span class="keyword">null</span>;
+				<span class="keyword">if</span>(<span class="variable">t</span> === <span class="number integer">0</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>;
+				} 
+				<span class="keyword">else</span> <span class="keyword">if</span>((<span class="variable">t</span>/=<span class="variable">d</span>) === <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>+<span class="variable">c</span>;
+				}
+				<span class="keyword">if</span>(!<span class="variable">p</span>) {
+					<span class="variable">p</span>=<span class="variable">d</span>*<span class="number float">0.3</span>;
+				}
+				<span class="keyword">if</span>(<span class="variable">a</span> &<span class="variable">lt</span>; <span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>)) {
+					<span class="variable">a</span>=<span class="variable">c</span>;
+					<span class="variable">s</span>=<span class="variable">p</span>/<span class="number integer">4</span>;
+				}
+				<span class="keyword">else</span> {
+					<span class="variable">a</span> = <span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>);
+					<span class="variable">s</span> = <span class="regexp">/(2*Math.PI) * Math.asin(c/a</span>);
+				}
+				<span class="keyword">return</span> -(<span class="variable">a</span>*<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>,<span class="number integer">10</span>*(<span class="variable">t</span>-=<span class="number integer">1</span>)) * <span class="class">Math</span>.<span class="variable">sin</span>( (<span class="variable">t</span>*<span class="variable">d</span>-<span class="variable">s</span>)*(<span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>)/<span class="variable">p</span> )) + <span class="variable">b</span>;
+			},
+			<span class="variable">outElastic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">a</span>, <span class="variable">p</span>) {
+				<span class="keyword">var</span> <span class="variable">s</span> = <span class="keyword">null</span>;
+				<span class="keyword">if</span>(<span class="variable">t</span> === <span class="number integer">0</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span>((<span class="variable">t</span>/=<span class="variable">d</span>) === <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>+<span class="variable">c</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span> (!<span class="variable">p</span>) {
+					<span class="variable">p</span>=<span class="variable">d</span>*<span class="number float">0.3</span>;
+				}
+				<span class="keyword">if</span>(<span class="variable">a</span> &<span class="variable">lt</span>; <span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>)) {
+					<span class="variable">a</span>=<span class="variable">c</span>;
+					<span class="variable">s</span>=<span class="variable">p</span>/<span class="number integer">4</span>;
+				}
+				<span class="keyword">else</span> {
+					<span class="variable">a</span>=<span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>);
+					<span class="variable">s</span>= <span class="regexp">/(2*Math.PI) * Math.asin (c/a</span>);
+				}
+				<span class="keyword">return</span> <span class="variable">a</span>*<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>,-<span class="number integer">10</span>*<span class="variable">t</span>) * <span class="class">Math</span>.<span class="variable">sin</span>( (<span class="variable">t</span>*<span class="variable">d</span>-<span class="variable">s</span>)*(<span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>)/<span class="variable">p</span> ) + <span class="variable">c</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutElastic</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">a</span>, <span class="variable">p</span>) {
+				<span class="keyword">var</span> <span class="variable">s</span> = <span class="keyword">null</span>;
+				<span class="keyword">if</span> (<span class="variable">t</span> === <span class="number integer">0</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) === <span class="number integer">2</span>) {
+					<span class="keyword">return</span> <span class="variable">b</span>+<span class="variable">c</span>;
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span> (!<span class="variable">p</span>) {
+					<span class="variable">p</span>=<span class="variable">d</span>*(<span class="number float">0.3</span>*<span class="number float">1.5</span>);
+				}
+				<span class="keyword">if</span> (<span class="variable">a</span> &<span class="variable">lt</span>; <span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>)) {
+					<span class="variable">a</span>=<span class="variable">c</span>;
+					<span class="variable">s</span>=<span class="variable">p</span>/<span class="number integer">4</span>;
+				}
+				<span class="keyword">else</span> {
+					<span class="variable">a</span>=<span class="class">Math</span>.<span class="variable">abs</span>(<span class="variable">c</span>);
+					<span class="variable">s</span>= <span class="regexp">/(2*Math.PI) * Math.asin (c/a</span>);
+				}
+				<span class="keyword">if</span> (<span class="variable">t</span> &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> -<span class="number float">0.5</span>*(<span class="variable">a</span>*<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>,<span class="number integer">10</span>*(<span class="variable">t</span>-=<span class="number integer">1</span>)) * <span class="class">Math</span>.<span class="variable">sin</span>( (<span class="variable">t</span>*<span class="variable">d</span>-<span class="variable">s</span>)*(<span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>)/<span class="variable">p</span> )) + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">a</span>*<span class="class">Math</span>.<span class="variable">pow</span>(<span class="number integer">2</span>,-<span class="number integer">10</span>*(<span class="variable">t</span>-=<span class="number integer">1</span>)) * <span class="class">Math</span>.<span class="variable">sin</span>( (<span class="variable">t</span>*<span class="variable">d</span>-<span class="variable">s</span>)*(<span class="number integer">2</span>*<span class="class">Math</span>.<span class="class">PI</span>)/<span class="variable">p</span> )*<span class="number float">0.5</span> + <span class="variable">c</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">inBack</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">s</span>) {
+				<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">s</span> === <span class="string">'undefined'</span>) {
+					<span class="variable">s</span> = <span class="number float">1.70158</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span>*((<span class="variable">s</span>+<span class="number integer">1</span>)*<span class="variable">t</span> - <span class="variable">s</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">outBack</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">s</span>) {
+				<span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable">s</span> === <span class="string">'undefined'</span>) {
+					<span class="variable">s</span> = <span class="number float">1.70158</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>*((<span class="variable">t</span>=<span class="variable">t</span>/<span class="variable">d</span>-<span class="number integer">1</span>)*<span class="variable">t</span>*((<span class="variable">s</span>+<span class="number integer">1</span>)*<span class="variable">t</span> + <span class="variable">s</span>) + <span class="number integer">1</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inOutBack</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>, <span class="variable">s</span>) {
+				<span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable">s</span> === <span class="string">'undefined'</span>) {
+					<span class="variable">s</span> = <span class="number float">1.70158</span>;
+				}
+				<span class="keyword">if</span> ((<span class="regexp">/=d/</span><span class="number integer">2</span>) &<span class="variable">lt</span>; <span class="number integer">1</span>) {
+					<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*(<span class="variable">t</span>*<span class="variable">t</span>*(((<span class="variable">s</span>*=(<span class="number float">1.525</span>))+<span class="number integer">1</span>)*<span class="variable">t</span> - <span class="variable">s</span>)) + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="variable">c</span>/<span class="number integer">2</span>*((<span class="variable">t</span>-=<span class="number integer">2</span>)*<span class="variable">t</span>*(((<span class="variable">s</span>*=(<span class="number float">1.525</span>))+<span class="number integer">1</span>)*<span class="variable">t</span> + <span class="variable">s</span>) + <span class="number integer">2</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">inBounce</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">return</span> <span class="variable">c</span> - <span class="this">this</span>.<span class="variable">outBounce</span> (<span class="variable">d</span>-<span class="variable">t</span>, <span class="number integer">0</span>, <span class="variable">c</span>, <span class="variable">d</span>) + <span class="variable">b</span>;
+			},
+			<span class="variable">outBounce</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> ((<span class="regexp">/=d) &lt; (1/</span><span class="number float">2.75</span>)) {
+					<span class="keyword">return</span> <span class="variable">c</span>*(<span class="number float">7.5625</span>*<span class="variable">t</span>*<span class="variable">t</span>) + <span class="variable">b</span>;
+				} 
+				<span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable">t</span> &<span class="variable">lt</span>; (<span class="number integer">2</span>/<span class="number float">2.75</span>)) {
+					<span class="keyword">return</span> <span class="variable">c</span>*(<span class="number float">7.5625</span>*(<span class="variable">t</span>-=(<span class="number float">1.5</span>/<span class="number float">2.75</span>))*<span class="variable">t</span> + <span class="number float">0.75</span>) + <span class="variable">b</span>;
+				} 
+				<span class="keyword">else</span> <span class="keyword">if</span> (<span class="variable">t</span> &<span class="variable">lt</span>; (<span class="number float">2.5</span>/<span class="number float">2.75</span>)) {
+					<span class="keyword">return</span> <span class="variable">c</span>*(<span class="number float">7.5625</span>*(<span class="variable">t</span>-=(<span class="number float">2.25</span>/<span class="number float">2.75</span>))*<span class="variable">t</span> + <span class="number float">0.9375</span>) + <span class="variable">b</span>;
+				}
+				<span class="keyword">else</span> {
+					<span class="keyword">return</span> <span class="variable">c</span>*(<span class="number float">7.5625</span>*(<span class="variable">t</span>-=(<span class="number float">2.625</span>/<span class="number float">2.75</span>))*<span class="variable">t</span> + <span class="number float">0.984375</span>) + <span class="variable">b</span>;
+				}
+			},
+			<span class="variable">inOutBounce</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
+				<span class="keyword">if</span> (<span class="variable">t</span> &<span class="variable">lt</span>; <span class="variable">d</span>/<span class="number integer">2</span>) {
+					<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">inBounce</span> (<span class="variable">t</span>*<span class="number integer">2</span>, <span class="number integer">0</span>, <span class="variable">c</span>, <span class="variable">d</span>) * <span class="number float">0.5</span> + <span class="variable">b</span>;
+				}
+				<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">outBounce</span> (<span class="variable">t</span>*<span class="number integer">2</span>-<span class="variable">d</span>, <span class="number integer">0</span>, <span class="variable">c</span>, <span class="variable">d</span>) * <span class="number float">0.5</span> + <span class="variable">c</span>*<span class="number float">0.5</span> + <span class="variable">b</span>;
+			}
+		};
 	
+	<span class="comment">// Check if we need to perform multiple animations</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">style</span> === <span class="string">'object'</span>) {
+		<span class="comment">// Loop over the animations calling them</span>
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">t</span>, <span class="variable">s</span>) {
+			<span class="variable">that</span>.<span class="variable">animate</span>(<span class="variable">s</span>, <span class="variable">t</span>);
+		}, <span class="variable">style</span>);
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Loop through all the elements</span>
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+			<span class="comment">// Grab where we need to animate from</span>
+			<span class="variable">from</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="variable">style</span>);
+			
+			<span class="comment">// Get the unit if the to is a string</span>
+			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">to</span> === <span class="string">'string'</span>) {
+				<span class="variable">unit</span> = <span class="variable">to</span>.<span class="variable">replace</span>(<span class="regexp">/[^%|in|cm|mm|em|ex|pt|pc|px]/gi</span>, <span class="string">''</span>);
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// Otherwise set it to an empty string</span>
+				<span class="variable">unit</span> = <span class="string">''</span>;
+			}
+			
+			<span class="comment">// Turn the to and from into an integer</span>
+			<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
+			<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">from</span>);
+			
+			<span class="comment">// Work out the difference per frame</span>
+			<span class="variable">difference</span> = (<span class="variable">to</span> - <span class="variable">from</span>) / <span class="variable">fps</span>;
+		});
+	}
+	
+	<span class="comment">// Return the Spark object</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
 </td>
@@ -710,7 +951,7 @@ $('p').data('foo', 'bar');</code></pre>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the data you wish to get or set</p></li><li><p><strong>param</strong>: <em>Mixed</em>  data The data you wish to assign, if not provided then the data is returned</p></li><li><p><strong>returns</strong>: <em>Mixed</em>  If it fails, it will return false, if it succeeds it will return true. If it succeeds in finding data it will return that data</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  name The name of the data you wish to get or set</p></li><li><p><strong>param</strong>: <em>Mixed</em>  data The data you wish to assign, if not provided then the data is returned</p></li><li><p><strong>returns</strong>: <em>Mixed</em>  If it fails, it will return false, if it succeeds it will return the Spark object for chaining. If it succeeds in finding data it will return that data</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'data'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">data</span>) {
@@ -757,8 +998,8 @@ $('p').data('foo', 'bar');</code></pre>
 				<span class="comment">// Assign the data</span>
 				<span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>] = <span class="variable">data</span>;
 				
-				<span class="comment">// Return true because it worked</span>
-				<span class="keyword">return</span> <span class="variable">true</span>;
+				<span class="comment">// Return the Spark object to allow chaining</span>
+				<span class="keyword">return</span> <span class="this">this</span>;
 			}
 			<span class="keyword">else</span> {
 				<span class="comment">// We do not have data</span>
@@ -848,25 +1089,6 @@ You can also pass an array or object as the second argument and it will loop thr
 });
 </code></pre>
 </td>
-</tr><tr class="filename"><td><h2 id="src/hasClass.js"><a href="#">hasClass</a></h2></td><td>src/hasClass.js</td></tr><tr class="code">
-<td class="docs">
-<p>Checks if an element has the specified class.</p>
-
-<p>For example, this will return true, given that there is a div with a class of focus on the page.</p>
-
-<pre><code>$('div.focus').hasClass('focus');</code></pre>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to search for</p></li><li><p><strong>returns</strong>: <em>Boolean</em>  Will return true if it has the class or false if it does not</p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hasClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
-	<span class="comment">// Check for the class</span>
-	<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'\\b'</span> + <span class="variable">name</span> + <span class="string">'\\b'</span>).<span class="variable">test</span>(<span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">className</span>);
-});
-</code></pre>
-</td>
 </tr><tr class="filename"><td><h2 id="src/find.js"><a href="#">find</a></h2></td><td>src/find.js</td></tr><tr class="code">
 <td class="docs">
 <p>The find function is Spark's selector engine. It supports all of the <a href="http://www.w3.org/TR/CSS2/selector.html">CSS2 selectors</a> apart from the link and dynamic pseudo selectors.
@@ -886,6 +1108,8 @@ Say you wanted to find all p tags that where within a div, you would use the fol
 $('div p', el);</code></pre>
 
 <p>The elements are placed within the Spark object. The object is then assigned a length so you can treat it as an array. There is also an array of elements located in the <code>elements</code> section of the object.</p>
+
+<p>You can also pass element objects to it and they will be adopted. If you pass an event object it will adopt the events target.</p>
 
 <h2></h2>
 
@@ -914,7 +1138,68 @@ $('div p', el);</code></pre>
 			<span class="comment">// Return the object with the adopted value</span>
 			<span class="keyword">return</span> <span class="variable">built</span>;
 		}
+		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">parameters</span>.<span class="variable">target</span> === <span class="string">'object'</span>) {
+			<span class="comment">// They passed an event object, its target needs to be adopted into the chain</span>
+			<span class="variable">built</span>[<span class="number integer">0</span>] = <span class="variable">parameters</span>.<span class="variable">target</span>;
+			<span class="variable">built</span>.<span class="variable">elements</span> = [<span class="variable">parameters</span>.<span class="variable">target</span>];
+			<span class="variable">built</span>.<span class="variable">length</span> = <span class="number integer">1</span>;
+			
+			<span class="comment">// Return the object with the adopted value</span>
+			<span class="keyword">return</span> <span class="variable">built</span>;
+		}
 	}</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/hasClass.js"><a href="#">hasClass</a></h2></td><td>src/hasClass.js</td></tr><tr class="code">
+<td class="docs">
+<p>Checks if an element has the specified class.</p>
+
+<p>For example, this will return true, given that there is a div with a class of focus on the page.</p>
+
+<pre><code>$('div.focus').hasClass('focus');</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to search for</p></li><li><p><strong>returns</strong>: <em>Boolean</em>  Will return true if it has the class or false if it does not</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hasClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// Check for the class</span>
+	<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'\\b'</span> + <span class="variable">name</span> + <span class="string">'\\b'</span>).<span class="variable">test</span>(<span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">className</span>);
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/hide.js"><a href="#">hide</a></h2></td><td>src/hide.js</td></tr><tr class="code">
+<td class="docs">
+<p>Hides all of the found elements</p>
+
+<p>For example, to hide all p tags on the page, you would use the following line</p>
+
+<pre><code>$('p').hide();</code></pre>
+
+<p>This function takes the originial display type into account.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hide'</span>, <span class="keyword">function</span>() {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>.<span class="variable">clone</span>();
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Make sure it is already shown</span>
+		<span class="keyword">if</span>(<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>) !== <span class="string">'none'</span>) {
+			<span class="comment">// Store the original display type and hide the element</span>
+			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>)).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="string">'none'</span>);
+		}
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/html.js"><a href="#">html</a></h2></td><td>src/html.js</td></tr><tr class="code">
 <td class="docs">
@@ -1159,28 +1444,48 @@ For best results across all browsers always wrap your code within the ready func
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'ready'</span>, <span class="keyword">function</span>(<span class="variable">fn</span>) {
-	<span class="comment">// Check if we can use addEventListener</span>
-	<span class="keyword">if</span>(<span class="variable">window</span>.<span class="variable">addEventListener</span>) {
-		<span class="comment">// For all browsers except IE</span>
-		<span class="variable">document</span>.<span class="variable">addEventListener</span>(<span class="string">'DOMContentLoaded'</span>, <span class="variable">fn</span>, <span class="variable">false</span>);
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>.<span class="variable">clone</span>();</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<pre><code> * Runs the call back and sets the already run flag to true
+ </code></pre>
+</td>
+<td class="code">
+<pre><code><span class="keyword">function</span> <span class="variable">ready</span>() {
+		<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">document</span>).<span class="variable">data</span>(<span class="string">'domReady'</span>, <span class="variable">true</span>);
+		<span class="variable">fn</span>();
+	}
+	
+	<span class="keyword">if</span>(!<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">document</span>).<span class="variable">data</span>(<span class="string">'domReady'</span>)) {
+		<span class="comment">// Check if we can use addEventListener</span>
+		<span class="keyword">if</span>(<span class="variable">window</span>.<span class="variable">addEventListener</span>) {
+			<span class="comment">// For all browsers except IE</span>
+			<span class="variable">document</span>.<span class="variable">addEventListener</span>(<span class="string">'DOMContentLoaded'</span>, <span class="variable">ready</span>, <span class="variable">false</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// For IE</span>
+			(<span class="keyword">function</span>() {
+				<span class="comment">// Create the custom tag</span>
+				<span class="keyword">var</span> <span class="variable">tempNode</span> = <span class="variable">document</span>.<span class="variable">createElement</span>(<span class="string">'document:ready'</span>);
+
+				<span class="keyword">try</span> {
+					<span class="comment">// See if it throws errors until after it is ready</span>
+					<span class="variable">tempNode</span>.<span class="variable">doScroll</span>(<span class="string">'left'</span>);
+
+					<span class="comment">// Call the function</span>
+					<span class="variable">ready</span>();
+				}
+				<span class="keyword">catch</span>(<span class="variable">err</span>) {
+					<span class="variable">setTimeout</span>(<span class="variable">arguments</span>.<span class="variable">callee</span>, <span class="number integer">0</span>);
+				}
+			}());
+		}
 	}
 	<span class="keyword">else</span> {
-		<span class="comment">// For IE</span>
-		(<span class="keyword">function</span>() {
-			<span class="comment">// Create the custom tag</span>
-			<span class="keyword">var</span> <span class="variable">tempNode</span> = <span class="variable">document</span>.<span class="variable">createElement</span>(<span class="string">'document:ready'</span>);
-			
-			<span class="keyword">try</span> {
-				<span class="comment">// See if it throws errors until after it is ready</span>
-				<span class="variable">tempNode</span>.<span class="variable">doScroll</span>(<span class="string">'left'</span>);
-				
-				<span class="comment">// Call the function</span>
-				<span class="variable">fn</span>();
-			}
-			<span class="keyword">catch</span>(<span class="variable">err</span>) {
-				<span class="variable">setTimeout</span>(<span class="variable">arguments</span>.<span class="variable">callee</span>, <span class="number integer">0</span>);
-			}
-		})();
+		<span class="variable">fn</span>();
 	}
 });
 </code></pre>
@@ -1280,6 +1585,36 @@ For best results across all browsers always wrap your code within the ready func
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/show.js"><a href="#">show</a></h2></td><td>src/show.js</td></tr><tr class="code">
+<td class="docs">
+<p>Shows all of the found elements</p>
+
+<p>For example, to show all p tags on the page, you would use the following line</p>
+
+<pre><code>$('p').show();</code></pre>
+
+<p>This function takes the originial display type into account.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'show'</span>, <span class="keyword">function</span>() {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>.<span class="variable">clone</span>();
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Show the element with the correct display type</span>
+		<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>));
+	});
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/style.js"><a href="#">style</a></h2></td><td>src/style.js</td></tr><tr class="code">
 <td class="docs">
 <p>The style function is used to get or set styles.
@@ -1335,15 +1670,25 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 			<span class="variable">style</span> = <span class="variable">e</span>.<span class="variable">currentStyle</span>[<span class="variable">name</span>];
 		}
 		
+		<span class="comment">// If not found, check the style property</span>
+		<span class="keyword">if</span>(!<span class="variable">style</span>) {
+			<span class="variable">style</span> = <span class="variable">e</span>.<span class="variable">style</span>[<span class="variable">name</span>];
+		}
+		
+		<span class="comment">// Fix colours</span>
+		<span class="keyword">if</span>(<span class="variable">name</span>.<span class="variable">toLowerCase</span>().<span class="variable">indexOf</span>(<span class="string">'color'</span>) !== -<span class="number integer">1</span>) {
+			<span class="variable">style</span> = <span class="variable">fixColor</span>(<span class="variable">style</span>);
+		}
+		
 		<span class="comment">// Return the found style, if not found then look in the style property</span>
-		<span class="keyword">return</span> (<span class="variable">style</span>) ? <span class="variable">style</span> : <span class="variable">e</span>.<span class="variable">style</span>[<span class="variable">name</span>];
+		<span class="keyword">return</span> <span class="variable">style</span>;
 	}
 	
 	
 	<span class="comment">// Check what kind of variable name is</span>
 	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
 		<span class="comment">// Check if they passed a value</span>
-		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">value</span> === <span class="string">'string'</span>) {
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">value</span> === <span class="string">'string'</span> || <span class="keyword">typeof</span> <span class="variable">value</span> === <span class="string">'number'</span>) {
 			<span class="comment">// Loop through all elements and assign the style</span>
 			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="this">this</span>.<span class="variable">length</span>; <span class="variable">i</span>++) {
 				<span class="variable">setStyle</span>(<span class="this">this</span>[<span class="variable">i</span>], <span class="variable">name</span>, <span class="variable">value</span>);
