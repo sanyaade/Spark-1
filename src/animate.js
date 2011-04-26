@@ -265,7 +265,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Loop over all the frames
 			for(i = 1; i <= frames; i++) {
 				calculated = easingMethods[easing](i, from, difference, frames) + unit;
-				calculated = (calculated.replace(onlyUnits, '').length === 0) ? calculated + 'px' : calculated;
+				calculated = (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated;
 				animate(that, e, style, calculated, i * (1000 / fps));
 			}
 		}, animations);
