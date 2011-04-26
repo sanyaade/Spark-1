@@ -25,6 +25,8 @@
  *         console.log('Animation complete');
  *     });
  * 
+ * If you pass false for the timeframe or easing then it will default to 600ms and outQuad.
+ * 
  * @param {Object} style Name of the style you wish to animate and then what you want to animate to
  * @param {Number|Boolean} timeframe How many miliseconds you wish the animation to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use, in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad
