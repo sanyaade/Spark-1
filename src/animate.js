@@ -246,7 +246,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Loop over all the frames
 			for(i = 1; i <= frames; i++) {
-				// console.log(easingMethods[easing](i, from, difference, frames) + unit);
+				animate(easingMethods[easing](i, from, difference, frames) + unit, i * (1000 / fps));
 			}
 		}, animations);
 	});
