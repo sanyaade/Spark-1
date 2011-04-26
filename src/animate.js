@@ -309,7 +309,16 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set up the callback if one has been passed
 	if(callback) {
-		setTimeout(callback, timeframe);
+		setTimeout(function() {
+			// Loop through all the elements
+			that.each(function(e) {
+				// Remove the timeframe from the SparkAnimation data of the element
+				that.find(e).data('SparkAnimation', that.find(e).data('SparkAnimation') - timeframe);
+			});
+			
+			// Run the callback
+			callback();
+		}, timeframe);
 	}
 	
 	// Return the Spark object
