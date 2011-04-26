@@ -242,11 +242,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			frames = timeframe / (1000 / fps);
 			
 			// Work out the difference per frame
-			difference = (to - from) / frames;
+			difference = to - from;
 			
 			// Loop over all the frames
 			for(i = 1; i <= frames; i++) {
-				
+				// console.log(easingMethods[easing](i, from, difference, frames) + unit);
 			}
 		}, animations);
 	});
