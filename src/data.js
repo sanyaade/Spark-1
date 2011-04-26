@@ -22,7 +22,7 @@ Spark.extend('dataMeta', {
  * 
  * @param {String} name The name of the data you wish to get or set
  * @param {Mixed} data The data you wish to assign, if not provided then the data is returned
- * @returns {Mixed} If it fails, it will return false, if it succeeds it will return true. If it succeeds in finding data it will return that data
+ * @returns {Mixed} If it fails, it will return false, if it succeeds it will return the Spark object for chaining. If it succeeds in finding data it will return that data
  */
 Spark.extend('data', function(name, data) {
 	// Initialise any required variables
