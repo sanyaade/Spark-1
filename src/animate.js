@@ -250,12 +250,24 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
+	function animate(found, to, frames, unit, style, timeframe) {
+		setTimeout(function() {
+			found.data('SparkOffset', found.data('SparkOffset') - timeframe);
+		}, timeframe);
+		
+		// Grab where we need to animate from
+		from = parseFloat(found.style(style));
+		
+		// Work out the difference per frame
+		difference = to - from;
+	}
+	
 	// Loop through all the elements
 	this.each(function(e) {
+		// Grab the element
+		found = that.find(e);
+		
 		that.each(function(to, style) {
-			// Grab the element
-			found = that.find(e);
-			
 			// Make sure the offset exists
 			if(found.data('SparkOffset') === false) {
 				found.data('SparkOffset', 0);
@@ -276,12 +288,17 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
-			// Grab where we need to animate from
-			from = parseFloat(found.style(style));
-			
-			// Work out the difference per frame
-			difference = to - from;
+			if(found.data('SparkOffset') === 0) {
+				animate(found, to, frames, unit, style, timeframe);
+			}
+			else {
+				setTimeout(function() {
+					animate(found, to, frames, unit, style, timeframe);
+				}, found.data('SparkOffset'));
+			}
 		}, animations);
+		
+		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
 	});
 	
 	// Return the Spark object
