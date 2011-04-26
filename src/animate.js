@@ -267,11 +267,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Convert to into a float
 			to = parseFloat(to);
 			
-			// Work out how many frames are required
-			frames = timeframe / (1000 / fps);
-			
 			// Grab where we need to animate from
 			from = parseFloat(that.find(e).style(style));
+			
+			// Work out how many frames are required
+			frames = timeframe / (1000 / fps);
 			
 			// Work out the difference per frame
 			difference = to - from;
