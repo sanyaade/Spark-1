@@ -224,7 +224,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	this.each(function(e) {
 		that.each(function(to, style) {
 			// Grab where we need to animate from
-			from = that.find(e).style(style);
+			from = parseFloat(that.find(e).style(style));
 			
 			// Get the unit if the to is a string
 			if(typeof to === 'string') {
@@ -235,9 +235,8 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				unit = '';
 			}
 			
-			// Turn the to and from into an integer
+			// Convert to into a float
 			to = parseFloat(to);
-			from = parseFloat(from);
 			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
