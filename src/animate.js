@@ -241,6 +241,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					return this.inBounce (t*2, 0, c, d) * 0.5 + b;
 				}
 				return this.outBounce (t*2-d, 0, c, d) * 0.5 + c*0.5 + b;
+			},
+			linear: function(frame, original, change, frames) {
+				return original + (frame * (change / frames));
 			}
 		};
 	
