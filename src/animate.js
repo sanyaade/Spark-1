@@ -258,16 +258,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	 * @param {Number} time Amount of miliseconds to wait
 	 * @private
 	 */
-	function animate(instance, element, style, time, to, frames, unit, frame) {
+	function animate(instance, element, style, time, to, frames, unit, frame, from, difference) {
 		setTimeout(function() {
-			// Grab where we need to animate from
-			from = parseFloat(instance.find(element).style(style));
-			
-			// Work out the difference per frame
-			difference = to - from;
-			
 			calculated = easingMethods[easing](frame, from, difference, frames) + unit;
-			
 			instance.find(element).style(style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated);
 		}, time);
 	}
@@ -297,10 +290,18 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Get the offset
 			offset = that.find(e).data('SparkAnimation');
 			
-			// Loop over all the frames
-			for(i = 1; i <= frames; i++) {
-				animate(that, e, style, i * (1000 / fps) + ((offset) ? offset : 0), to, frames, unit, i);
-			}
+			setTimeout(function() {
+				// Grab where we need to animate from
+				from = parseFloat(that.find(e).style(style));
+				
+				// Work out the difference per frame
+				difference = to - from;
+				
+				// Loop over all the frames
+				for(i = 1; i <= frames; i++) {
+					animate(that, e, style, i * (1000 / fps) + ((offset) ? offset : 0), to, frames, unit, i, from, difference);
+				}
+			}, that.find(e).data('SparkAnimation') || 0);
 		}, animations);
 		
 		// Add the timeframe to the SparkAnimation data of the element
