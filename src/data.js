@@ -68,7 +68,7 @@ Spark.extend('data', function(name, data) {
 				// Assign the data
 				this.dataMeta.data[target][name] = data;
 				
-				// Return true because it worked
+				// Return the Spark object to allow chaining
 				return true;
 			}
 			else {
