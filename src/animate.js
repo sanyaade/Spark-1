@@ -43,6 +43,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		i = null,
 		frames = null,
 		calculated = null,
+		offset = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -257,12 +258,18 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	 * @param {Number} time Amount of miliseconds to wait
 	 * @private
 	 */
-	function animate(instance, element, style, value, time) {
-		var offset = that.find(element).data('SparkAnimation');
-		
+	function animate(instance, element, style, time, to, frames, unit, frame) {
 		setTimeout(function() {
-			instance.find(element).style(style, value);
-		}, time + ((offset) ? offset : 0));
+			// Grab where we need to animate from
+			from = parseFloat(instance.find(element).style(style));
+			
+			// Work out the difference per frame
+			difference = to - from;
+			
+			calculated = easingMethods[easing](frame, from, difference, frames) + unit;
+			
+			instance.find(element).style(style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated);
+		}, time);
 	}
 	
 	// Set up defaults
@@ -287,16 +294,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
-			// Grab where we need to animate from
-			from = parseFloat(that.find(e).style(style));
-			
-			// Work out the difference per frame
-			difference = to - from;
+			// Get the offset
+			offset = that.find(e).data('SparkAnimation');
 			
 			// Loop over all the frames
 			for(i = 1; i <= frames; i++) {
-				calculated = easingMethods[easing](i, from, difference, frames) + unit;
-				animate(that, e, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
+				animate(that, e, style, i * (1000 / fps) + ((offset) ? offset : 0), to, frames, unit, i);
 			}
 		}, animations);
 		
@@ -311,7 +314,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Remove the timeframe from the SparkAnimation data of the element
 		setTimeout(function() {
 			that.find(e).data('SparkAnimation', that.find(e).data('SparkAnimation') - timeframe);
-		}, timeframe + that.find(e).data('SparkAnimation'));
+		}, timeframe);
 	});
 	
 	// Set up the callback if one has been passed
