@@ -214,16 +214,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	// Check if we need to perform multiple animations
-	if(typeof style === 'object') {
-		// Loop over the animations calling them
-		this.each(function(t, s) {
-			that.animate(s, t);
-		}, style);
-	}
-	else {
-		// Loop through all the elements
-		this.each(function(e) {
+	// Loop through all the elements
+	this.each(function(e) {
+		that.each(function(to, style) {
 			// Grab where we need to animate from
 			from = that.find(e).style(style);
 			
@@ -242,8 +235,8 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Work out the difference per frame
 			difference = (to - from) / fps;
-		});
-	}
+		}, animations);
+	});
 	
 	// Return the Spark object
 	return this;
