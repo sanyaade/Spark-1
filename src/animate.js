@@ -1,11 +1,13 @@
 /**
  * Animate styles of the specified elements
  * 
- * @param {String|Object} style Name of the style you wish to animate
- * @param {String|Number} to Only required if style is a string, the target to animate to. If it is a number it will append px as the unit
+ * @param {Object} style Name of the style you wish to animate and then what you want to animate to
+ * @param {Number|Boolean} timeframe How many miliseconds you wish the animation to take, pass false to default to 600
+ * @param {String|Boolean} easing The easing method to use, in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad
+ * @param {Function} callback Function to be run on completion of the animation
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('animate', function(style, to) {
+Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this,
 		from = null,
