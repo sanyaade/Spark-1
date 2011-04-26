@@ -17,6 +17,8 @@
  * 
  * The elements are placed within the Spark object. The object is then assigned a length so you can treat it as an array. There is also an array of elements located in the `elements` section of the object.
  * 
+ * You can also pass element objects to it and they will be adopted. If you pass an event object it will adopt the events target.
+ * 
  * @param {String|Object} parameters The criteria the element must meet to be selected
  * @param {Object} context The place you wish to start the search from, defaults to document
  * @returns {Object} Returns the Spark object to allow chaining
@@ -38,6 +40,15 @@ Spark.extend('find', function(parameters, context) {
 			// They passed an element, this needs to be adopted into the chain
 			built[0] = parameters;
 			built.elements = [parameters];
+			built.length = 1;
+			
+			// Return the object with the adopted value
+			return built;
+		}
+		else if(typeof parameters.target.nodeName === 'string') {
+			// They passed an event object, its target needs to be adopted into the chain
+			built[0] = parameters.target;
+			built.elements = [parameters.target];
 			built.length = 1;
 			
 			// Return the object with the adopted value
