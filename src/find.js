@@ -45,7 +45,7 @@ Spark.extend('find', function(parameters, context) {
 			// Return the object with the adopted value
 			return built;
 		}
-		else if(typeof parameters.target.nodeName === 'string') {
+		else if(typeof parameters.target === 'object') {
 			// They passed an event object, its target needs to be adopted into the chain
 			built[0] = parameters.target;
 			built.elements = [parameters.target];
