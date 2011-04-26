@@ -10,4 +10,7 @@ Spark.extend('show', function() {
 		// Show the element with the correct display type
 		that.find(e).style('display', that.find(e).data('SparkDisplayType'));
 	});
+	
+	// Return the Spark object for chaining
+	return this;
 });

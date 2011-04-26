@@ -13,4 +13,7 @@ Spark.extend('hide', function() {
 	
 	// Hide the element
 	this.style('display', 'none');
+	
+	// Return the Spark object for chaining
+	return this;
 });
