@@ -299,13 +299,13 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		}, animations);
 		
+		// Add the offset
+		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
+		
 		// Set a timeout to remove the offset
 		setTimeout(function() {
 			found.data('SparkOffset', found.data('SparkOffset') - timeframe);
 		}, timeframe);
-		
-		// Add the offset
-		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
 	});
 	
 	// Return the Spark object
