@@ -44,6 +44,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		i = null,
 		frames = null,
 		found = null,
+		timestamp = new Date().getTime(),
 		calculated = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
@@ -264,8 +265,19 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Grab the element
 		found = that.find(e);
 		
+		// Check if we can call now, or if we need to add it to the animation stack
+		if(found.data('SparkOffset') >= timestamp) {
+			// Add it to the stack
+			setTimeout(function() {
+				found.animate(animations, timeframe, easing, callback);
+			}, found.data('SparkOffset') - timestamp);
+			
+			// Return out of the loop
+			return false;
+		}
+		
 		// Set the offset
-		found.data('SparkOffset', new Date().getTime());
+		found.data('SparkOffset', timestamp + timeframe);
 		
 		that.each(function(to, style) {
 			// Get the unit if the to is a string
