@@ -259,7 +259,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, time);
 	}
 	
-	function stackAnimation(e, timestamp, animations, timeframe, easing, callback) {
+	function stackAnimation(e, animations, timeframe, easing, callback) {
 		setTimeout(function() {
 			e.animate(animations, timeframe, easing, callback);
 		}, e.data('SparkOffset'));
@@ -284,7 +284,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Check if we can call now, or if we need to add it to the animation stack
 		if(found.data('SparkOffset') > 0) {
 			// Add it to the stack
-			stackAnimation(found, timestamp, animations, timeframe, easing, callback);
+			stackAnimation(found, animations, timeframe, easing, callback);
 			
 			// Return out of the loop
 			return false;
