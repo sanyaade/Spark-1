@@ -251,11 +251,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	easing = (easing) ? easing : 'outQuad';
 	
 	function animate(found, to, frames, unit, style, timeframe) {
-		// Set a timeout to remove the offset
-		setTimeout(function() {
-			found.data('SparkOffset', found.data('SparkOffset') - timeframe);
-		}, timeframe);
-		
 		// Grab where we need to animate from
 		from = parseFloat(found.style(style));
 		
@@ -304,6 +299,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		}, animations);
 		
+		// Set a timeout to remove the offset
+		setTimeout(function() {
+			found.data('SparkOffset', found.data('SparkOffset') - timeframe);
+		}, timeframe);
+		
+		// Add the offset
 		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
 	});
 	
