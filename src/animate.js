@@ -260,6 +260,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		
 		// Work out the difference per frame
 		difference = to - from;
+		
+		// Loop through all of the frames
+		for(i = 1; i <= frames; i++) {
+			
+		}
 	}
 	
 	// Loop through all the elements
