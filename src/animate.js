@@ -45,7 +45,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		frames = null,
 		found = null,
 		calculated = null,
-		callbackOffset = 0,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -333,7 +332,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function' && this.noCallback !== true) {
-		setTimeout(callback, timeframe + callbackOffset);
+		setTimeout(callback, timeframe);
 	}
 	
 	// Return the Spark object
