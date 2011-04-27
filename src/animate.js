@@ -42,6 +42,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		fps = 50,
 		frames = null,
 		found = null,
+		time = new Date().getTime(),
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -250,7 +251,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
-	function animate(found, to, frames, unit, style, timeframe) {
+	function animate(found, to, frames, unit, style, timeframe, time) {
 		// Grab where we need to animate from
 		from = parseFloat(found.style(style));
 		
@@ -271,7 +272,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		that.each(function(to, style) {
 			// Make sure the offset exists
 			if(found.data('SparkOffset') === false) {
-				found.data('SparkOffset', 0);
+				found.data('SparkOffset', time);
 			}
 			
 			// Get the unit if the to is a string
@@ -289,23 +290,18 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
-			if(found.data('SparkOffset') === 0) {
-				animate(found, to, frames, unit, style, timeframe);
+			if(found.data('SparkOffset') <= time) {
+				animate(found, to, frames, unit, style, timeframe, time);
 			}
 			else {
 				setTimeout(function() {
-					animate(found, to, frames, unit, style, timeframe);
-				}, found.data('SparkOffset'));
+					animate(found, to, frames, unit, style, timeframe, time);
+				}, found.data('SparkOffset') - time);
 			}
 		}, animations);
 		
 		// Add the offset
-		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
-		
-		// Set a timeout to remove the offset
-		setTimeout(function() {
-			found.data('SparkOffset', found.data('SparkOffset') - timeframe);
-		}, timeframe);
+		found.data('SparkOffset', time + timeframe);
 	});
 	
 	// Return the Spark object
