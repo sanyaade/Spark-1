@@ -297,6 +297,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, animations);
 	});
 	
+	// Set the callback to be run if one was passed
+	if(typeof callback === 'function') {
+		setTimeout(callback, timeframe);
+	}
+	
 	// Return the Spark object
 	return this;
 });
