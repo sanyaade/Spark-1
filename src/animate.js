@@ -264,6 +264,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Grab the element
 		found = that.find(e);
 		
+		// Set the offset
+		found.data('SparkOffset', new Date().getTime());
+		
 		that.each(function(to, style) {
 			// Get the unit if the to is a string
 			if(typeof to === 'string') {
