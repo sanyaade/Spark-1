@@ -437,18 +437,50 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 <td class="docs">
 <p>Animate styles of the specified elements</p>
 
+<p>The minimal use of this function would be passing an object of animations like so</p>
+
+<pre><code>$('p').animate({
+    opacity: .5
+});</code></pre>
+
+<p>This will animate all p tags opacity to 0.5 over 600ms using the outQuad easing method.</p>
+
+<p>You can pass a timeframe and easing like so.</p>
+
+<pre><code>$('p').animate({
+    opacity: .5
+}, 1000, 'inBounce');</code></pre>
+
+<p>This will obviously use inBounce as the easing method and will last for one second, or 1000 miliseconds.</p>
+
+<p>You can also pass a callback function to be run when the animation completes like so.</p>
+
+<pre><code>$('p').animate({
+    opacity: .5
+}, 1000, 'inBounce', function() {
+    console.log('Animation complete');
+});</code></pre>
+
+<p>If you pass false for the timeframe or easing then it will default to 600ms and outQuad.</p>
+
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String | Object</em>  style Name of the style you wish to animate</p></li><li><p><strong>param</strong>: <em>String | Number</em>  to Only required if style is a string, the target to animate to. If it is a number it will append px as the unit</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>Object</em>  style Name of the style you wish to animate and then what you want to animate to</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many miliseconds you wish the animation to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Function to be run on completion of the animation</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>(<span class="variable">style</span>, <span class="variable">to</span>) {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
 		<span class="variable">from</span> = <span class="keyword">null</span>,
+		<span class="variable">to</span> = <span class="keyword">null</span>,
 		<span class="variable">unit</span> = <span class="keyword">null</span>,
 		<span class="variable">difference</span> = <span class="keyword">null</span>,
 		<span class="variable">fps</span> = <span class="number integer">50</span>,
+		<span class="variable">i</span> = <span class="keyword">null</span>,
+		<span class="variable">frames</span> = <span class="keyword">null</span>,
+		<span class="variable">found</span> = <span class="keyword">null</span>,
+		<span class="variable">calculated</span> = <span class="keyword">null</span>,
+		<span class="variable">onlyUnits</span> = <span class="regexp">/[^%|in|cm|mm|em|ex|pt|pc|px]/gi</span>,
 		<span class="variable">easingMethods</span> = {
 			<span class="variable">inQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
 				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span> + <span class="variable">b</span>;
@@ -646,38 +678,96 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 					<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">inBounce</span> (<span class="variable">t</span>*<span class="number integer">2</span>, <span class="number integer">0</span>, <span class="variable">c</span>, <span class="variable">d</span>) * <span class="number float">0.5</span> + <span class="variable">b</span>;
 				}
 				<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">outBounce</span> (<span class="variable">t</span>*<span class="number integer">2</span>-<span class="variable">d</span>, <span class="number integer">0</span>, <span class="variable">c</span>, <span class="variable">d</span>) * <span class="number float">0.5</span> + <span class="variable">c</span>*<span class="number float">0.5</span> + <span class="variable">b</span>;
+			},
+			<span class="variable">linear</span>: <span class="keyword">function</span>(<span class="variable">frame</span>, <span class="variable">original</span>, <span class="variable">change</span>, <span class="variable">frames</span>) {
+				<span class="keyword">return</span> <span class="variable">original</span> + (<span class="variable">frame</span> * (<span class="variable">change</span> / <span class="variable">frames</span>));
 			}
 		};
 	
-	<span class="comment">// Check if we need to perform multiple animations</span>
-	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">style</span> === <span class="string">'object'</span>) {
-		<span class="comment">// Loop over the animations calling them</span>
-		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">t</span>, <span class="variable">s</span>) {
-			<span class="variable">that</span>.<span class="variable">animate</span>(<span class="variable">s</span>, <span class="variable">t</span>);
-		}, <span class="variable">style</span>);
+	<span class="comment">// Set up defaults</span>
+	<span class="variable">timeframe</span> = (<span class="variable">timeframe</span>) ? <span class="variable">timeframe</span> : <span class="number integer">600</span>;
+	<span class="variable">easing</span> = (<span class="variable">easing</span>) ? <span class="variable">easing</span> : <span class="string">'outQuad'</span>;
+	
+	<span class="keyword">function</span> <span class="variable">applyStyle</span>(<span class="variable">e</span>, <span class="variable">name</span>, <span class="variable">value</span>, <span class="variable">time</span>) {
+		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="variable">e</span>.<span class="variable">style</span>(<span class="variable">name</span>, <span class="variable">value</span>);
+		}, <span class="variable">time</span>);
 	}
-	<span class="keyword">else</span> {
-		<span class="comment">// Loop through all the elements</span>
-		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-			<span class="comment">// Grab where we need to animate from</span>
-			<span class="variable">from</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="variable">style</span>);
+	
+	<span class="keyword">function</span> <span class="variable">stackAnimation</span>(<span class="variable">e</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
+		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="variable">e</span>.<span class="variable">noCallback</span> = <span class="variable">true</span>;
+			<span class="variable">e</span>.<span class="variable">animate</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
+		}, <span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>));
+	}
+	
+	<span class="keyword">function</span> <span class="variable">reduceOffset</span>(<span class="variable">e</span>, <span class="variable">timeframe</span>) {
+		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) - <span class="variable">timeframe</span>);
+		}, <span class="variable">timeframe</span>);
+	}
+	
+	<span class="comment">// Loop through all the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Grab the element</span>
+		<span class="variable">found</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
+		
+		<span class="comment">// Make sure there is an offset</span>
+		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) === <span class="variable">false</span>) {
+			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="number integer">0</span>);
+		}
+		
+		<span class="comment">// Check if we can call now, or if we need to add it to the animation stack</span>
+		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) &<span class="variable">gt</span>; <span class="number integer">0</span>) {
+			<span class="comment">// Add it to the stack</span>
+			<span class="variable">stackAnimation</span>(<span class="variable">found</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
 			
+			<span class="comment">// Return out of the loop</span>
+			<span class="keyword">return</span> <span class="variable">false</span>;
+		}
+		
+		<span class="comment">// Set the offset</span>
+		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) + <span class="variable">timeframe</span>);
+		
+		<span class="comment">// Reduce the offset</span>
+		<span class="variable">reduceOffset</span>(<span class="variable">found</span>, <span class="variable">timeframe</span>);
+		
+		<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">to</span>, <span class="variable">style</span>) {
 			<span class="comment">// Get the unit if the to is a string</span>
 			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">to</span> === <span class="string">'string'</span>) {
-				<span class="variable">unit</span> = <span class="variable">to</span>.<span class="variable">replace</span>(<span class="regexp">/[^%|in|cm|mm|em|ex|pt|pc|px]/gi</span>, <span class="string">''</span>);
+				<span class="variable">unit</span> = <span class="variable">to</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>);
 			}
 			<span class="keyword">else</span> {
 				<span class="comment">// Otherwise set it to an empty string</span>
 				<span class="variable">unit</span> = <span class="string">''</span>;
 			}
 			
-			<span class="comment">// Turn the to and from into an integer</span>
+			<span class="comment">// Convert to into a float</span>
 			<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
-			<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">from</span>);
 			
-			<span class="comment">// Work out the difference per frame</span>
-			<span class="variable">difference</span> = (<span class="variable">to</span> - <span class="variable">from</span>) / <span class="variable">fps</span>;
-		});
+			<span class="comment">// Grab where we need to animate from</span>
+			<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>)) || <span class="number integer">0</span>;
+			
+			<span class="comment">// Work out the difference</span>
+			<span class="variable">difference</span> = <span class="variable">to</span> - <span class="variable">from</span>;
+			
+			<span class="comment">// Work out how many frames are required</span>
+			<span class="variable">frames</span> = <span class="variable">timeframe</span> <span class="regexp">/ (1000 /</span> <span class="variable">fps</span>);
+			
+			<span class="comment">// Loop through all the frames</span>
+			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>;= <span class="variable">frames</span>; <span class="variable">i</span>++) {
+				<span class="comment">// Work out the value</span>
+				<span class="variable">calculated</span> = <span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>, <span class="variable">difference</span>, <span class="variable">frames</span>) + <span class="variable">unit</span>;
+				
+				<span class="comment">// Set it to be applied</span>
+				<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, (<span class="variable">calculated</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>).<span class="variable">length</span> === <span class="number integer">0</span>) ? <span class="variable">parseFloat</span>(<span class="variable">calculated</span>) : <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
+			}
+		}, <span class="variable">animations</span>);
+	});
+	
+	<span class="comment">// Set the callback to be run if one was passed</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="this">this</span>.<span class="variable">noCallback</span> !== <span class="variable">true</span>) {
+		<span class="variable">setTimeout</span>(<span class="variable">callback</span>, <span class="variable">timeframe</span>);
 	}
 	
 	<span class="comment">// Return the Spark object</span>
@@ -1010,7 +1100,7 @@ $('p').data('foo', 'bar');</code></pre>
 				}
 				
 				<span class="comment">// We now return the found data</span>
-				<span class="keyword">return</span> <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>] || <span class="variable">false</span>;
+				<span class="keyword">return</span> (<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>] !== <span class="string">'undefined'</span>) ? <span class="this">this</span>.<span class="variable">dataMeta</span>.<span class="variable">data</span>[<span class="variable">target</span>][<span class="variable">name</span>] : <span class="variable">false</span>;
 			}
 		}
 	}
