@@ -44,6 +44,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		i = null,
 		frames = null,
 		found = null,
+		calculated = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -270,12 +271,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Convert to into a float
 			to = parseFloat(to);
 			
+			// Grab where we need to animate from
+			from = parseFloat(that.find(e).style(style));
+			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
 			// Loop through all the frames
 			for(i = 1; i <= frames; i++) {
-				
+				calculated = easingMethods[easing](i, from, difference, frames) + unit;
 			}
 		}, animations);
 	});
