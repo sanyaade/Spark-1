@@ -251,7 +251,17 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
-	function animate(found, to, frames, unit, style, timeframe, time) {
+	function applyStyle(found, style, value, t) {
+		// Apply the style
+		setTimeout(function() {
+			found.style(style, value);
+		}, t);
+	}
+	
+	function animate(found, to, frames, unit, style, timeframe) {
+		// Initialise any required variables
+		var calculated = null;
+		
 		// Grab where we need to animate from
 		from = parseFloat(found.style(style));
 		
@@ -260,10 +270,14 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		
 		// Loop through all of the frames
 		for(i = 1; i <= frames; i++) {
+			// Work out the style
+			calculated = easingMethods[easing](i, from, difference, frames) + unit;
 			
+			// Apply the style
+			applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
 		}
 	}
-	
+		
 	// Loop through all the elements
 	this.each(function(e) {
 		// Grab the element
@@ -291,12 +305,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			frames = timeframe / (1000 / fps);
 			
 			if(found.data('SparkOffset') <= time) {
-				animate(found, to, frames, unit, style, timeframe, time);
+				animate(found, to, frames, unit, style, timeframe);
 			}
 			else {
-				setTimeout(function() {
-					animate(found, to, frames, unit, style, timeframe, time);
-				}, found.data('SparkOffset') - time);
+				setTimeout(function(f, r, fr, u, s, t) {
+					animate(f, t, fr, u, s, t);
+				}(found, to, frames, unit, style, timeframe), found.data('SparkOffset'));
 			}
 		}, animations);
 		
