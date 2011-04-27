@@ -253,6 +253,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
+	function applyStyle(e, name, value) {
+		e.style(name, value);
+	}
+	
 	// Loop through all the elements
 	this.each(function(e) {
 		// Grab the element
@@ -272,14 +276,23 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			to = parseFloat(to);
 			
 			// Grab where we need to animate from
-			from = parseFloat(that.find(e).style(style));
+			from = parseFloat(found.style(style));
+			
+			// Work out the difference
+			difference = to - from;
 			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
 			// Loop through all the frames
 			for(i = 1; i <= frames; i++) {
+				// Work out the value
 				calculated = easingMethods[easing](i, from, difference, frames) + unit;
+				
+				// Set it to be applied
+				setTimeout(function() {
+					applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated);
+				}, i * (1000 / fps));
 			}
 		}, animations);
 	});
