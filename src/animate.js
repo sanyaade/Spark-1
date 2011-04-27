@@ -261,6 +261,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	function stackAnimation(e, animations, timeframe, easing, callback) {
 		setTimeout(function() {
+			e.noCallback = true;
 			e.animate(animations, timeframe, easing, callback);
 		}, e.data('SparkOffset'));
 	}
@@ -330,7 +331,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	});
 	
 	// Set the callback to be run if one was passed
-	if(typeof callback === 'function') {
+	if(typeof callback === 'function' && this.noCallback !== true) {
 		setTimeout(callback, timeframe);
 	}
 	
