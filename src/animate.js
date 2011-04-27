@@ -37,12 +37,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this,
 		from = null,
+		to = null,
 		unit = null,
 		difference = null,
 		fps = 50,
 		frames = null,
 		found = null,
-		time = new Date().getTime(),
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -251,44 +251,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
-	function applyStyle(found, style, value, t) {
-		// Apply the style
-		setTimeout(function() {
-			found.style(style, value);
-		}, t);
-	}
-	
-	function animate(found, to, frames, unit, style, timeframe) {
-		// Initialise any required variables
-		var calculated = null;
-		
-		// Grab where we need to animate from
-		from = parseFloat(found.style(style));
-		
-		// Work out the difference per frame
-		difference = to - from;
-		
-		// Loop through all of the frames
-		for(i = 1; i <= frames; i++) {
-			// Work out the style
-			calculated = easingMethods[easing](i, from, difference, frames) + unit;
-			
-			// Apply the style
-			applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
-		}
-	}
-		
 	// Loop through all the elements
 	this.each(function(e) {
 		// Grab the element
 		found = that.find(e);
 		
 		that.each(function(to, style) {
-			// Make sure the offset exists
-			if(found.data('SparkOffset') === false) {
-				found.data('SparkOffset', time);
-			}
-			
 			// Get the unit if the to is a string
 			if(typeof to === 'string') {
 				unit = to.replace(onlyUnits, '');
@@ -303,19 +271,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
-			
-			if(found.data('SparkOffset') <= time) {
-				animate(found, to, frames, unit, style, timeframe);
-			}
-			else {
-				setTimeout(function(f, r, fr, u, s, t) {
-					animate(f, t, fr, u, s, t);
-				}(found, to, frames, unit, style, timeframe), found.data('SparkOffset'));
-			}
 		}, animations);
-		
-		// Add the offset
-		found.data('SparkOffset', time + timeframe);
 	});
 	
 	// Return the Spark object
