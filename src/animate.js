@@ -41,6 +41,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		unit = null,
 		difference = null,
 		fps = 50,
+		i = null,
 		frames = null,
 		found = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
@@ -271,6 +272,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
+			
+			// Loop through all the frames
+			for(i = 1; i <= frames; i++) {
+				
+			}
 		}, animations);
 	});
 	
