@@ -253,8 +253,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
 	
-	function applyStyle(e, name, value) {
-		e.style(name, value);
+	function applyStyle(e, name, value, time) {
+		setTimeout(function() {
+			e.style(name, value);
+		}, time);
 	}
 	
 	// Loop through all the elements
@@ -290,9 +292,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				calculated = easingMethods[easing](i, from, difference, frames) + unit;
 				
 				// Set it to be applied
-				setTimeout(function() {
-					applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated);
-				}, i * (1000 / fps));
+				applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
 			}
 		}, animations);
 	});
