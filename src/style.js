@@ -69,7 +69,7 @@ Spark.extend('style', function(name, value) {
 		
 		if(name === 'opacity') {
 			element.style.zoom = '1';
-			element.style.filter = 'alpha(opacity=' + (parseFloat(value) * 100) + ')';
+			element.style.filter = 'alpha(opacity=' + Math.floor(parseFloat(value) * 100) + ')';
 			element.style.MozOpacity = value;
 			element.style.KhtmlOpacity = value;
 		}
