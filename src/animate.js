@@ -338,25 +338,47 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				unit = '';
 			}
 			
-			// Convert to into a float
-			to = parseFloat(to);
-			
-			// Grab where we need to animate from
-			from = parseFloat(found.style(style)) || 0;
-			
-			// Work out the difference
-			difference = to - from;
+			if(to instanceof Array) {
+				// Grab where we need to animate from
+				from = that.color.toArray(found.style(style));
+				
+				// Work out the difference
+				difference = [to[0] - from[0], to[1] - from[1], to[2] - from[2]];
+			}
+			else {
+				// Convert to into a float
+				to = parseFloat(to);
+				
+				// Grab where we need to animate from
+				from = parseFloat(found.style(style)) || 0;
+				
+				// Work out the difference
+				difference = to - from;
+			}
 			
 			// Work out how many frames are required
 			frames = timeframe / (1000 / fps);
 			
 			// Loop through all the frames
 			for(i = 1; i <= frames; i++) {
-				// Work out the value
-				calculated = easingMethods[easing](i, from, difference, frames) + unit;
-				
-				// Set it to be applied
-				applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
+				if(to instanceof Array) {
+					// Work out the value
+					calculated = that.color.toRgb([
+						easingMethods[easing](i, from[0], difference[0], frames),
+						easingMethods[easing](i, from[1], difference[1], frames),
+						easingMethods[easing](i, from[2], difference[2], frames)
+					]);
+					
+					// Set it to be applied
+					applyStyle(found, style, calculated, i * (1000 / fps));
+				}
+				else {
+					// Work out the value
+					calculated = easingMethods[easing](i, from, difference, frames) + unit;
+					
+					// Set it to be applied
+					applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
+				}
 			}
 		}, animations);
 	});
