@@ -45,6 +45,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		frames = null,
 		found = null,
 		calculated = null,
+		callbackOffset = 0,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -280,6 +281,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Make sure there is an offset
 		if(found.data('SparkOffset') === false) {
 			found.data('SparkOffset', 0);
+			found.data('SparkFullOffset', 0);
 		}
 		
 		// Check if we can call now, or if we need to add it to the animation stack
@@ -293,6 +295,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		
 		// Set the offset
 		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
+		found.data('SparkFullOffset', found.data('SparkFullOffset') + timeframe);
 		
 		// Reduce the offset
 		reduceOffset(found, timeframe);
@@ -332,7 +335,21 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function' && this.noCallback !== true) {
-		setTimeout(callback, timeframe);
+		setTimeout(function() {
+			// Loop through all the elements
+			that.each(function(e) {
+				// Grab the element
+				found = that.find(e);
+				
+				if(found.data('SparkFullOffset') > callbackOffset) {
+					callbackOffset = found.data('SparkFullOffset');
+				}
+				
+				found.data('SparkFullOffset', 0);
+			});
+			
+			setTimeout(callback, callbackOffset);
+		}, timeframe);
 	}
 	
 	// Return the Spark object
