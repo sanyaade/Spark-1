@@ -38,7 +38,9 @@ Spark.extend('style', function(name, value) {
 		// Check if we need to camel case
 		if(style.indexOf('-') !== -1) {
 			// Return the camel cased string
-			return style.replace(/-([a-z])/gi, function(s, g1) { return g1.toUpperCase(); });
+			return style.replace(/-([a-z])/gi, function(s, g1) {
+				return g1.toUpperCase();
+			});
 		}
 		
 		// Default to returning the string back just as it was
