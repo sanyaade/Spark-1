@@ -25,7 +25,8 @@ Spark.extend('style', function(name, value) {
 	// Initialise any required variables
 	var i = null,
 		n = null,
-		that = this;
+		that = this,
+		directions = null;
 	
 	/**
 	 * Turns a hyphen seperated style name into a camel case one
@@ -136,8 +137,30 @@ Spark.extend('style', function(name, value) {
 			}
 		}
 		else {
-			// Get the style
-			return getStyle(this[0], camelStyle(name));
+			if(name === 'padding' || name === 'margin' || name === 'border') {
+				// Get the direction styles
+				directions = [
+					getStyle(this[0], camelStyle(name + 'Top')),
+					getStyle(this[0], camelStyle(name + 'Right')),
+					getStyle(this[0], camelStyle(name + 'Bottom')),
+					getStyle(this[0], camelStyle(name + 'Left'))
+				];
+				
+				// Loop through the styles
+				for(i = 1; i < 4; i++) {
+					// Compare
+					if(directions[0] !== directions[i]) {
+						return '';
+					}
+				}
+				
+				// They match, return one of them
+				return directions[0];
+			}
+			else {
+				// Get the style
+				return getStyle(this[0], camelStyle(name));
+			}
 		}
 	}
 	else if(typeof name === 'object') {
