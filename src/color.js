@@ -164,7 +164,11 @@ Spark.extend('color', {
 				yellowgreen: [154, 205, 50]
 			};
 		
-		if(color.indexOf('rgb') === 0) {
+		if(typeof color === 'object') {
+			// It is already an object, return it
+			return color;
+		}
+		else if(color.indexOf('rgb') === 0) {
 			// It is RGB, take out the 'rgb(', ')' and spaces, split it by commas and assign it to hex
 			split = color.replace(/rgb\(|\)|\s/gi, '').split(',');
 		}
@@ -181,10 +185,6 @@ Spark.extend('color', {
 			for(i = 0; i < 3; i++) {
 				split.push(parseInt(color.slice(i * 2, (i + 1) * 2), 16));
 			}
-		}
-		else if(typeof color === 'object') {
-			// It is already an object, return it
-			return color;
 		}
 		else {
 			// It is a name, loop through until we find it
