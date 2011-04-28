@@ -64,6 +64,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		found = null,
 		calculated = null,
 		callbackOffset = 0,
+		colours = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -271,6 +272,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Set up defaults
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
+	
+	// Convert colors to arrays
+	this.each(function(to, style) {
+		// Check that it is a color
+		if(style.toLowerCase().indexOf('color') !== -1) {
+			// Convert it to an array
+			animations[style] = that.color.toArray(to);
+		}
+	}, animations);
 	
 	function applyStyle(e, name, value, time) {
 		setTimeout(function() {
