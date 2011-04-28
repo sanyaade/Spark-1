@@ -223,6 +223,19 @@ Spark.extend('color', {
      * @returns {String} The hex string
      */
 	toHex: function(color) {
+		// Initialise any required variables
+		var i = null;
 		
+		// Convert the color to an array
+		color = this.toArray(color);
+		
+		// Loop over the array
+		for(i = 0; i < 3; i++) {
+			// Convert it to hex
+			color[i] = color[i].toString(16).toUpperCase();
+		}
+		
+		// Return the joined version
+		return '#' + color.join('');
 	}
 });
