@@ -5,12 +5,12 @@
 /** @private */
 Spark.extend('color', {
     /**
-     * Converts any color to an object containing its rgb values
+     * Converts any color to an array containing its rgb values
      * 
-     * @param {String|Object} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB object
-     * @returns {Object} The object containing the rgb values
+     * @param {String|Array} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array
+     * @returns {Array} The array containing the rgb values
      */
-	toObject: function(color) {
+	toArray: function(color) {
 		// Initialise any required variables
 		var i = null,
 			split = [],
@@ -164,8 +164,8 @@ Spark.extend('color', {
 				yellowgreen: [154, 205, 50]
 			};
 		
-		if(typeof color === 'object') {
-			// It is already an object, return it
+		if(color instanceof Array) {
+			// It is already an array, return it
 			return color;
 		}
 		else if(color.indexOf('rgb') === 0) {
@@ -196,29 +196,30 @@ Spark.extend('color', {
 			}
 		}
 		
+		// Convert all colors to numbers
+		for(i = 0; i < 3; i++) {
+			split[i] = parseInt(split[i], 10);
+		}
+		
 		// Return the color as an object
-		return {
-			red: parseInt(split[0], 10),
-			green: parseInt(split[1], 10),
-			blue: parseInt(split[2], 10)
-		};
+		return split;
 	},
 	
     /**
      * Converts any color to a RGB string
      * 
-     * @param {String|Object} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB object
+     * @param {String|Array} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array
      * @returns {String} The RGB string
      */
 	toRgb: function(color) {
 		// Convert the color to an object and return the rgb version
-		return 'rgb(' + this.toObject(color).join(', ') + ')';
+		return 'rgb(' + this.toArray(color).join(', ') + ')';
 	},
 	
     /**
      * Converts any color to a hex string
      * 
-     * @param {String|Object} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB object
+     * @param {String|Array} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array
      * @returns {String} The hex string
      */
 	toHex: function(color) {
