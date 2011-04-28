@@ -411,7 +411,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				that.each(function(e) {
 					that.find(e).data('SparkFullOffset', 0);
 				});
-			}, callbackOffset - timeframe);
+			}, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
 		}, timeframe);
 	}
 	
