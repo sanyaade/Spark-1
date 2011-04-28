@@ -6,29 +6,41 @@
 			div.d1 {
 				width: 100px;
 				height: 120px;
-				background-color: #CCFF00;
 				border: 1px dotted #000000;
-				margin: 25px;
 			}
 			
 			div.d2 {
 				width: 320px;
 				height: 80px;
-				background-color: #FFAA00;
 				border: 3px solid #00FF00;
-				margin: 50px;
 			}
 		</style>
 	</head>
 	
 	<body>
-		<div class='d1'></div>
-		<div class='d2'></div>
+		<div style='margin: 25px; background-color: #CCFF00' class='d1'></div>
+		<div style='margin: 50px; background-color: #FFAA00' class='d2'></div>
 		
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				
+				$('div.d1, div.d2').animate({
+					width: 400,
+					height: 400
+				}).animate({
+					margin: 10,
+					borderWidth: 5
+				}).animate({
+					borderWidth: 1,
+					backgroundColor: '#CCCCCC'
+				}).animate({
+					width: 100,
+					height: 100
+				}).animate({
+					opacity: 0
+				}, 3000, false, function() {
+					$('div').style('display', 'none');
+				});
 			});
 		</script>
 	</body>
