@@ -348,7 +348,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				found.data('SparkFullOffset', 0);
 			});
 			
-			setTimeout(callback, callbackOffset);
+			setTimeout(callback, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
 		}, timeframe);
 	}
 	
