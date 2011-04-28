@@ -46,6 +46,20 @@ Spark.extend('style', function(name, value) {
 	}
 	
 	/**
+	 * Turns a camelcase seperated style name into a hyphen one
+	 * 
+	 * @param {String} style The style name to convert
+	 * @returns {String} The hyphen version of the string
+	 * @private
+	 */
+	function hyphenStyle(style) {
+		// Return the hyphen seperated string
+		return style.replace(/([A-Z])/g, function($1) {
+			return '-' + $1.toLowerCase();
+		});
+	}
+	
+	/**
 	 * Sets the specified style with cross browser adjustments if necessary
 	 * 
 	 * @param {Object} element The element to alter
@@ -89,7 +103,7 @@ Spark.extend('style', function(name, value) {
 		// If we can use getComputedStyle
 		if(typeof getComputedStyle !== 'undefined') {
 			// Return getComputedStyle
-			style = document.defaultView.getComputedStyle(e, null).getPropertyValue(name);
+			style = document.defaultView.getComputedStyle(e, null).getPropertyValue(hyphenStyle(name));
 		}
 		else {
 			// Otherwise return currentStyle
