@@ -359,7 +359,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				to = parseFloat(to);
 				
 				// Grab where we need to animate from
-				from = parseFloat(found.style(style)) || getDefault(style);
+				from = (found.style(style) !== '') ? parseFloat(found.style(style)) : getDefault(style);
 				
 				// Work out the difference
 				difference = to - from;
