@@ -21,7 +21,7 @@ Spark.extend('color', {
 			return color;
 		}
 		else if(color.indexOf('rgb') === 0) {
-			// It is RGB, take out the 'rgb(', ')' and spaces, split it by commas and assign it to hex
+			// It is RGB, take out the 'rgb(', ')' and spaces, split it by commas and assign it to split
 			split = color.replace(/rgb\(|\)|\s/gi, '').split(',');
 		}
 		else if(color.indexOf('#') === 0) {
@@ -42,7 +42,7 @@ Spark.extend('color', {
 			// It is a name, loop through until we find it
 			for(i in colors) {
 				if(colors.hasOwnProperty(i) && i === color.toLowerCase()) {
-					// Found it, assign the value to hex
+					// Found it, assign the value to split
 					split = colors[i];
 				}
 			}
