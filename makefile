@@ -28,7 +28,8 @@ files = ${src}core.js\
 		${src}text.js\
 		${src}animate.js\
 		${src}hide.js\
-		${src}show.js
+		${src}show.js\
+		${src}color.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
