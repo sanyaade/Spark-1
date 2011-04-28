@@ -27,7 +27,7 @@
 		
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
-			Spark.ready(function() {
+			function runAnimation() {
 				$('div.d1, div.d2').animate({
 					width: 400,
 					height: 400
@@ -43,9 +43,27 @@
 				}).animate({
 					opacity: 0
 				}, 3000, false, function() {
-					$('div').style('display', 'none');
+					$('div.d1').animate({
+						width: 100,
+						height: 120,
+						borderWidth: 1,
+						margin: 25,
+						backgroundColor: '#CCFF00',
+						opacity: 1
+					}, 3000);
+					
+					$('div.d2').animate({
+						width: 320,
+						height: 80,
+						borderWidth: 3,
+						margin: 50,
+						backgroundColor: '#FFAA00',
+						opacity: 1
+					}, 3000, false, runAnimation);
 				});
-			});
+			}
+			
+			Spark.ready(runAnimation);
 		</script>
 	</body>
 </html>
