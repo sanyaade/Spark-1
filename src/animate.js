@@ -301,6 +301,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, timeframe);
 	}
 	
+	function getDefault(style) {
+		if(style === 'opacity') {
+			return 1;
+		}
+		else {
+			return 0;
+		}
+	}
+	
 	// Loop through all the elements
 	this.each(function(e) {
 		// Grab the element
@@ -350,7 +359,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				to = parseFloat(to);
 				
 				// Grab where we need to animate from
-				from = parseFloat(found.style(style)) || 0;
+				from = parseFloat(found.style(style)) || getDefault(style);
 				
 				// Work out the difference
 				difference = to - from;
