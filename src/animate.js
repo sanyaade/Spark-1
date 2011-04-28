@@ -15,7 +15,7 @@
  *         opacity: .5
  *     }, 1000, 'inBounce');
  * 
- * This will obviously use inBounce as the easing method and will last for one second, or 1000 miliseconds.
+ * This will obviously use inBounce as the easing method and will last for one second, or 1000 milliseconds.
  * 
  * You can also pass a callback function to be run when the animation completes like so.
  * 
@@ -27,8 +27,26 @@
  * 
  * If you pass false for the timeframe or easing then it will default to 600ms and outQuad.
  * 
+ * If you chain animations then they will stack up. Even if it is called from a different chain then the animations will stack. For example, these animations will run one after another.
+ * 
+ *     $('p').animate({
+ *         opacity: .5
+ *     });
+ *     
+ *     $('p').animate({
+ *         opacity: 1
+ *     });
+ * 
+ * The following code will produce an identical outcome to the one above.
+ * 
+ *     $('p').animate({
+ *         opacity: .5
+ *     }).animate({
+ *         opacity: 1
+ *     });
+ * 
  * @param {Object} style Name of the style you wish to animate and then what you want to animate to
- * @param {Number|Boolean} timeframe How many miliseconds you wish the animation to take, pass false to default to 600
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the animation to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Function to be run on completion of the animation
  * @returns {Object} Returns the Spark object for chaining
