@@ -85,6 +85,11 @@ Spark.extend('color', {
 		for(i = 0; i < 3; i++) {
 			// Convert it to hex
 			color[i] = color[i].toString(16).toUpperCase();
+			
+			// Make sure it is always the right length
+			if(color[i].length === 1) {
+				color[i] = color[i] + color[i];
+			}
 		}
 		
 		// Return the joined version
