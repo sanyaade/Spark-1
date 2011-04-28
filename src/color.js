@@ -42,8 +42,8 @@ Spark.extend('color', {
 			// It is a name, loop through until we find it
 			for(i in colors) {
 				if(colors.hasOwnProperty(i) && i === color.toLowerCase()) {
-					// Found it, assign the value to split
-					split = colors[i];
+					// Found it, assign the value to split. This has to be done like this so it returns a new array, not a reference
+					split = [colors[i][0], colors[i][1], colors[i][2]];
 				}
 			}
 		}
