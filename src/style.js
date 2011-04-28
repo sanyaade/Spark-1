@@ -110,7 +110,6 @@ Spark.extend('style', function(name, value) {
 		return style;
 	}
 	
-	
 	// Check what kind of variable name is
 	if(typeof name === 'string') {
 		// Check if they passed a value
