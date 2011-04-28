@@ -364,9 +364,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				if(to instanceof Array) {
 					// Work out the value
 					calculated = that.color.toRgb([
-						easingMethods[easing](i, from[0], difference[0], frames),
-						easingMethods[easing](i, from[1], difference[1], frames),
-						easingMethods[easing](i, from[2], difference[2], frames)
+						Math.floor(easingMethods[easing](i, from[0], difference[0], frames)),
+						Math.floor(easingMethods[easing](i, from[1], difference[1], frames)),
+						Math.floor(easingMethods[easing](i, from[2], difference[2], frames))
 					]);
 					
 					// Set it to be applied
