@@ -65,6 +65,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		calculated = null,
 		callbackOffset = 0,
 		colours = null,
+		got = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -359,7 +360,17 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				to = parseFloat(to);
 				
 				// Grab where we need to animate from
-				from = (found.style(style) !== '') ? parseFloat(found.style(style)) : getDefault(style);
+				got = found.style(style);
+				
+				if(got !== '' && typeof got === 'string') {
+					from = parseFloat(found.style(style));
+				}
+				else if(typeof got === 'number') {
+					from = got;
+				}
+				else {
+					from = getDefault(style);
+				}
 				
 				// Work out the difference
 				difference = to - from;
