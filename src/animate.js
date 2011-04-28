@@ -351,15 +351,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			setTimeout(callback, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
 		}, timeframe);
 	}
-	else {
-		// Just remove the offset
-		setTimeout(function() {
-			// Loop through all the elements
-			that.each(function(e) {
-				that.find(e).data('SparkFullOffset', 0);
-			});
-		}, timeframe);
-	}
 	
 	// Return the Spark object
 	return this;
