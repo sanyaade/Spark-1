@@ -451,7 +451,7 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
     opacity: .5
 }, 1000, 'inBounce');</code></pre>
 
-<p>This will obviously use inBounce as the easing method and will last for one second, or 1000 miliseconds.</p>
+<p>This will obviously use inBounce as the easing method and will last for one second, or 1000 milliseconds.</p>
 
 <p>You can also pass a callback function to be run when the animation completes like so.</p>
 
@@ -463,9 +463,27 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 
 <p>If you pass false for the timeframe or easing then it will default to 600ms and outQuad.</p>
 
+<p>If you chain animations then they will stack up. Even if it is called from a different chain then the animations will stack. For example, these animations will run one after another.</p>
+
+<pre><code>$('p').animate({
+    opacity: .5
+});
+
+$('p').animate({
+    opacity: 1
+});</code></pre>
+
+<p>The following code will produce an identical outcome to the one above.</p>
+
+<pre><code>$('p').animate({
+    opacity: .5
+}).animate({
+    opacity: 1
+});</code></pre>
+
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>Object</em>  style Name of the style you wish to animate and then what you want to animate to</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many miliseconds you wish the animation to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Function to be run on completion of the animation</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>Object</em>  style Name of the style you wish to animate and then what you want to animate to</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many milliseconds you wish the animation to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Function to be run on completion of the animation</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
@@ -480,6 +498,9 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		<span class="variable">frames</span> = <span class="keyword">null</span>,
 		<span class="variable">found</span> = <span class="keyword">null</span>,
 		<span class="variable">calculated</span> = <span class="keyword">null</span>,
+		<span class="variable">callbackOffset</span> = <span class="number integer">0</span>,
+		<span class="variable">colours</span> = <span class="keyword">null</span>,
+		<span class="variable">got</span> = <span class="keyword">null</span>,
 		<span class="variable">onlyUnits</span> = <span class="regexp">/[^%|in|cm|mm|em|ex|pt|pc|px]/gi</span>,
 		<span class="variable">easingMethods</span> = {
 			<span class="variable">inQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
@@ -688,6 +709,15 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 	<span class="variable">timeframe</span> = (<span class="variable">timeframe</span>) ? <span class="variable">timeframe</span> : <span class="number integer">600</span>;
 	<span class="variable">easing</span> = (<span class="variable">easing</span>) ? <span class="variable">easing</span> : <span class="string">'outQuad'</span>;
 	
+	<span class="comment">// Convert colors to arrays</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">to</span>, <span class="variable">style</span>) {
+		<span class="comment">// Check that it is a color</span>
+		<span class="keyword">if</span>(<span class="variable">style</span>.<span class="variable">toLowerCase</span>().<span class="variable">indexOf</span>(<span class="string">'color'</span>) !== -<span class="number integer">1</span>) {
+			<span class="comment">// Convert it to an array</span>
+			<span class="variable">animations</span>[<span class="variable">style</span>] = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toArray</span>(<span class="variable">to</span>);
+		}
+	}, <span class="variable">animations</span>);
+	
 	<span class="keyword">function</span> <span class="variable">applyStyle</span>(<span class="variable">e</span>, <span class="variable">name</span>, <span class="variable">value</span>, <span class="variable">time</span>) {
 		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
 			<span class="variable">e</span>.<span class="variable">style</span>(<span class="variable">name</span>, <span class="variable">value</span>);
@@ -707,6 +737,15 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		}, <span class="variable">timeframe</span>);
 	}
 	
+	<span class="keyword">function</span> <span class="variable">getDefault</span>(<span class="variable">style</span>) {
+		<span class="keyword">if</span>(<span class="variable">style</span> === <span class="string">'opacity'</span>) {
+			<span class="keyword">return</span> <span class="number integer">1</span>;
+		}
+		<span class="keyword">else</span> {
+			<span class="keyword">return</span> <span class="number integer">0</span>;
+		}
+	}
+	
 	<span class="comment">// Loop through all the elements</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
 		<span class="comment">// Grab the element</span>
@@ -715,6 +754,7 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		<span class="comment">// Make sure there is an offset</span>
 		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) === <span class="variable">false</span>) {
 			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="number integer">0</span>);
+			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="number integer">0</span>);
 		}
 		
 		<span class="comment">// Check if we can call now, or if we need to add it to the animation stack</span>
@@ -728,6 +768,7 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		
 		<span class="comment">// Set the offset</span>
 		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) + <span class="variable">timeframe</span>);
+		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>) + <span class="variable">timeframe</span>);
 		
 		<span class="comment">// Reduce the offset</span>
 		<span class="variable">reduceOffset</span>(<span class="variable">found</span>, <span class="variable">timeframe</span>);
@@ -742,32 +783,82 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 				<span class="variable">unit</span> = <span class="string">''</span>;
 			}
 			
-			<span class="comment">// Convert to into a float</span>
-			<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
-			
-			<span class="comment">// Grab where we need to animate from</span>
-			<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>)) || <span class="number integer">0</span>;
-			
-			<span class="comment">// Work out the difference</span>
-			<span class="variable">difference</span> = <span class="variable">to</span> - <span class="variable">from</span>;
+			<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+				<span class="comment">// Grab where we need to animate from</span>
+				<span class="variable">from</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toArray</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>));
+				
+				<span class="comment">// Work out the difference</span>
+				<span class="variable">difference</span> = [<span class="variable">to</span>[<span class="number integer">0</span>] - <span class="variable">from</span>[<span class="number integer">0</span>], <span class="variable">to</span>[<span class="number integer">1</span>] - <span class="variable">from</span>[<span class="number integer">1</span>], <span class="variable">to</span>[<span class="number integer">2</span>] - <span class="variable">from</span>[<span class="number integer">2</span>]];
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// Convert to into a float</span>
+				<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
+				
+				<span class="comment">// Grab where we need to animate from</span>
+				<span class="variable">got</span> = <span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>);
+				
+				<span class="keyword">if</span>(<span class="variable">got</span> !== <span class="string">''</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="keyword">typeof</span> <span class="variable">got</span> === <span class="string">'string'</span>) {
+					<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>));
+				}
+				<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">got</span> === <span class="string">'number'</span>) {
+					<span class="variable">from</span> = <span class="variable">got</span>;
+				}
+				<span class="keyword">else</span> {
+					<span class="variable">from</span> = <span class="variable">getDefault</span>(<span class="variable">style</span>);
+				}
+				
+				<span class="comment">// Work out the difference</span>
+				<span class="variable">difference</span> = <span class="variable">to</span> - <span class="variable">from</span>;
+			}
 			
 			<span class="comment">// Work out how many frames are required</span>
 			<span class="variable">frames</span> = <span class="variable">timeframe</span> <span class="regexp">/ (1000 /</span> <span class="variable">fps</span>);
 			
 			<span class="comment">// Loop through all the frames</span>
 			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>;= <span class="variable">frames</span>; <span class="variable">i</span>++) {
-				<span class="comment">// Work out the value</span>
-				<span class="variable">calculated</span> = <span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>, <span class="variable">difference</span>, <span class="variable">frames</span>) + <span class="variable">unit</span>;
-				
-				<span class="comment">// Set it to be applied</span>
-				<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, (<span class="variable">calculated</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>).<span class="variable">length</span> === <span class="number integer">0</span>) ? <span class="variable">parseFloat</span>(<span class="variable">calculated</span>) : <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
+				<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+					<span class="comment">// Work out the value</span>
+					<span class="variable">calculated</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toRgb</span>([
+						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">0</span>], <span class="variable">difference</span>[<span class="number integer">0</span>], <span class="variable">frames</span>)),
+						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">1</span>], <span class="variable">difference</span>[<span class="number integer">1</span>], <span class="variable">frames</span>)),
+						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">2</span>], <span class="variable">difference</span>[<span class="number integer">2</span>], <span class="variable">frames</span>))
+					]);
+					
+					<span class="comment">// Set it to be applied</span>
+					<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
+				}
+				<span class="keyword">else</span> {
+					<span class="comment">// Work out the value</span>
+					<span class="variable">calculated</span> = <span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>, <span class="variable">difference</span>, <span class="variable">frames</span>) + <span class="variable">unit</span>;
+					
+					<span class="comment">// Set it to be applied</span>
+					<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, (<span class="variable">calculated</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>).<span class="variable">length</span> === <span class="number integer">0</span>) ? <span class="variable">parseFloat</span>(<span class="variable">calculated</span>) : <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
+				}
 			}
 		}, <span class="variable">animations</span>);
 	});
 	
 	<span class="comment">// Set the callback to be run if one was passed</span>
 	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="this">this</span>.<span class="variable">noCallback</span> !== <span class="variable">true</span>) {
-		<span class="variable">setTimeout</span>(<span class="variable">callback</span>, <span class="variable">timeframe</span>);
+		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="comment">// Loop through all the elements</span>
+			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+				<span class="comment">// Grab the element</span>
+				<span class="variable">found</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
+				
+				<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>) &<span class="variable">gt</span>; <span class="variable">callbackOffset</span>) {
+					<span class="variable">callbackOffset</span> = <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>);
+				}
+			});
+			
+			<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+				<span class="variable">callback</span>();
+				
+				<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+					<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="number integer">0</span>);
+				});
+			}, (<span class="variable">callbackOffset</span> === <span class="variable">timeframe</span>) ? <span class="variable">callbackOffset</span> - <span class="variable">timeframe</span> : <span class="variable">callbackOffset</span>);
+		}, <span class="variable">timeframe</span>);
 	}
 	
 	<span class="comment">// Return the Spark object</span>
@@ -875,6 +966,303 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/color.js"><a href="#">color</a></h2></td><td>src/color.js</td></tr><tr class="code">
+<td class="docs">
+<p>Converts colors to RGB or hex from RGB, hex or the color name
+ </p>
+</td>
+<td class="code">
+
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Converts any color to an array containing its rgb values</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array</p></li><li><p><strong>returns</strong>: <em>Array</em>  The array containing the rgb values</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">toArray</span>: <span class="keyword">function</span>(<span class="variable">color</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+			<span class="variable">split</span> = [],
+			<span class="variable">colors</span> = <span class="this">this</span>.<span class="variable">names</span>;
+		
+		<span class="keyword">if</span>(<span class="variable">color</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+			<span class="comment">// It is already an array, return it</span>
+			<span class="keyword">return</span> <span class="variable">color</span>;
+		}
+		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">color</span>.<span class="variable">indexOf</span>(<span class="string">'rgb'</span>) === <span class="number integer">0</span>) {
+			<span class="comment">// It is RGB, take out the 'rgb(', ')' and spaces, split it by commas and assign it to split</span>
+			<span class="variable">split</span> = <span class="variable">color</span>.<span class="variable">replace</span>(<span class="regexp">/rgb\(|\)|\s/gi</span>, <span class="string">''</span>).<span class="variable">split</span>(<span class="string">','</span>);
+		}
+		<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">color</span>.<span class="variable">indexOf</span>(<span class="string">'#'</span>) === <span class="number integer">0</span>) {
+			<span class="comment">// It is hex, take off the hash</span>
+			<span class="variable">color</span> = <span class="variable">color</span>.<span class="variable">slice</span>(<span class="number integer">1</span>);
+			
+			<span class="comment">// Convert it to the right length if it is the shorthand</span>
+			<span class="keyword">if</span>(<span class="variable">color</span>.<span class="variable">length</span> === <span class="number integer">3</span>) {
+				<span class="variable">color</span> = <span class="variable">color</span>.<span class="variable">replace</span>(<span class="regexp">/([0-9a-f])/ig</span>, <span class="string">'$1$1'</span>);
+			}
+			
+			<span class="comment">// Split the string into its main components and convert them to RGB</span>
+			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">3</span>; <span class="variable">i</span>++) {
+				<span class="variable">split</span>.<span class="variable">push</span>(<span class="variable">parseInt</span>(<span class="variable">color</span>.<span class="variable">slice</span>(<span class="variable">i</span> * <span class="number integer">2</span>, (<span class="variable">i</span> + <span class="number integer">1</span>) * <span class="number integer">2</span>), <span class="number integer">16</span>));
+			}
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// It is a name, loop through until we find it</span>
+			<span class="keyword">for</span>(<span class="variable">i</span> <span class="keyword">in</span> <span class="variable">colors</span>) {
+				<span class="keyword">if</span>(<span class="variable">colors</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">i</span>) &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">i</span> === <span class="variable">color</span>.<span class="variable">toLowerCase</span>()) {
+					<span class="comment">// Found it, assign the value to split. This has to be done like this so it returns a new array, not a reference</span>
+					<span class="variable">split</span> = [<span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">0</span>], <span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">1</span>], <span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">2</span>]];
+				}
+			}
+		}
+		
+		<span class="comment">// Convert all colors to numbers</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">3</span>; <span class="variable">i</span>++) {
+			<span class="variable">split</span>[<span class="variable">i</span>] = <span class="variable">parseInt</span>(<span class="variable">split</span>[<span class="variable">i</span>], <span class="number integer">10</span>);
+		}
+		
+		<span class="comment">// Return the color as an object</span>
+		<span class="keyword">return</span> <span class="variable">split</span>;
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Converts any color to a RGB string</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array</p></li><li><p><strong>returns</strong>: <em>String</em>  The RGB string</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">toRgb</span>: <span class="keyword">function</span>(<span class="variable">color</span>) {
+		<span class="comment">// Convert the color to an array and return the rgb version</span>
+		<span class="keyword">return</span> <span class="string">'rgb('</span> + <span class="this">this</span>.<span class="variable">toArray</span>(<span class="variable">color</span>).<span class="variable">join</span>(<span class="string">', '</span>) + <span class="string">')'</span>;
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Converts any color to a hex string</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array</p></li><li><p><strong>returns</strong>: <em>String</em>  The hex string</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">toHex</span>: <span class="keyword">function</span>(<span class="variable">color</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>;
+		
+		<span class="comment">// Convert the color to an array</span>
+		<span class="variable">color</span> = <span class="this">this</span>.<span class="variable">toArray</span>(<span class="variable">color</span>);
+		
+		<span class="comment">// Loop over the array</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">0</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">3</span>; <span class="variable">i</span>++) {
+			<span class="comment">// Convert it to hex</span>
+			<span class="variable">color</span>[<span class="variable">i</span>] = <span class="variable">color</span>[<span class="variable">i</span>].<span class="variable">toString</span>(<span class="number integer">16</span>).<span class="variable">toUpperCase</span>();
+			
+			<span class="comment">// Make sure it is always the right length</span>
+			<span class="keyword">if</span>(<span class="variable">color</span>[<span class="variable">i</span>].<span class="variable">length</span> === <span class="number integer">1</span>) {
+				<span class="variable">color</span>[<span class="variable">i</span>] = <span class="variable">color</span>[<span class="variable">i</span>] + <span class="variable">color</span>[<span class="variable">i</span>];
+			}
+		}
+		
+		<span class="comment">// Return the joined version</span>
+		<span class="keyword">return</span> <span class="string">'#'</span> + <span class="variable">color</span>.<span class="variable">join</span>(<span class="string">''</span>);
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Converts any color to its name equivilant, if there is not a name for it then it will return false</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The name of the color or false if there is not a name for it</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">toName</span>: <span class="keyword">function</span>(<span class="variable">color</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
+			<span class="variable">colors</span> = <span class="this">this</span>.<span class="variable">names</span>;
+		
+		<span class="comment">// Convert it to an array</span>
+		<span class="variable">color</span> = <span class="this">this</span>.<span class="variable">toArray</span>(<span class="variable">color</span>);
+		
+		<span class="comment">// Loop through all of the names</span>
+		<span class="keyword">for</span>(<span class="variable">i</span> <span class="keyword">in</span> <span class="variable">colors</span>) {
+			<span class="keyword">if</span>(<span class="variable">colors</span>.<span class="variable">hasOwnProperty</span>(<span class="variable">i</span>)) {
+				<span class="comment">// Compare</span>
+				<span class="keyword">if</span>(<span class="variable">color</span>[<span class="number integer">0</span>] === <span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">0</span>] &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">color</span>[<span class="number integer">1</span>] === <span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">1</span>] &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">color</span>[<span class="number integer">2</span>] === <span class="variable">colors</span>[<span class="variable">i</span>][<span class="number integer">2</span>]) {
+					<span class="comment">// Found it, return the name</span>
+					<span class="keyword">return</span> <span class="variable">i</span>;
+				}
+			}
+		}
+		
+		<span class="comment">// Did not find a name, return false</span>
+		<span class="keyword">return</span> <span class="variable">false</span>;
+	},
+	
+	<span class="variable">names</span>: {
+		<span class="variable">aliceblue</span>: [<span class="number integer">240</span>, <span class="number integer">248</span>, <span class="number integer">255</span>],
+		<span class="variable">antiquewhite</span>: [<span class="number integer">250</span>, <span class="number integer">235</span>, <span class="number integer">215</span>],
+		<span class="variable">aqua</span>: [<span class="number integer">0</span>, <span class="number integer">255</span>, <span class="number integer">255</span>],
+		<span class="variable">aquamarine</span>: [<span class="number integer">127</span>, <span class="number integer">255</span>, <span class="number integer">212</span>],
+		<span class="variable">azure</span>: [<span class="number integer">240</span>, <span class="number integer">255</span>, <span class="number integer">255</span>],
+		<span class="variable">beige</span>: [<span class="number integer">245</span>, <span class="number integer">245</span>, <span class="number integer">220</span>],
+		<span class="variable">bisque</span>: [<span class="number integer">255</span>, <span class="number integer">228</span>, <span class="number integer">196</span>],
+		<span class="variable">black</span>: [<span class="number integer">0</span>, <span class="number integer">0</span>, <span class="number integer">0</span>],
+		<span class="variable">blanchedalmond</span>: [<span class="number integer">255</span>, <span class="number integer">235</span>, <span class="number integer">205</span>],
+		<span class="variable">blue</span>: [<span class="number integer">0</span>, <span class="number integer">0</span>, <span class="number integer">255</span>],
+		<span class="variable">blueviolet</span>: [<span class="number integer">138</span>, <span class="number integer">43</span>, <span class="number integer">226</span>],
+		<span class="variable">brown</span>: [<span class="number integer">165</span>, <span class="number integer">42</span>, <span class="number integer">42</span>],
+		<span class="variable">burlywood</span>: [<span class="number integer">222</span>, <span class="number integer">184</span>, <span class="number integer">135</span>],
+		<span class="variable">cadetblue</span>: [<span class="number integer">95</span>, <span class="number integer">158</span>, <span class="number integer">160</span>],
+		<span class="variable">chartreuse</span>: [<span class="number integer">127</span>, <span class="number integer">255</span>, <span class="number integer">0</span>],
+		<span class="variable">chocolate</span>: [<span class="number integer">210</span>, <span class="number integer">105</span>, <span class="number integer">30</span>],
+		<span class="variable">coral</span>: [<span class="number integer">255</span>, <span class="number integer">127</span>, <span class="number integer">80</span>],
+		<span class="variable">cornflowerblue</span>: [<span class="number integer">100</span>, <span class="number integer">149</span>, <span class="number integer">237</span>],
+		<span class="variable">cornsilk</span>: [<span class="number integer">255</span>, <span class="number integer">248</span>, <span class="number integer">220</span>],
+		<span class="variable">crimson</span>: [<span class="number integer">220</span>, <span class="number integer">20</span>, <span class="number integer">60</span>],
+		<span class="variable">cyan</span>: [<span class="number integer">0</span>, <span class="number integer">255</span>, <span class="number integer">255</span>],
+		<span class="variable">darkblue</span>: [<span class="number integer">0</span>, <span class="number integer">0</span>, <span class="number integer">139</span>],
+		<span class="variable">darkcyan</span>: [<span class="number integer">0</span>, <span class="number integer">139</span>, <span class="number integer">139</span>],
+		<span class="variable">darkgoldenrod</span>: [<span class="number integer">184</span>, <span class="number integer">134</span>, <span class="number integer">11</span>],
+		<span class="variable">darkgray</span>: [<span class="number integer">169</span>, <span class="number integer">169</span>, <span class="number integer">169</span>],
+		<span class="variable">darkgreen</span>: [<span class="number integer">0</span>, <span class="number integer">100</span>, <span class="number integer">0</span>],
+		<span class="variable">darkgrey</span>: [<span class="number integer">169</span>, <span class="number integer">169</span>, <span class="number integer">169</span>],
+		<span class="variable">darkkhaki</span>: [<span class="number integer">189</span>, <span class="number integer">183</span>, <span class="number integer">107</span>],
+		<span class="variable">darkmagenta</span>: [<span class="number integer">139</span>, <span class="number integer">0</span>, <span class="number integer">139</span>],
+		<span class="variable">darkolivegreen</span>: [<span class="number integer">85</span>, <span class="number integer">107</span>, <span class="number integer">47</span>],
+		<span class="variable">darkorange</span>: [<span class="number integer">255</span>, <span class="number integer">140</span>, <span class="number integer">0</span>],
+		<span class="variable">darkorchid</span>: [<span class="number integer">153</span>, <span class="number integer">50</span>, <span class="number integer">204</span>],
+		<span class="variable">darkred</span>: [<span class="number integer">139</span>, <span class="number integer">0</span>, <span class="number integer">0</span>],
+		<span class="variable">darksalmon</span>: [<span class="number integer">233</span>, <span class="number integer">150</span>, <span class="number integer">122</span>],
+		<span class="variable">darkseagreen</span>: [<span class="number integer">143</span>, <span class="number integer">188</span>, <span class="number integer">143</span>],
+		<span class="variable">darkslateblue</span>: [<span class="number integer">72</span>, <span class="number integer">61</span>, <span class="number integer">139</span>],
+		<span class="variable">darkslategray</span>: [<span class="number integer">47</span>, <span class="number integer">79</span>, <span class="number integer">79</span>],
+		<span class="variable">darkslategrey</span>: [<span class="number integer">47</span>, <span class="number integer">79</span>, <span class="number integer">79</span>],
+		<span class="variable">darkturquoise</span>: [<span class="number integer">0</span>, <span class="number integer">206</span>, <span class="number integer">209</span>],
+		<span class="variable">darkviolet</span>: [<span class="number integer">148</span>, <span class="number integer">0</span>, <span class="number integer">211</span>],
+		<span class="variable">deeppink</span>: [<span class="number integer">255</span>, <span class="number integer">20</span>, <span class="number integer">147</span>],
+		<span class="variable">deepskyblue</span>: [<span class="number integer">0</span>, <span class="number integer">191</span>, <span class="number integer">255</span>],
+		<span class="variable">dimgray</span>: [<span class="number integer">105</span>, <span class="number integer">105</span>, <span class="number integer">105</span>],
+		<span class="variable">dimgrey</span>: [<span class="number integer">105</span>, <span class="number integer">105</span>, <span class="number integer">105</span>],
+		<span class="variable">dodgerblue</span>: [<span class="number integer">30</span>, <span class="number integer">144</span>, <span class="number integer">255</span>],
+		<span class="variable">firebrick</span>: [<span class="number integer">178</span>, <span class="number integer">34</span>, <span class="number integer">34</span>],
+		<span class="variable">floralwhite</span>: [<span class="number integer">255</span>, <span class="number integer">250</span>, <span class="number integer">240</span>],
+		<span class="variable">forestgreen</span>: [<span class="number integer">34</span>, <span class="number integer">139</span>, <span class="number integer">34</span>],
+		<span class="variable">fuchsia</span>: [<span class="number integer">255</span>, <span class="number integer">0</span>, <span class="number integer">255</span>],
+		<span class="variable">gainsboro</span>: [<span class="number integer">220</span>, <span class="number integer">220</span>, <span class="number integer">220</span>],
+		<span class="variable">ghostwhite</span>: [<span class="number integer">248</span>, <span class="number integer">248</span>, <span class="number integer">255</span>],
+		<span class="variable">gold</span>: [<span class="number integer">255</span>, <span class="number integer">215</span>, <span class="number integer">0</span>],
+		<span class="variable">goldenrod</span>: [<span class="number integer">218</span>, <span class="number integer">165</span>, <span class="number integer">32</span>],
+		<span class="variable">gray</span>: [<span class="number integer">128</span>, <span class="number integer">128</span>, <span class="number integer">128</span>],
+		<span class="variable">green</span>: [<span class="number integer">0</span>, <span class="number integer">128</span>, <span class="number integer">0</span>],
+		<span class="variable">greenyellow</span>: [<span class="number integer">173</span>, <span class="number integer">255</span>, <span class="number integer">47</span>],
+		<span class="variable">grey</span>: [<span class="number integer">128</span>, <span class="number integer">128</span>, <span class="number integer">128</span>],
+		<span class="variable">honeydew</span>: [<span class="number integer">240</span>, <span class="number integer">255</span>, <span class="number integer">240</span>],
+		<span class="variable">hotpink</span>: [<span class="number integer">255</span>, <span class="number integer">105</span>, <span class="number integer">180</span>],
+		<span class="variable">indianred</span>: [<span class="number integer">205</span>, <span class="number integer">92</span>, <span class="number integer">92</span>],
+		<span class="variable">indigo</span>: [<span class="number integer">75</span>, <span class="number integer">0</span>, <span class="number integer">130</span>],
+		<span class="variable">ivory</span>: [<span class="number integer">255</span>, <span class="number integer">255</span>, <span class="number integer">240</span>],
+		<span class="variable">khaki</span>: [<span class="number integer">240</span>, <span class="number integer">230</span>, <span class="number integer">140</span>],
+		<span class="variable">lavender</span>: [<span class="number integer">230</span>, <span class="number integer">230</span>, <span class="number integer">250</span>],
+		<span class="variable">lavenderblush</span>: [<span class="number integer">255</span>, <span class="number integer">240</span>, <span class="number integer">245</span>],
+		<span class="variable">lawngreen</span>: [<span class="number integer">124</span>, <span class="number integer">252</span>, <span class="number integer">0</span>],
+		<span class="variable">lemonchiffon</span>: [<span class="number integer">255</span>, <span class="number integer">250</span>, <span class="number integer">205</span>],
+		<span class="variable">lightblue</span>: [<span class="number integer">173</span>, <span class="number integer">216</span>, <span class="number integer">230</span>],
+		<span class="variable">lightcoral</span>: [<span class="number integer">240</span>, <span class="number integer">128</span>, <span class="number integer">128</span>],
+		<span class="variable">lightcyan</span>: [<span class="number integer">224</span>, <span class="number integer">255</span>, <span class="number integer">255</span>],
+		<span class="variable">lightgoldenrodyellow</span>: [<span class="number integer">250</span>, <span class="number integer">250</span>, <span class="number integer">210</span>],
+		<span class="variable">lightgray</span>: [<span class="number integer">211</span>, <span class="number integer">211</span>, <span class="number integer">211</span>],
+		<span class="variable">lightgreen</span>: [<span class="number integer">144</span>, <span class="number integer">238</span>, <span class="number integer">144</span>],
+		<span class="variable">lightgrey</span>: [<span class="number integer">211</span>, <span class="number integer">211</span>, <span class="number integer">211</span>],
+		<span class="variable">lightpink</span>: [<span class="number integer">255</span>, <span class="number integer">182</span>, <span class="number integer">193</span>],
+		<span class="variable">lightsalmon</span>: [<span class="number integer">255</span>, <span class="number integer">160</span>, <span class="number integer">122</span>],
+		<span class="variable">lightseagreen</span>: [<span class="number integer">32</span>, <span class="number integer">178</span>, <span class="number integer">170</span>],
+		<span class="variable">lightskyblue</span>: [<span class="number integer">135</span>, <span class="number integer">206</span>, <span class="number integer">250</span>],
+		<span class="variable">lightslategray</span>: [<span class="number integer">119</span>, <span class="number integer">136</span>, <span class="number integer">153</span>],
+		<span class="variable">lightslategrey</span>: [<span class="number integer">119</span>, <span class="number integer">136</span>, <span class="number integer">153</span>],
+		<span class="variable">lightsteelblue</span>: [<span class="number integer">176</span>, <span class="number integer">196</span>, <span class="number integer">222</span>],
+		<span class="variable">lightyellow</span>: [<span class="number integer">255</span>, <span class="number integer">255</span>, <span class="number integer">224</span>],
+		<span class="variable">lime</span>: [<span class="number integer">0</span>, <span class="number integer">255</span>, <span class="number integer">0</span>],
+		<span class="variable">limegreen</span>: [<span class="number integer">50</span>, <span class="number integer">205</span>, <span class="number integer">50</span>],
+		<span class="variable">linen</span>: [<span class="number integer">250</span>, <span class="number integer">240</span>, <span class="number integer">230</span>],
+		<span class="variable">magenta</span>: [<span class="number integer">255</span>, <span class="number integer">0</span>, <span class="number integer">255</span>],
+		<span class="variable">maroon</span>: [<span class="number integer">128</span>, <span class="number integer">0</span>, <span class="number integer">0</span>],
+		<span class="variable">mediumaquamarine</span>: [<span class="number integer">102</span>, <span class="number integer">205</span>, <span class="number integer">170</span>],
+		<span class="variable">mediumblue</span>: [<span class="number integer">0</span>, <span class="number integer">0</span>, <span class="number integer">205</span>],
+		<span class="variable">mediumorchid</span>: [<span class="number integer">186</span>, <span class="number integer">85</span>, <span class="number integer">211</span>],
+		<span class="variable">mediumpurple</span>: [<span class="number integer">147</span>, <span class="number integer">112</span>, <span class="number integer">216</span>],
+		<span class="variable">mediumseagreen</span>: [<span class="number integer">60</span>, <span class="number integer">179</span>, <span class="number integer">113</span>],
+		<span class="variable">mediumslateblue</span>: [<span class="number integer">123</span>, <span class="number integer">104</span>, <span class="number integer">238</span>],
+		<span class="variable">mediumspringgreen</span>: [<span class="number integer">0</span>, <span class="number integer">250</span>, <span class="number integer">154</span>],
+		<span class="variable">mediumturquoise</span>: [<span class="number integer">72</span>, <span class="number integer">209</span>, <span class="number integer">204</span>],
+		<span class="variable">mediumvioletred</span>: [<span class="number integer">199</span>, <span class="number integer">21</span>, <span class="number integer">133</span>],
+		<span class="variable">midnightblue</span>: [<span class="number integer">25</span>, <span class="number integer">25</span>, <span class="number integer">112</span>],
+		<span class="variable">mintcream</span>: [<span class="number integer">245</span>, <span class="number integer">255</span>, <span class="number integer">250</span>],
+		<span class="variable">mistyrose</span>: [<span class="number integer">255</span>, <span class="number integer">228</span>, <span class="number integer">225</span>],
+		<span class="variable">moccasin</span>: [<span class="number integer">255</span>, <span class="number integer">228</span>, <span class="number integer">181</span>],
+		<span class="variable">navajowhite</span>: [<span class="number integer">255</span>, <span class="number integer">222</span>, <span class="number integer">173</span>],
+		<span class="variable">navy</span>: [<span class="number integer">0</span>, <span class="number integer">0</span>, <span class="number integer">128</span>],
+		<span class="variable">oldlace</span>: [<span class="number integer">253</span>, <span class="number integer">245</span>, <span class="number integer">230</span>],
+		<span class="variable">olive</span>: [<span class="number integer">128</span>, <span class="number integer">128</span>, <span class="number integer">0</span>],
+		<span class="variable">olivedrab</span>: [<span class="number integer">107</span>, <span class="number integer">142</span>, <span class="number integer">35</span>],
+		<span class="variable">orange</span>: [<span class="number integer">255</span>, <span class="number integer">165</span>, <span class="number integer">0</span>],
+		<span class="variable">orangered</span>: [<span class="number integer">255</span>, <span class="number integer">69</span>, <span class="number integer">0</span>],
+		<span class="variable">orchid</span>: [<span class="number integer">218</span>, <span class="number integer">112</span>, <span class="number integer">214</span>],
+		<span class="variable">palegoldenrod</span>: [<span class="number integer">238</span>, <span class="number integer">232</span>, <span class="number integer">170</span>],
+		<span class="variable">palegreen</span>: [<span class="number integer">152</span>, <span class="number integer">251</span>, <span class="number integer">152</span>],
+		<span class="variable">paleturquoise</span>: [<span class="number integer">175</span>, <span class="number integer">238</span>, <span class="number integer">238</span>],
+		<span class="variable">palevioletred</span>: [<span class="number integer">216</span>, <span class="number integer">112</span>, <span class="number integer">147</span>],
+		<span class="variable">papayawhip</span>: [<span class="number integer">255</span>, <span class="number integer">239</span>, <span class="number integer">213</span>],
+		<span class="variable">peachpuff</span>: [<span class="number integer">255</span>, <span class="number integer">218</span>, <span class="number integer">185</span>],
+		<span class="variable">peru</span>: [<span class="number integer">205</span>, <span class="number integer">133</span>, <span class="number integer">63</span>],
+		<span class="variable">pink</span>: [<span class="number integer">255</span>, <span class="number integer">192</span>, <span class="number integer">203</span>],
+		<span class="variable">plum</span>: [<span class="number integer">221</span>, <span class="number integer">160</span>, <span class="number integer">221</span>],
+		<span class="variable">powderblue</span>: [<span class="number integer">176</span>, <span class="number integer">224</span>, <span class="number integer">230</span>],
+		<span class="variable">purple</span>: [<span class="number integer">128</span>, <span class="number integer">0</span>, <span class="number integer">128</span>],
+		<span class="variable">red</span>: [<span class="number integer">255</span>, <span class="number integer">0</span>, <span class="number integer">0</span>],
+		<span class="variable">rosybrown</span>: [<span class="number integer">188</span>, <span class="number integer">143</span>, <span class="number integer">143</span>],
+		<span class="variable">royalblue</span>: [<span class="number integer">65</span>, <span class="number integer">105</span>, <span class="number integer">225</span>],
+		<span class="variable">saddlebrown</span>: [<span class="number integer">139</span>, <span class="number integer">69</span>, <span class="number integer">19</span>],
+		<span class="variable">salmon</span>: [<span class="number integer">250</span>, <span class="number integer">128</span>, <span class="number integer">114</span>],
+		<span class="variable">sandybrown</span>: [<span class="number integer">244</span>, <span class="number integer">164</span>, <span class="number integer">96</span>],
+		<span class="variable">seagreen</span>: [<span class="number integer">46</span>, <span class="number integer">139</span>, <span class="number integer">87</span>],
+		<span class="variable">seashell</span>: [<span class="number integer">255</span>, <span class="number integer">245</span>, <span class="number integer">238</span>],
+		<span class="variable">sienna</span>: [<span class="number integer">160</span>, <span class="number integer">82</span>, <span class="number integer">45</span>],
+		<span class="variable">silver</span>: [<span class="number integer">192</span>, <span class="number integer">192</span>, <span class="number integer">192</span>],
+		<span class="variable">skyblue</span>: [<span class="number integer">135</span>, <span class="number integer">206</span>, <span class="number integer">235</span>],
+		<span class="variable">slateblue</span>: [<span class="number integer">106</span>, <span class="number integer">90</span>, <span class="number integer">205</span>],
+		<span class="variable">slategray</span>: [<span class="number integer">112</span>, <span class="number integer">128</span>, <span class="number integer">144</span>],
+		<span class="variable">slategrey</span>: [<span class="number integer">112</span>, <span class="number integer">128</span>, <span class="number integer">144</span>],
+		<span class="variable">snow</span>: [<span class="number integer">255</span>, <span class="number integer">250</span>, <span class="number integer">250</span>],
+		<span class="variable">springgreen</span>: [<span class="number integer">0</span>, <span class="number integer">255</span>, <span class="number integer">127</span>],
+		<span class="variable">steelblue</span>: [<span class="number integer">70</span>, <span class="number integer">130</span>, <span class="number integer">180</span>],
+		<span class="variable">tan</span>: [<span class="number integer">210</span>, <span class="number integer">180</span>, <span class="number integer">140</span>],
+		<span class="variable">teal</span>: [<span class="number integer">0</span>, <span class="number integer">128</span>, <span class="number integer">128</span>],
+		<span class="variable">tle</span>: [<span class="number integer">216</span>, <span class="number integer">191</span>, <span class="number integer">216</span>],
+		<span class="variable">tomato</span>: [<span class="number integer">255</span>, <span class="number integer">99</span>, <span class="number integer">71</span>],
+		<span class="variable">turquoise</span>: [<span class="number integer">64</span>, <span class="number integer">224</span>, <span class="number integer">208</span>],
+		<span class="variable">violet</span>: [<span class="number integer">238</span>, <span class="number integer">130</span>, <span class="number integer">238</span>],
+		<span class="variable">wheat</span>: [<span class="number integer">245</span>, <span class="number integer">222</span>, <span class="number integer">179</span>],
+		<span class="variable">white</span>: [<span class="number integer">255</span>, <span class="number integer">255</span>, <span class="number integer">255</span>],
+		<span class="variable">whitesmoke</span>: [<span class="number integer">245</span>, <span class="number integer">245</span>, <span class="number integer">245</span>],
+		<span class="variable">yellow</span>: [<span class="number integer">255</span>, <span class="number integer">255</span>, <span class="number integer">0</span>],
+		<span class="variable">yellowgreen</span>: [<span class="number integer">154</span>, <span class="number integer">205</span>, <span class="number integer">50</span>]
+	}
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/cookie.js"><a href="#">cookie</a></h2></td><td>src/cookie.js</td></tr><tr class="code">
 <td class="docs">
 <p>The cookie function is used to set or get cookies. To get the contents of a cookie simply call the function and provide the name of the cookie you wish to get the contents of. For example.</p>
@@ -941,6 +1329,23 @@ Spark.cookie('foo', 'bar', 5000);</code></pre>
 </code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/core.js"><a href="#">core</a></h2></td><td>src/core.js</td></tr><tr class="code">
+<td class="docs">
+<ul><li><strong>preserve</strong>: <em>Spark</em>
+JavaScript Library v3.0.0
+http://sparkjs.co.uk/</li></ul>
+
+<p>Copyright 2011, Oliver Caldwell
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://sparkjs.co.uk/licence.html
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="keyword">var</span> <span class="class">Spark</span> = (<span class="keyword">function</span>() {
+	<span class="comment">// Create the object</span>
+	<span class="keyword">function</span> <span class="class">Spark</span>(){}</code></pre>
+</td>
+</tr>
+<tr class="code">
 <td class="docs">
 <p>Adds a variable to Spark's prototype.
 This is used to extend Spark with plugins.</p>
@@ -1733,7 +2138,9 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'style'</span>, <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">value</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">i</span> = <span class="keyword">null</span>,
-		<span class="variable">n</span> = <span class="keyword">null</span>;</code></pre>
+		<span class="variable">n</span> = <span class="keyword">null</span>,
+		<span class="variable">that</span> = <span class="this">this</span>,
+		<span class="variable">directions</span> = <span class="keyword">null</span>;</code></pre>
 </td>
 </tr>
 <tr class="code">
@@ -1753,7 +2160,7 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 		<span class="comment">// If we can use getComputedStyle</span>
 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
 			<span class="comment">// Return getComputedStyle</span>
-			<span class="variable">style</span> = <span class="variable">document</span>.<span class="variable">defaultView</span>.<span class="variable">getComputedStyle</span>(<span class="variable">e</span>, <span class="keyword">null</span>).<span class="variable">getPropertyValue</span>(<span class="variable">name</span>);
+			<span class="variable">style</span> = <span class="variable">document</span>.<span class="variable">defaultView</span>.<span class="variable">getComputedStyle</span>(<span class="variable">e</span>, <span class="keyword">null</span>).<span class="variable">getPropertyValue</span>(<span class="variable">hyphenStyle</span>(<span class="variable">name</span>));
 		}
 		<span class="keyword">else</span> {
 			<span class="comment">// Otherwise return currentStyle</span>
@@ -1767,13 +2174,12 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 		
 		<span class="comment">// Fix colours</span>
 		<span class="keyword">if</span>(<span class="variable">name</span>.<span class="variable">toLowerCase</span>().<span class="variable">indexOf</span>(<span class="string">'color'</span>) !== -<span class="number integer">1</span>) {
-			<span class="variable">style</span> = <span class="variable">fixColor</span>(<span class="variable">style</span>);
+			<span class="variable">style</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toRgb</span>(<span class="variable">style</span>);
 		}
 		
 		<span class="comment">// Return the found style, if not found then look in the style property</span>
 		<span class="keyword">return</span> <span class="variable">style</span>;
 	}
-	
 	
 	<span class="comment">// Check what kind of variable name is</span>
 	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'string'</span>) {
@@ -1785,8 +2191,30 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 			}
 		}
 		<span class="keyword">else</span> {
-			<span class="comment">// Get the style</span>
-			<span class="keyword">return</span> <span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span>));
+			<span class="keyword">if</span>(<span class="variable">name</span> === <span class="string">'padding'</span> || <span class="variable">name</span> === <span class="string">'margin'</span> || <span class="variable">name</span> === <span class="string">'border'</span>) {
+				<span class="comment">// Get the direction styles</span>
+				<span class="variable">directions</span> = [
+					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Top'</span>)),
+					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Right'</span>)),
+					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Bottom'</span>)),
+					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Left'</span>))
+				];
+				
+				<span class="comment">// Loop through the styles</span>
+				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">4</span>; <span class="variable">i</span>++) {
+					<span class="comment">// Compare</span>
+					<span class="keyword">if</span>(<span class="variable">directions</span>[<span class="number integer">0</span>] !== <span class="variable">directions</span>[<span class="variable">i</span>]) {
+						<span class="keyword">return</span> <span class="string">''</span>;
+					}
+				}
+				
+				<span class="comment">// They match, return one of them</span>
+				<span class="keyword">return</span> <span class="variable">directions</span>[<span class="number integer">0</span>];
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// Get the style</span>
+				<span class="keyword">return</span> <span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span>));
+			}
 		}
 	}
 	<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">name</span> === <span class="string">'object'</span>) {
