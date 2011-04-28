@@ -211,7 +211,8 @@ Spark.extend('color', {
      * @returns {String} The RGB string
      */
 	toRgb: function(color) {
-		
+		// Convert the color to an object and return the rgb version
+		return 'rgb(' + this.toObject(color).join(', ') + ')';
 	},
 	
     /**
