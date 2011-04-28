@@ -96,6 +96,34 @@ Spark.extend('color', {
 		return '#' + color.join('');
 	},
 	
+    /**
+     * Converts any color to its name equivilant, if there is not a name for it then it will return false
+     * 
+     * @param {String|Array} color The color string to convert (RGB, hex or a color name such as 'red') or the RGB array
+     * @returns {String|Boolean} The name of the color or false if there is not a name for it
+     */
+	toName: function(color) {
+		// Initialise any required variables
+		var i = null;
+		
+		// Convert it to an array
+		color = this.toArray(color);
+		
+		// Loop through all of the names
+		for(i in this.names) {
+			if(this.names.hasOwnProperty(i)) {
+				// Compare
+				if(color[0] === this.names[i][0] && color[1] === this.names[i][1] && color[2] === this.names[i][2]) {
+					// Found it, return the name
+					return i;
+				}
+			}
+		}
+		
+		// Did not find a name, return false
+		return false;
+	},
+	
 	names: {
 		aliceblue: [240, 248, 255],
 		antiquewhite: [250, 235, 215],
