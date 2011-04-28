@@ -344,11 +344,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				if(found.data('SparkFullOffset') > callbackOffset) {
 					callbackOffset = found.data('SparkFullOffset');
 				}
-				
-				found.data('SparkFullOffset', 0);
 			});
 			
-			setTimeout(callback, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
+			setTimeout(function() {
+				callback();
+				
+				that.each(function(e) {
+					that.find(e).data('SparkFullOffset', 0);
+				});
+			}, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
 		}, timeframe);
 	}
 	
