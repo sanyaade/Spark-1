@@ -346,6 +346,38 @@
 			
 			
 			
+			module('color');
+			
+			test('Converting to array', function() {
+				equals([255, 0, 0].join(), Spark.color.toArray('red').join(), 'Name');
+				equals([255, 0, 0].join(), Spark.color.toArray('rgb(255, 0, 0)').join(), 'RGB');
+				equals([255, 0, 0].join(), Spark.color.toArray('#FF0000').join(), 'Hex');
+				equals([255, 0, 0].join(), Spark.color.toArray([255, 0, 0]).join(), 'Array');
+			});
+			
+			test('Converting to RGB', function() {
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('red'), 'Name');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('rgb(255, 0, 0)'), 'RGB');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('#FF0000'), 'Hex');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb([255, 0, 0]), 'Array');
+			});
+			
+			test('Converting to hex', function() {
+				equals('#FF0000', Spark.color.toHex('red'), 'Name');
+				equals('#FF0000', Spark.color.toHex('rgb(255, 0, 0)'), 'RGB');
+				equals('#FF0000', Spark.color.toHex('#FF0000'), 'Hex');
+				equals('#FF0000', Spark.color.toHex([255, 0, 0]), 'Array');
+			});
+			
+			test('Converting to name', function() {
+				equals('red', Spark.color.toName('red'), 'Name');
+				equals('red', Spark.color.toName('rgb(255, 0, 0)'), 'RGB');
+				equals('red', Spark.color.toName('#FF0000'), 'Hex');
+				equals('red', Spark.color.toName([255, 0, 0]), 'Array');
+			});
+			
+			
+			
 			module('ajax.getJSON');
 			
 			function handleData(data) {
