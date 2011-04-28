@@ -13,7 +13,8 @@ Spark.extend('color', {
 	toArray: function(color) {
 		// Initialise any required variables
 		var i = null,
-			split = [];
+			split = [],
+			colors = this.names;
 		
 		if(color instanceof Array) {
 			// It is already an array, return it
@@ -39,10 +40,10 @@ Spark.extend('color', {
 		}
 		else {
 			// It is a name, loop through until we find it
-			for(i in this.names) {
-				if(this.names.hasOwnProperty(i) && i === color.toLowerCase()) {
+			for(i in colors) {
+				if(colors.hasOwnProperty(i) && i === color.toLowerCase()) {
 					// Found it, assign the value to split
-					split = this.names[i];
+					split = colors[i];
 				}
 			}
 		}
@@ -103,16 +104,17 @@ Spark.extend('color', {
      */
 	toName: function(color) {
 		// Initialise any required variables
-		var i = null;
+		var i = null,
+			colors = this.names;
 		
 		// Convert it to an array
 		color = this.toArray(color);
 		
 		// Loop through all of the names
-		for(i in this.names) {
-			if(this.names.hasOwnProperty(i)) {
+		for(i in colors) {
+			if(colors.hasOwnProperty(i)) {
 				// Compare
-				if(color[0] === this.names[i][0] && color[1] === this.names[i][1] && color[2] === this.names[i][2]) {
+				if(color[0] === colors[i][0] && color[1] === colors[i][1] && color[2] === colors[i][2]) {
 					// Found it, return the name
 					return i;
 				}
