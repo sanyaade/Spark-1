@@ -209,6 +209,6 @@ Spark.extend('ajax', {
 		}
 		
 		// Load the file
-		Spark.load(file + '?callback=' + callback + ((params) ? '&' + params : ''));
+		this.instance.load(file + '?callback=' + callback + ((params) ? '&' + params : ''));
 	}
 });
