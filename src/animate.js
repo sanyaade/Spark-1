@@ -59,6 +59,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		unit = null,
 		difference = null,
 		fps = 50,
+		timeout = null,
 		i = null,
 		frames = null,
 		found = null,
@@ -407,7 +408,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function') {
-		setTimeout(callback, timeframe);
+		timeout = setTimeout(callback, timeframe);
+		
+		// Loop though the elements adding the callbacks timeout reference
+		this.each(function(e) {
+			that.find(e).data('SparkTimeouts').push(timeout);
+		});
 	}
 	
 	// Return the Spark object
