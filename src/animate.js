@@ -320,6 +320,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			found.data('SparkOffset', 0);
 		}
 		
+		// Make sure there is an array of timeout references
+		if(found.data('SparkTimeouts') === false) {
+			found.data('SparkTimeouts', []);
+		}
+		
 		// Check if we can call now, or if we need to add it to the animation stack
 		if(found.data('SparkOffset') > 0) {
 			// Add it to the stack
