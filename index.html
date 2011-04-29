@@ -428,7 +428,7 @@ Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can re
 		}
 		
 		<span class="comment">// Load the file</span>
-		<span class="class">Spark</span>.<span class="variable">load</span>(<span class="variable">file</span> + <span class="string">'?callback='</span> + <span class="variable">callback</span> + ((<span class="variable">params</span>) ? <span class="string">'&amp;'</span> + <span class="variable">params</span> : <span class="string">''</span>));
+		<span class="this">this</span>.<span class="variable">instance</span>.<span class="variable">load</span>(<span class="variable">file</span> + <span class="string">'?callback='</span> + <span class="variable">callback</span> + ((<span class="variable">params</span>) ? <span class="string">'&amp;'</span> + <span class="variable">params</span> : <span class="string">''</span>));
 	}
 });
 </code></pre>
@@ -724,10 +724,9 @@ $('p').animate({
 		}, <span class="variable">time</span>);
 	}
 	
-	<span class="keyword">function</span> <span class="variable">stackAnimation</span>(<span class="variable">e</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
+	<span class="keyword">function</span> <span class="variable">stackAnimation</span>(<span class="variable">e</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>) {
 		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-			<span class="variable">e</span>.<span class="variable">noCallback</span> = <span class="variable">true</span>;
-			<span class="variable">e</span>.<span class="variable">animate</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
+			<span class="variable">e</span>.<span class="variable">animate</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>);
 		}, <span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>));
 	}
 	
@@ -754,13 +753,12 @@ $('p').animate({
 		<span class="comment">// Make sure there is an offset</span>
 		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) === <span class="variable">false</span>) {
 			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="number integer">0</span>);
-			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="number integer">0</span>);
 		}
 		
 		<span class="comment">// Check if we can call now, or if we need to add it to the animation stack</span>
 		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) &<span class="variable">gt</span>; <span class="number integer">0</span>) {
 			<span class="comment">// Add it to the stack</span>
-			<span class="variable">stackAnimation</span>(<span class="variable">found</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
+			<span class="variable">stackAnimation</span>(<span class="variable">found</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>);
 			
 			<span class="comment">// Return out of the loop</span>
 			<span class="keyword">return</span> <span class="variable">false</span>;
@@ -768,7 +766,6 @@ $('p').animate({
 		
 		<span class="comment">// Set the offset</span>
 		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) + <span class="variable">timeframe</span>);
-		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>) + <span class="variable">timeframe</span>);
 		
 		<span class="comment">// Reduce the offset</span>
 		<span class="variable">reduceOffset</span>(<span class="variable">found</span>, <span class="variable">timeframe</span>);
@@ -839,26 +836,8 @@ $('p').animate({
 	});
 	
 	<span class="comment">// Set the callback to be run if one was passed</span>
-	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="this">this</span>.<span class="variable">noCallback</span> !== <span class="variable">true</span>) {
-		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-			<span class="comment">// Loop through all the elements</span>
-			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-				<span class="comment">// Grab the element</span>
-				<span class="variable">found</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
-				
-				<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>) &<span class="variable">gt</span>; <span class="variable">callbackOffset</span>) {
-					<span class="variable">callbackOffset</span> = <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>);
-				}
-			});
-			
-			<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-				<span class="variable">callback</span>();
-				
-				<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-					<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkFullOffset'</span>, <span class="number integer">0</span>);
-				});
-			}, (<span class="variable">callbackOffset</span> === <span class="variable">timeframe</span>) ? <span class="variable">callbackOffset</span> - <span class="variable">timeframe</span> : <span class="variable">callbackOffset</span>);
-		}, <span class="variable">timeframe</span>);
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
+		<span class="variable">setTimeout</span>(<span class="variable">callback</span>, <span class="variable">timeframe</span>);
 	}
 	
 	<span class="comment">// Return the Spark object</span>
@@ -968,8 +947,23 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 </td>
 </tr><tr class="filename"><td><h2 id="src/color.js"><a href="#">color</a></h2></td><td>src/color.js</td></tr><tr class="code">
 <td class="docs">
-<p>Converts colors to RGB or hex from RGB, hex or the color name
- </p>
+<p>Converts colors to RGB or hex from RGB, hex or the color name</p>
+
+<p>Simply run any of the functions (<code>toArray</code>, <code>toRgb</code>, <code>toHex</code> or <code>toName</code>) and pass it your color in any of the following formats.</p>
+
+<ul><li>Array - <code>[25, 10, 255]</code></li><li>RGB - <code>rgb(25, 10, 255)</code></li><li>Hex - <code>#FFC609</code></li><li>Name - <code>red</code></li></ul>
+
+<p>The method will then return the color converted to either an array, rgb, hex or its name equivilent depending on what method you ran.</p>
+
+<p>You also have access to all of the colors and their values by name. For instance, the following code will return <code>[255, 0, 0]</code></p>
+
+<pre><code>Spark.color.names.red;</code></pre>
+
+<p>To then convert that into hex you would use the following line.</p>
+
+<pre><code>Spark.color.toHex(Spark.color.names.red);</code></pre>
+
+<p> </p>
 </td>
 <td class="code">
 
@@ -1358,6 +1352,11 @@ This is used to extend Spark with plugins.</p>
 <pre><code><span class="class">Spark</span>.<span class="variable">prototype</span>.<span class="variable">extend</span> = <span class="keyword">function</span>(<span class="variable">name</span>, <span class="variable">toAdd</span>) {
 		<span class="comment">// Add the object</span>
 		<span class="class">Spark</span>.<span class="variable">prototype</span>[<span class="variable">name</span>] = <span class="variable">toAdd</span>;
+		
+		<span class="comment">// If the object is actually an object, then assign the Spark instance to it</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">toAdd</span> === <span class="string">'object'</span>) {
+			<span class="variable">toAdd</span>.<span class="variable">instance</span> = <span class="this">this</span>;
+		}
 	};</code></pre>
 </td>
 </tr>
@@ -2195,13 +2194,12 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 				<span class="comment">// Get the direction styles</span>
 				<span class="variable">directions</span> = [
 					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Top'</span>)),
-					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Right'</span>)),
 					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Bottom'</span>)),
 					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Left'</span>))
 				];
 				
 				<span class="comment">// Loop through the styles</span>
-				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">4</span>; <span class="variable">i</span>++) {
+				<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>; <span class="number integer">2</span>; <span class="variable">i</span>++) {
 					<span class="comment">// Compare</span>
 					<span class="keyword">if</span>(<span class="variable">directions</span>[<span class="number integer">0</span>] !== <span class="variable">directions</span>[<span class="variable">i</span>]) {
 						<span class="keyword">return</span> <span class="string">''</span>;
