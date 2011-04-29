@@ -1,5 +1,7 @@
 /** 
  * Toggle the visibility of the specified elements
+ * 
+ * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('toggle', function() {
 	// Initialise any required variables
