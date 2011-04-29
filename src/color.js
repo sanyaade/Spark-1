@@ -1,12 +1,12 @@
 /**
  * Converts colors to RGB or hex from RGB, hex or the color name
  * 
- * Simply run any of the functions (toArray, toRgb, toHex or toName) and pass it your color in any of the following formats.
+ * Simply run any of the functions (`toArray`, `toRgb`, `toHex` or `toName`) and pass it your color in any of the following formats.
  * 
- *  * Array - [25, 10, 255]
- *  * RGB - rgb(25, 10, 255)
- *  * Hex - #FFC609
- *  * Name - red
+ *  * Array - `[25, 10, 255]`
+ *  * RGB - `rgb(25, 10, 255)`
+ *  * Hex - `#FFC609`
+ *  * Name - `red`
  * 
  * The method will then return the color converted to either an array, rgb, hex or its name equivilent depending on what method you ran.
  * 
