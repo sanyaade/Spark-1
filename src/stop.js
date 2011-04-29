@@ -1,5 +1,7 @@
 /**
  * Stops all animations for the specified elements
+ * 
+ * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('stop', function() {
 	// Initialise any required variables
