@@ -318,7 +318,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Make sure there is an offset
 		if(found.data('SparkOffset') === false) {
 			found.data('SparkOffset', 0);
-			found.data('SparkFullOffset', 0);
 		}
 		
 		// Check if we can call now, or if we need to add it to the animation stack
@@ -332,7 +331,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		
 		// Set the offset
 		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
-		found.data('SparkFullOffset', found.data('SparkFullOffset') + timeframe);
 		
 		// Reduce the offset
 		reduceOffset(found, timeframe);
@@ -404,25 +402,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function') {
-		setTimeout(function() {
-			// Loop through all the elements
-			that.each(function(e) {
-				// Grab the element
-				found = that.find(e);
-				
-				if(found.data('SparkFullOffset') > callbackOffset) {
-					callbackOffset = found.data('SparkFullOffset');
-				}
-			});
-			
-			setTimeout(function() {
-				callback();
-				
-				that.each(function(e) {
-					that.find(e).data('SparkFullOffset', 0);
-				});
-			}, (callbackOffset === timeframe) ? callbackOffset - timeframe : callbackOffset);
-		}, timeframe);
+		setTimeout(callback, timeframe);
 	}
 	
 	// Return the Spark object
