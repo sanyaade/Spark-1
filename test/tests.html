@@ -337,10 +337,12 @@
 			
 			module('visibility');
 			
-			test('Showing and hiding', function() {
+			test('Showing, hiding and toggling', function() {
 				equals('none', $('p#test').hide().style('display'), 'Hiding');
 				equals('block', $('p#test').show().style('display'), 'Showing');
 				equals('inline', $('p#test').style('display', 'inline').hide().show().style('display'), 'Maintaining original type');
+				equals('none', $('p#test').toggle().style('display'), 'Toggling 1');
+				equals('inline', $('p#test').toggle().style('display'), 'Toggling 2');
 				$('p#test').style('display', 'block');
 			});
 			
