@@ -19,4 +19,7 @@ Spark.extend('stop', function() {
 		// Reset the array
 		element.data('SparkTimeouts', []);
 	});
+	
+	// Return the Spark object
+	return this;
 });
