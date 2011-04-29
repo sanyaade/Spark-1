@@ -285,15 +285,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	}, animations);
 	
 	function applyStyle(e, name, value, time) {
-		setTimeout(function() {
+		e.data('SparkTimeouts').push(setTimeout(function() {
 			e.style(name, value);
-		}, time);
+		}, time));
 	}
 	
 	function stackAnimation(e, animations, timeframe, easing) {
-		setTimeout(function() {
+		e.data('SparkTimeouts').push(setTimeout(function() {
 			e.animate(animations, timeframe, easing);
-		}, e.data('SparkOffset'));
+		}, e.data('SparkOffset')));
 	}
 	
 	function reduceOffset(e, timeframe) {
