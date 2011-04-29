@@ -1,5 +1,22 @@
 /**
  * Converts colors to RGB or hex from RGB, hex or the color name
+ * 
+ * Simply run any of the functions (toArray, toRgb, toHex or toName) and pass it your color in any of the following formats.
+ * 
+ *  * Array - [25, 10, 255]
+ *  * RGB - rgb(25, 10, 255)
+ *  * Hex - #FFC609
+ *  * Name - red
+ * 
+ * The method will then return the color converted to either an array, rgb, hex or its name equivilent depending on what method you ran.
+ * 
+ * You also have access to all of the colors and their values by name. For instance, the following code will return `[255, 0, 0]`
+ * 
+ *     Spark.color.names.red;
+ * 
+ * To then convert that into hex you would use the following line.
+ * 
+ *     Spark.color.toHex(Spark.color.names.red);
  */
 
 /** @private */
