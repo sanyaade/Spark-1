@@ -1,6 +1,10 @@
 /**
  * Stops all animations for the specified elements
  * 
+ * For example, to stop the animation of all div's on the page, you would use the following line
+ * 
+ *     $('div').stop();
+ * 
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('stop', function() {
