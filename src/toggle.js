@@ -1,6 +1,10 @@
 /** 
  * Toggle the visibility of the specified elements
  * 
+ * For example, to toggle the visibility of all p tags on the page, you would use the following line
+ * 
+ *     $('p').toggle();
+ * 
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('toggle', function() {
