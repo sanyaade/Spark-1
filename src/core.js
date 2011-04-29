@@ -20,6 +20,11 @@ var Spark = (function() {
 	Spark.prototype.extend = function(name, toAdd) {
 		// Add the object
 		Spark.prototype[name] = toAdd;
+		
+		// If the object is actually an object, then assign the Spark instance to it
+		if(typeof toAdd === 'object') {
+			toAdd.instance = this;
+		}
 	};
 	
     /**
