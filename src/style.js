@@ -141,13 +141,12 @@ Spark.extend('style', function(name, value) {
 				// Get the direction styles
 				directions = [
 					getStyle(this[0], camelStyle(name + 'Top')),
-					getStyle(this[0], camelStyle(name + 'Right')),
 					getStyle(this[0], camelStyle(name + 'Bottom')),
 					getStyle(this[0], camelStyle(name + 'Left'))
 				];
 				
 				// Loop through the styles
-				for(i = 1; i < 4; i++) {
+				for(i = 1; i < 2; i++) {
 					// Compare
 					if(directions[0] !== directions[i]) {
 						return '';
