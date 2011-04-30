@@ -289,9 +289,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, time));
 	}
 	
-	function stackAnimation(e, animations, timeframe, easing) {
+	function stackAnimation(e, animations, timeframe, easing, callback) {
 		e.data('SparkTimeouts').push(setTimeout(function() {
-			e.animate(animations, timeframe, easing);
+			e.animate(animations, timeframe, easing, callback);
 		}, e.data('SparkOffset')));
 	}
 	
@@ -328,7 +328,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Check if we can call now, or if we need to add it to the animation stack
 		if(found.data('SparkOffset') > 0) {
 			// Add it to the stack
-			stackAnimation(found, animations, timeframe, easing);
+			stackAnimation(found, animations, timeframe, easing, callback);
+			
+			// Remove the original callback if it exists
+			if(typeof callback === 'function') {
+				callback = false;
+			}
 			
 			// Return out of the loop
 			return false;
