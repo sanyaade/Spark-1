@@ -32,7 +32,7 @@
 					width: 400,
 					height: 400
 				}, false, false, function() {
-					console.log('Size done');
+					console.log('First done');
 				}).animate({
 					margin: 10,
 					borderWidth: 5
@@ -61,7 +61,10 @@
 						margin: 50,
 						backgroundColor: '#FFAA00',
 						opacity: 1
-					}, 3000, false, runAnimation);
+					}, 3000, false, function() {
+						console.log('Looping');
+						runAnimation();
+					});
 				});
 			}
 			
