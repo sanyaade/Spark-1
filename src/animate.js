@@ -64,7 +64,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		frames = null,
 		found = null,
 		calculated = null,
-		callbackOffset = 0,
 		colours = null,
 		got = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
