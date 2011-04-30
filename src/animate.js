@@ -66,6 +66,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		calculated = null,
 		colours = null,
 		got = null,
+		callbackOffset = null,
 		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -273,6 +274,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Set up defaults
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
+	callbackOffset = timeframe;
 	
 	// Convert colors to arrays
 	this.each(function(to, style) {
@@ -289,9 +291,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, time));
 	}
 	
-	function stackAnimation(e, animations, timeframe, easing, callback) {
+	function stackAnimation(e, animations, timeframe, easing) {
 		e.data('SparkTimeouts').push(setTimeout(function() {
-			e.animate(animations, timeframe, easing, callback);
+			e.animate(animations, timeframe, easing);
 		}, e.data('SparkOffset')));
 	}
 	
@@ -328,12 +330,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Check if we can call now, or if we need to add it to the animation stack
 		if(found.data('SparkOffset') > 0) {
 			// Add it to the stack
-			stackAnimation(found, animations, timeframe, easing, callback);
+			stackAnimation(found, animations, timeframe, easing);
 			
-			// Remove the original callback if it exists
-			if(typeof callback === 'function') {
-				callback = false;
-			}
+			// Set the callback offset
+			callbackOffset = found.data('SparkOffset') + timeframe;
 			
 			// Return out of the loop
 			return false;
@@ -412,7 +412,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function') {
-		timeout = setTimeout(callback, timeframe);
+		timeout = setTimeout(callback, callbackOffset);
 		
 		// Loop though the elements adding the callbacks timeout reference
 		this.each(function(e) {
