@@ -49,9 +49,10 @@
  * @param {Number|Boolean} timeframe How many milliseconds you wish the animation to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Function to be run on completion of the animation
+ * @param {Boolean} inChain An internally used argument for determining if this animation is part of a chain or not, influences callbacks timing
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('animate', function(animations, timeframe, easing, callback) {
+Spark.extend('animate', function(animations, timeframe, easing, callback, inChain) {
 	// Initialise any required variables
 	var that = this,
 		from = null,
@@ -291,9 +292,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}, time));
 	}
 	
-	function stackAnimation(e, animations, timeframe, easing) {
+	function stackAnimation(e, animations, timeframe, easing, callback) {
 		e.data('SparkTimeouts').push(setTimeout(function() {
-			e.animate(animations, timeframe, easing);
+			e.animate(animations, timeframe, easing, callback, true);
 		}, e.data('SparkOffset')));
 	}
 	
@@ -330,7 +331,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Check if we can call now, or if we need to add it to the animation stack
 		if(found.data('SparkOffset') > 0) {
 			// Add it to the stack
-			stackAnimation(found, animations, timeframe, easing);
+			stackAnimation(found, animations, timeframe, easing, callback);
+			
+			// Remove the callback if it exists
+			if(typeof callback === 'function') {
+				callback = false;
+			}
 			
 			// Set the callback offset
 			callbackOffset = found.data('SparkOffset') + timeframe;
@@ -412,7 +418,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	// Set the callback to be run if one was passed
 	if(typeof callback === 'function') {
-		timeout = setTimeout(callback, callbackOffset);
+		timeout = setTimeout(callback, (inChain) ? callbackOffset : timeframe);
 		
 		// Loop though the elements adding the callbacks timeout reference
 		this.each(function(e) {
