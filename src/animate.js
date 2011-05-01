@@ -281,8 +281,8 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					callback();
 				}
 				
-				element.data('SparkAnimations').shift();
 				animate(element);
+				element.data('SparkAnimations').shift();
 			}
 		}, time);
 	}
