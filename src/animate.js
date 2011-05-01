@@ -278,6 +278,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			if(callback && lastFrame) {
 				callback();
 			}
+			
+			// If it is the last frame then remove the stack and run animate again
+			if(lastFrame) {
+				element.data('SparkAnimations').shift();
+				animate(element);
+			}
 		}, time);
 	}
 	
