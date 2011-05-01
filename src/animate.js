@@ -290,6 +290,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					
 					// Get the unit
 					unit = to.replace(notUnit, '');
+					
+					// Loop over all frames
+					for(i = 0; i < a.frames; i++) {
+						
+					}
 				}, a.animations);
 			}
 		}
