@@ -261,10 +261,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	// Set up defaults
-	timeframe = (timeframe) ? timeframe : 600;
-	easing = (easing) ? easing : 'outQuad';
-	
 	// Loop through all elements
 	this.each(function(e) {
 		// Adopt the element into an instance
@@ -274,6 +270,17 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		if(element.data('SparkAnimations') === false) {
 			element.data('SparkAnimations', []);
 		}
+		
+		// Push a new animation object into it
+		element.data('SparkAnimations').push({
+			animations: animations,
+			frames: ((timeframe) ? timeframe : 600) / (1000 / fps),
+			easing: (easing) ? easing : 'outQuad',
+			running: false
+		});
+		
+		// Call the animate function and pass the element
+		animate(element);
 	});
 	
 	// Return the Spark object
