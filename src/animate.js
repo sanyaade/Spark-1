@@ -267,13 +267,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	function doFrame(frame, from, difference, frames, element, name, unit, easing, callback) {
+	function doFrame(element, name, value, time) {
 		// Set the timeout
 		setTimeout(function() {
-			console.log(easingMethods[easing](frame, from, difference, frames) + unit);
 			// Apply the style
-			element.style(name, easingMethods[easing](frame, from, difference, frames) + unit);
-		}, frame * (1000 / fps));
+			element.style(name, value);
+		}, time);
 	}
 	
 	function animate(element) {
@@ -303,7 +302,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 						unit = value.replace(notUnit, '');
 					}
 					else {
-						unit = '';
+						unit = 0;
 					}
 					
 					// Work out the difference
@@ -312,7 +311,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					// Loop over all frames
 					for(i = 1; i <= a.frames; i++) {
 						// Pass this information to doFrame function
-						doFrame(i, from, difference, a.frames, element, name, unit, a.easing, a.callback);
+						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps));
 					}
 				}, a.animations);
 			}
