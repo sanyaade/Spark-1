@@ -270,7 +270,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		if(stack.length > 0) {
 			// Check if the first one is not running
 			if(stack[0].running === false) {
-				// It is not, we need to animate it
+				// It is not, we need to animate it, so loop through the animations
+				that.each(function(animation) {
+					
+				}, stack[0].animations);
 			}
 		}
 	}
