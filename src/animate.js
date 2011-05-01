@@ -261,6 +261,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
+	function animate(animation) {
+		
+	}
+	
 	// Loop through all elements
 	this.each(function(e) {
 		// Adopt the element into an instance
