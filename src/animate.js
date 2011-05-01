@@ -267,6 +267,10 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
+	function doFrame(frame, from, difference, frames, element, name, unit) {
+		
+	}
+	
 	function animate(element) {
 		// Grab the animation stack
 		stack = element.data('SparkAnimations');
@@ -297,7 +301,8 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					
 					// Loop over all frames
 					for(i = 0; i < a.frames; i++) {
-						
+						// Pass this information to doFrame function
+						doFrame(i, from, difference, frames, element, name, unit);
 					}
 				}, a.animations);
 			}
