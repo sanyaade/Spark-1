@@ -353,7 +353,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			animations: animations,
 			frames: ((timeframe) ? timeframe : 600) / (1000 / fps),
 			easing: (easing) ? easing : 'outQuad',
-			callback: callback,
+			callback: (callback) ? callback : false,
 			callbackRun: false,
 			running: false
 		});
