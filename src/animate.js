@@ -59,6 +59,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		element = null,
 		notUnit = /[^\d\.\-]/g,
 		stack = null,
+		from = null,
+		to = null,
+		unit = null,
 		a = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -275,8 +278,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				a = stack[0];
 				
 				// Loop through the animations
-				that.each(function(animation) {
+				that.each(function(value, name) {
+					// Get the from value
+					from = element.style(name);
 					
+					// Get the to value
+					to = parseFloat(value);
+					
+					// Get the unit
+					unit = to.replace(notUnit, '');
 				}, a.animations);
 			}
 		}
