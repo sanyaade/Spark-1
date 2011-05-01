@@ -298,7 +298,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					to = parseFloat(value);
 					
 					// Get the unit
-					unit = to.replace(notUnit, '');
+					unit = value.replace(notUnit, '');
 					
 					// Work out the difference
 					difference = to - from;
