@@ -324,7 +324,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					for(i = 1; i <= a.frames; i++) {
 						// Pass this information to doFrame function calculating the value, time and whether to pass a callback or not
 						if(typeof a.callback === 'function' && a.callbackRun === false && i === a.frames) {
-							cb = callback;
+							cb = a.callback;
 							a.callbackRun = true;
 						}
 						else {
