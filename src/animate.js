@@ -274,13 +274,13 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			// Apply the style
 			element.style(name, value);
 			
-			// Run the callback if it has been passed and it is the last frame
-			if(callback && lastFrame) {
-				callback();
-			}
-			
 			// If it is the last frame then remove the stack and run animate again
 			if(lastFrame) {
+				// Run the callback if it has been passed
+				if(callback) {
+					callback();
+				}
+				
 				element.data('SparkAnimations').shift();
 				animate(element);
 			}
