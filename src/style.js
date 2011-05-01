@@ -118,6 +118,17 @@ Spark.extend('style', function(name, value) {
 			style = e.style[name];
 		}
 		
+		// If it is still not found, set a default
+		if(!style) {
+			// If it is opacity, set it to 1, anything else, set it to 0
+			if(name === 'opacity') {
+				style = '1';
+			}
+			else {
+				style = '0';
+			}
+		}
+		
 		// Fix colours
 		if(name.toLowerCase().indexOf('color') !== -1) {
 			style = that.color.toRgb(style);
