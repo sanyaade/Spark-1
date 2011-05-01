@@ -269,6 +269,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	this.each(function(e) {
 		// Adopt the element into an instance
 		element = that.find(e);
+		
+		// Make sure the element has an animations array
+		if(element.data('SparkAnimations') === false) {
+			element.data('SparkAnimations', []);
+		}
 	});
 	
 	// Return the Spark object
