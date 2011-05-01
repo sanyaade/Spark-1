@@ -339,7 +339,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	}
 	
 	// Loop through all elements
-	this.each(function(e) {
+	this.each(function(e, count) {
 		// Adopt the element into an instance
 		element = that.find(e);
 		
@@ -353,16 +353,13 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			animations: animations,
 			frames: ((timeframe) ? timeframe : 600) / (1000 / fps),
 			easing: (easing) ? easing : 'outQuad',
-			callback: (callback) ? callback : false,
+			callback: (callback && count === that.length - 1) ? callback : false,
 			callbackRun: false,
 			running: false
 		});
 		
 		// Call the animate function and pass the element
 		animate(element);
-		
-		// Now remove the callback, because we only want it to be called for one element
-		callback = false;
 	});
 	
 	// Return the Spark object
