@@ -56,6 +56,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	var that = this,
 		fps = 50,
 		i = null,
+		notUnit = /[^\d\.-]/g,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
