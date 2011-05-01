@@ -58,6 +58,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		i = null,
 		element = null,
 		notUnit = /[^\d\.-]/g,
+		stack = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
@@ -261,8 +262,17 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	function animate(animation) {
+	function animate(element) {
+		// Grab the animation stack
+		stack = element.data('SparkAnimations');
 		
+		// Make sure we have some animations
+		if(stack.length > 0) {
+			// Check if the first one is not running
+			if(stack[0].running === false) {
+				// It is not, we need to animate it
+			}
+		}
 	}
 	
 	// Loop through all elements
