@@ -63,6 +63,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		to = null,
 		unit = null,
 		difference = null,
+		cb = null,
 		a = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -267,11 +268,16 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	function doFrame(element, name, value, time) {
+	function doFrame(element, name, value, time, callback, lastFrame) {
 		// Set the timeout
 		setTimeout(function() {
 			// Apply the style
 			element.style(name, value);
+			
+			// Run the callback if it has been passed and it is the last frame
+			if(callback && lastFrame) {
+				callback();
+			}
 		}, time);
 	}
 	
@@ -310,8 +316,16 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					
 					// Loop over all frames
 					for(i = 1; i <= a.frames; i++) {
-						// Pass this information to doFrame function
-						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps));
+						// Pass this information to doFrame function calculating the value, time and whether to pass a callback or not
+						if(typeof a.callback === 'function' && a.callbackRun === false && i === a.frames) {
+							cb = callback;
+							a.callbackRun = true;
+						}
+						else {
+							cb = false;
+						}
+						
+						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps), cb, i === a.frames);
 					}
 				}, a.animations);
 			}
@@ -334,11 +348,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			frames: ((timeframe) ? timeframe : 600) / (1000 / fps),
 			easing: (easing) ? easing : 'outQuad',
 			callback: callback,
+			callbackRun: false,
 			running: false
 		});
 		
 		// Call the animate function and pass the element
 		animate(element);
+		
+		// Now remove the callback, because we only want it to be called for one element
+		callback = false;
 	});
 	
 	// Return the Spark object
