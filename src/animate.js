@@ -56,6 +56,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	var that = this,
 		fps = 50,
 		i = null,
+		element = null,
 		notUnit = /[^\d\.-]/g,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -263,6 +264,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Set up defaults
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
+	
+	// Loop through all elements
+	this.each(function(e) {
+		// Adopt the element into an instance
+		element = that.find(e);
+	});
 	
 	// Return the Spark object
 	return this;
