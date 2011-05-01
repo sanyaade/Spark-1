@@ -62,6 +62,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		from = null,
 		to = null,
 		unit = null,
+		difference = null,
 		a = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -290,6 +291,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					
 					// Get the unit
 					unit = to.replace(notUnit, '');
+					
+					// Work out the difference
+					difference = to - from;
 					
 					// Loop over all frames
 					for(i = 0; i < a.frames; i++) {
