@@ -57,7 +57,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		fps = 50,
 		i = null,
 		element = null,
-		notUnit = /[^\d\.\-]/g,
+		notUnit = /[\d\.\-]/g,
 		stack = null,
 		from = null,
 		to = null,
@@ -270,6 +270,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	function doFrame(frame, from, difference, frames, element, name, unit, easing, callback) {
 		// Set the timeout
 		setTimeout(function() {
+			console.log(easingMethods[easing](frame, from, difference, frames) + unit);
 			// Apply the style
 			element.style(name, easingMethods[easing](frame, from, difference, frames) + unit);
 		}, frame * (1000 / fps));
@@ -292,19 +293,24 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				// Loop through the animations
 				that.each(function(value, name) {
 					// Get the from value
-					from = element.style(name);
+					from = parseFloat(element.style(name));
 					
 					// Get the to value
 					to = parseFloat(value);
 					
 					// Get the unit
-					unit = value.replace(notUnit, '');
+					if(typeof value === 'string') {
+						unit = value.replace(notUnit, '');
+					}
+					else {
+						unit = '';
+					}
 					
 					// Work out the difference
 					difference = to - from;
 					
 					// Loop over all frames
-					for(i = 0; i < a.frames; i++) {
+					for(i = 1; i <= a.frames; i++) {
 						// Pass this information to doFrame function
 						doFrame(i, from, difference, a.frames, element, name, unit, a.easing, a.callback);
 					}
