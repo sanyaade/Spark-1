@@ -57,7 +57,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		fps = 50,
 		i = null,
 		element = null,
-		notUnit = /[^\d\.-]/g,
+		notUnit = /[^\d\.\-]/g,
 		stack = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
