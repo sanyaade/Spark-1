@@ -148,7 +148,7 @@ Spark.extend('style', function(name, value) {
 			}
 		}
 		else {
-			if(name === 'padding' || name === 'margin' || name === 'border') {
+			if(name === 'padding' || name === 'margin') {
 				// Get the direction styles
 				directions = [
 					getStyle(this[0], camelStyle(name + 'Top')),
