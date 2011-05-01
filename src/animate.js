@@ -49,26 +49,13 @@
  * @param {Number|Boolean} timeframe How many milliseconds you wish the animation to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Function to be run on completion of the animation
- * @param {Boolean} inChain An internally used argument for determining if this animation is part of a chain or not, influences callbacks timing
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('animate', function(animations, timeframe, easing, callback, inChain) {
+Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this,
-		from = null,
-		to = null,
-		unit = null,
-		difference = null,
 		fps = 50,
-		timeout = null,
 		i = null,
-		frames = null,
-		found = null,
-		calculated = null,
-		colours = null,
-		got = null,
-		callbackOffset = null,
-		onlyUnits = /[^%|in|cm|mm|em|ex|pt|pc|px]/gi,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
 				return c*(t/=d)*t + b;
@@ -275,156 +262,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback, inChai
 	// Set up defaults
 	timeframe = (timeframe) ? timeframe : 600;
 	easing = (easing) ? easing : 'outQuad';
-	callbackOffset = timeframe;
-	
-	// Convert colors to arrays
-	this.each(function(to, style) {
-		// Check that it is a color
-		if(style.toLowerCase().indexOf('color') !== -1) {
-			// Convert it to an array
-			animations[style] = that.color.toArray(to);
-		}
-	}, animations);
-	
-	function applyStyle(e, name, value, time) {
-		e.data('SparkTimeouts').push(setTimeout(function() {
-			e.style(name, value);
-		}, time));
-	}
-	
-	function stackAnimation(e, animations, timeframe, easing, callback) {
-		e.data('SparkTimeouts').push(setTimeout(function() {
-			e.animate(animations, timeframe, easing, callback, true);
-		}, e.data('SparkOffset')));
-	}
-	
-	function reduceOffset(e, timeframe) {
-		setTimeout(function() {
-			e.data('SparkOffset', e.data('SparkOffset') - timeframe);
-		}, timeframe);
-	}
-	
-	function getDefault(style) {
-		if(style === 'opacity') {
-			return 1;
-		}
-		else {
-			return 0;
-		}
-	}
-	
-	// Loop through all the elements
-	this.each(function(e) {
-		// Grab the element
-		found = that.find(e);
-		
-		// Make sure there is an offset
-		if(found.data('SparkOffset') === false) {
-			found.data('SparkOffset', 0);
-		}
-		
-		// Make sure there is an array of timeout references
-		if(found.data('SparkTimeouts') === false) {
-			found.data('SparkTimeouts', []);
-		}
-		
-		// Check if we can call now, or if we need to add it to the animation stack
-		if(found.data('SparkOffset') > 0) {
-			// Add it to the stack
-			stackAnimation(found, animations, timeframe, easing, callback);
-			
-			// Remove the callback if it exists
-			if(typeof callback === 'function') {
-				callback = false;
-			}
-			
-			// Set the callback offset
-			callbackOffset = found.data('SparkOffset') + timeframe;
-			
-			// Return out of the loop
-			return false;
-		}
-		
-		// Set the offset
-		found.data('SparkOffset', found.data('SparkOffset') + timeframe);
-		
-		// Reduce the offset
-		reduceOffset(found, timeframe);
-		
-		that.each(function(to, style) {
-			// Get the unit if the to is a string
-			if(typeof to === 'string') {
-				unit = to.replace(onlyUnits, '');
-			}
-			else {
-				// Otherwise set it to an empty string
-				unit = '';
-			}
-			
-			if(to instanceof Array) {
-				// Grab where we need to animate from
-				from = that.color.toArray(found.style(style));
-				
-				// Work out the difference
-				difference = [to[0] - from[0], to[1] - from[1], to[2] - from[2]];
-			}
-			else {
-				// Convert to into a float
-				to = parseFloat(to);
-				
-				// Grab where we need to animate from
-				got = found.style(style);
-				
-				if(got !== '' && typeof got === 'string') {
-					from = parseFloat(found.style(style));
-				}
-				else if(typeof got === 'number') {
-					from = got;
-				}
-				else {
-					from = getDefault(style);
-				}
-				
-				// Work out the difference
-				difference = to - from;
-			}
-			
-			// Work out how many frames are required
-			frames = timeframe / (1000 / fps);
-			
-			// Loop through all the frames
-			for(i = 1; i <= frames; i++) {
-				if(to instanceof Array) {
-					// Work out the value
-					calculated = that.color.toRgb([
-						Math.floor(easingMethods[easing](i, from[0], difference[0], frames)),
-						Math.floor(easingMethods[easing](i, from[1], difference[1], frames)),
-						Math.floor(easingMethods[easing](i, from[2], difference[2], frames))
-					]);
-					
-					// Set it to be applied
-					applyStyle(found, style, calculated, i * (1000 / fps));
-				}
-				else {
-					// Work out the value
-					calculated = easingMethods[easing](i, from, difference, frames) + unit;
-					
-					// Set it to be applied
-					applyStyle(found, style, (calculated.replace(onlyUnits, '').length === 0) ? parseFloat(calculated) : calculated, i * (1000 / fps));
-				}
-			}
-		}, animations);
-	});
-	
-	// Set the callback to be run if one was passed
-	if(typeof callback === 'function') {
-		timeout = setTimeout(callback, (inChain) ? callbackOffset : timeframe);
-		
-		// Loop though the elements adding the callbacks timeout reference
-		this.each(function(e) {
-			that.find(e).data('SparkTimeouts').push(timeout);
-		});
-	}
 	
 	// Return the Spark object
 	return this;
