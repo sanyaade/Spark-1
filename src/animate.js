@@ -277,6 +277,9 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				// It is not, we need to animate it, so copy the first stack into a
 				a = stack[0];
 				
+				// Set running to true
+				a.running = true;
+				
 				// Loop through the animations
 				that.each(function(value, name) {
 					// Get the from value
