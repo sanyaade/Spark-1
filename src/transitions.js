@@ -64,6 +64,22 @@ Spark.extend('transitions', {
 			}, false, false, function() {
 				element.style('opacity', original).hide();
 			});
+		},
+		slide: function(element) {
+			// Grab its height
+			var originalHeight = element.style('height'),
+				// Grab its overflow and default to visible
+				originalOverflow = element.style('overflow') || 'visible';
+			
+			// Set its overflow to hidden and slide its height to 0, then set everything back to their defaults and hide it
+			element.style('overflow', 'hidden').animate({
+				height: 0
+			}, false, false, function() {
+				element.style({
+					height: originalHeight,
+					overflow: originalOverflow
+				}).hide();
+			});
 		}
 	}
 });
