@@ -14,10 +14,9 @@ Spark.extend('transitions', {
 		},
 		slide: function(element) {
 			// Show the element and grab its height
-			var originalHeight = element.show().style('height');
-			
-			// Grab its overflow and default to visible
-			var originalOverflow = element.style('overflow') || 'visible';
+			var originalHeight = element.show().style('height'),
+				// Grab its overflow and default to visible
+				originalOverflow = element.style('overflow') || 'visible';
 			
 			// Set the height to 0 and the overflow to hidden and then slide it to its original. Then set the overflow to its original
 			element.style({
