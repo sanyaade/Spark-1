@@ -335,6 +335,15 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		}
 	}
 	
+	// Convert colors to arrays
+	this.each(function(to, style) {
+		// Check that it is a color
+		if(style.toLowerCase().indexOf('color') !== -1) {
+			// Convert it to an array
+			animations[style] = that.color.toArray(to);
+		}
+	}, animations);
+	
 	// Loop through all elements
 	this.each(function(e, count) {
 		// Adopt the element into an instance
