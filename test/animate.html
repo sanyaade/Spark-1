@@ -31,8 +31,6 @@
 				$('div.d1, div.d2').animate({
 					width: 400,
 					height: 400
-				}, false, false, function() {
-					console.log('First done');
 				}).animate({
 					margin: 10,
 					borderWidth: 5
@@ -62,7 +60,6 @@
 						backgroundColor: '#FFAA00',
 						opacity: 1
 					}, 3000, false, function() {
-						console.log('Looping');
 						runAnimation();
 					});
 				});
