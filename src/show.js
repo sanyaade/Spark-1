@@ -9,12 +9,19 @@
  * 
  *     $('p').show('fade');
  * 
+ * You can also pass a function as the second argument to be run when the transition completes, like so
+ * 
+ *     $('p').show('fade', function() {
+ *         alert('done');
+ *     });
+ * 
  * This function takes the originial display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth
+ * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('show', function(transition) {
+Spark.extend('show', function(transition, callback) {
 	// Initialise any required variables
 	var that = this;
 	
@@ -26,7 +33,7 @@ Spark.extend('show', function(transition) {
 			// Loop through all of the elements
 			this.each(function(e) {
 				// Run the transition
-				that.transitions.show[transition](that.find(e));
+				that.transitions.show[transition](that.find(e), callback);
 			});
 		}
 		else {
