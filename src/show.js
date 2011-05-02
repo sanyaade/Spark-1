@@ -9,9 +9,9 @@
  * 
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('show', function() {
+Spark.extend('show', function(transition) {
 	// Initialise any required variables
-	var that = this.clone();
+	var that = this;
 	
 	// Loop through all the elements
 	this.each(function(e) {
