@@ -31,7 +31,8 @@ files = ${src}core.js\
 		${src}show.js\
 		${src}color.js\
 		${src}stop.js\
-		${src}toggle.js
+		${src}toggle.js\
+		${src}transitions.js
 
 # Set the default files to be built
 default: spark.js spark.min.js validate
