@@ -269,14 +269,14 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 	
 	function doFrame(element, name, value, time) {
 		// Set the timeout
-		setTimeout(function() {
+		element.data('SparkTimeouts').push(setTimeout(function() {
 			// Apply the style
 			element.style(name, value);
-		}, time);
+		}, time));
 	}
 	
 	function lastFrame(callback, element, time) {
-		setTimeout(function() {
+		element.data('SparkTimeouts').push(setTimeout(function() {
 			// Run the callback if it has been passed
 			if(callback) {
 				callback();
@@ -287,7 +287,7 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			
 			// Recurse
 			animate(element);
-		}, time);
+		}, time));
 	}
 	
 	function animate(element) {
@@ -377,6 +377,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		// Make sure the element has an animations array
 		if(element.data('SparkAnimations') === false) {
 			element.data('SparkAnimations', []);
+		}
+		
+		// Make sure the element has a timeouts array
+		if(element.data('SparkTimeouts') === false) {
+			element.data('SparkTimeouts', []);
 		}
 		
 		// Get the timeframe with a default if required
