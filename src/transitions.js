@@ -80,6 +80,30 @@ Spark.extend('transitions', {
 					overflow: originalOverflow
 				}).hide();
 			});
+		},
+		smooth: function(element) {
+			// Grab its height
+			var originalHeight = element.style('height'),
+				// Grab its width
+				originalWidth = element.style('width'),
+				// Grab its opacity
+				originalOpacity = element.style('opacity'),
+				// Grab its overflow and default to visible
+				originalOverflow = element.style('overflow') || 'visible';
+			
+			// Set its overflow to hidden and animate everything to 0, then set everything back to their defaults and hide it
+			element.style('overflow', 'hidden').animate({
+				height: 0,
+				width: 0,
+				opacity: 0
+			}, false, false, function() {
+				element.style({
+					height: originalHeight,
+					width: originalWidth,
+					opacity: originalOpacity,
+					overflow: originalOverflow
+				}).hide();
+			});
 		}
 	}
 });
