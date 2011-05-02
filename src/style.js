@@ -72,7 +72,7 @@ Spark.extend('style', function(name, value) {
 	 */
 	function setStyle(element, name, value) {
 		// Initialise any required variables
-		var pxNames = 'zIndex fontWeight opacity zoom lineHeight',
+		var pxNames = 'zIndex fontWeight opacity zoom lineHeight scrollTop scrollLeft',
 			nameTest = null;
 		
 		// Assign the new regex and fix the name
@@ -82,7 +82,13 @@ Spark.extend('style', function(name, value) {
 		// Assign px to the value if required
 		value = (typeof value === 'number' && !nameTest.test(pxNames)) ? value + 'px' : value;
 		
-		element.style[name] = value;
+		// Work around for scroll position
+		if(name === 'scrollTop' || name === 'scrollLeft') {
+			element[name] = value;
+		}
+		else {
+			element.style[name] = value;
+		}
 		
 		if(name === 'opacity') {
 			element.style.zoom = '1';
@@ -102,6 +108,11 @@ Spark.extend('style', function(name, value) {
 	function getStyle(e, name) {
 		// Initialise any required variables
 		var style = null;
+		
+		// Work around for scroll position
+		if(name === 'scrollTop' || name === 'scrollLeft') {
+			return e[name];
+		}
 		
 		// If we can use getComputedStyle
 		if(typeof getComputedStyle !== 'undefined') {
