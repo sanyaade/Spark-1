@@ -489,19 +489,16 @@ $('p').animate({
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'animate'</span>, <span class="keyword">function</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
-		<span class="variable">from</span> = <span class="keyword">null</span>,
-		<span class="variable">to</span> = <span class="keyword">null</span>,
-		<span class="variable">unit</span> = <span class="keyword">null</span>,
-		<span class="variable">difference</span> = <span class="keyword">null</span>,
 		<span class="variable">fps</span> = <span class="number integer">50</span>,
 		<span class="variable">i</span> = <span class="keyword">null</span>,
-		<span class="variable">frames</span> = <span class="keyword">null</span>,
-		<span class="variable">found</span> = <span class="keyword">null</span>,
+		<span class="variable">element</span> = <span class="keyword">null</span>,
+		<span class="variable">notUnit</span> = <span class="regexp">/[\d\.\-]/g</span>,
+		<span class="variable">stack</span> = <span class="keyword">null</span>,
+		<span class="variable">from</span> = <span class="keyword">null</span>,
+		<span class="variable">unit</span> = <span class="keyword">null</span>,
 		<span class="variable">calculated</span> = <span class="keyword">null</span>,
-		<span class="variable">callbackOffset</span> = <span class="number integer">0</span>,
-		<span class="variable">colours</span> = <span class="keyword">null</span>,
-		<span class="variable">got</span> = <span class="keyword">null</span>,
-		<span class="variable">onlyUnits</span> = <span class="regexp">/[^%|in|cm|mm|em|ex|pt|pc|px]/gi</span>,
+		<span class="variable">difference</span> = <span class="keyword">null</span>,
+		<span class="variable">a</span> = <span class="keyword">null</span>,
 		<span class="variable">easingMethods</span> = {
 			<span class="variable">inQuad</span>: <span class="keyword">function</span> (<span class="variable">t</span>, <span class="variable">b</span>, <span class="variable">c</span>, <span class="variable">d</span>) {
 				<span class="keyword">return</span> <span class="variable">c</span>*(<span class="variable">t</span>/=<span class="variable">d</span>)*<span class="variable">t</span> + <span class="variable">b</span>;
@@ -705,9 +702,98 @@ $('p').animate({
 			}
 		};
 	
-	<span class="comment">// Set up defaults</span>
-	<span class="variable">timeframe</span> = (<span class="variable">timeframe</span>) ? <span class="variable">timeframe</span> : <span class="number integer">600</span>;
-	<span class="variable">easing</span> = (<span class="variable">easing</span>) ? <span class="variable">easing</span> : <span class="string">'outQuad'</span>;
+	<span class="keyword">function</span> <span class="variable">doFrame</span>(<span class="variable">element</span>, <span class="variable">name</span>, <span class="variable">value</span>, <span class="variable">time</span>) {
+		<span class="comment">// Set the timeout</span>
+		<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>).<span class="variable">push</span>(<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="comment">// Apply the style</span>
+			<span class="variable">element</span>.<span class="variable">style</span>(<span class="variable">name</span>, <span class="variable">value</span>);
+		}, <span class="variable">time</span>));
+	}
+	
+	<span class="keyword">function</span> <span class="variable">lastFrame</span>(<span class="variable">callback</span>, <span class="variable">element</span>, <span class="variable">time</span>) {
+		<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>).<span class="variable">push</span>(<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
+			<span class="comment">// Run the callback if it has been passed</span>
+			<span class="keyword">if</span>(<span class="variable">callback</span>) {
+				<span class="variable">callback</span>();
+			}
+			
+			<span class="comment">// Remove the animation object</span>
+			<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>).<span class="variable">shift</span>();
+			
+			<span class="comment">// Recurse</span>
+			<span class="variable">animate</span>(<span class="variable">element</span>);
+		}, <span class="variable">time</span>));
+	}
+	
+	<span class="keyword">function</span> <span class="variable">animate</span>(<span class="variable">element</span>) {
+		<span class="comment">// Grab the animation stack</span>
+		<span class="variable">stack</span> = <span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>);
+		
+		<span class="comment">// Make sure we have some animations</span>
+		<span class="keyword">if</span>(<span class="variable">stack</span>.<span class="variable">length</span> &<span class="variable">gt</span>; <span class="number integer">0</span>) {
+			<span class="comment">// Check if the first one is not running</span>
+			<span class="keyword">if</span>(<span class="variable">stack</span>[<span class="number integer">0</span>].<span class="variable">running</span> === <span class="variable">false</span>) {
+				<span class="comment">// It is not, we need to animate it, so copy the first stack into a</span>
+				<span class="variable">a</span> = <span class="variable">stack</span>[<span class="number integer">0</span>];
+				
+				<span class="comment">// Set running to true</span>
+				<span class="variable">a</span>.<span class="variable">running</span> = <span class="variable">true</span>;
+				
+				<span class="comment">// Loop through the animations</span>
+				<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">to</span>, <span class="variable">name</span>) {
+					<span class="comment">// Get the unit</span>
+					<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">to</span> === <span class="string">'string'</span>) {
+						<span class="variable">unit</span> = <span class="variable">to</span>.<span class="variable">replace</span>(<span class="variable">notUnit</span>, <span class="string">''</span>);
+					}
+					<span class="keyword">else</span> {
+						<span class="variable">unit</span> = <span class="number integer">0</span>;
+					}
+					
+					<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+						<span class="comment">// Get the from value</span>
+						<span class="variable">from</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toArray</span>(<span class="variable">element</span>.<span class="variable">style</span>(<span class="variable">name</span>));
+						
+						<span class="comment">// Work out the difference</span>
+						<span class="variable">difference</span> = [
+							<span class="variable">to</span>[<span class="number integer">0</span>] - <span class="variable">from</span>[<span class="number integer">0</span>],
+							<span class="variable">to</span>[<span class="number integer">1</span>] - <span class="variable">from</span>[<span class="number integer">1</span>],
+							<span class="variable">to</span>[<span class="number integer">2</span>] - <span class="variable">from</span>[<span class="number integer">2</span>]
+						];
+					}
+					<span class="keyword">else</span> {
+						<span class="comment">// Get the from value</span>
+						<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">element</span>.<span class="variable">style</span>(<span class="variable">name</span>));
+						
+						<span class="comment">// Get the to value</span>
+						<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
+						
+						<span class="comment">// Work out the difference</span>
+						<span class="variable">difference</span> = <span class="variable">to</span> - <span class="variable">from</span>;
+					}
+					
+					<span class="comment">// Loop over all frames</span>
+					<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>;= <span class="variable">a</span>.<span class="variable">frames</span>; <span class="variable">i</span>++) {
+						<span class="comment">// Work out the value</span>
+						<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+							<span class="variable">calculated</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toRgb</span>([
+								<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">a</span>.<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">0</span>], <span class="variable">difference</span>[<span class="number integer">0</span>], <span class="variable">a</span>.<span class="variable">frames</span>)),
+								<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">a</span>.<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">1</span>], <span class="variable">difference</span>[<span class="number integer">1</span>], <span class="variable">a</span>.<span class="variable">frames</span>)),
+								<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">a</span>.<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">2</span>], <span class="variable">difference</span>[<span class="number integer">2</span>], <span class="variable">a</span>.<span class="variable">frames</span>))
+							]);
+						}
+						<span class="keyword">else</span> {
+							<span class="variable">calculated</span> = <span class="variable">easingMethods</span>[<span class="variable">a</span>.<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>, <span class="variable">difference</span>, <span class="variable">a</span>.<span class="variable">frames</span>) + <span class="variable">unit</span>;
+						}
+						
+						<span class="variable">doFrame</span>(<span class="variable">element</span>, <span class="variable">name</span>, <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
+					}
+				}, <span class="variable">a</span>.<span class="variable">animations</span>);
+				
+				<span class="comment">// Run the last frame</span>
+				<span class="variable">lastFrame</span>(<span class="variable">a</span>.<span class="variable">callback</span>, <span class="variable">element</span>, <span class="variable">a</span>.<span class="variable">timeframe</span>);
+			}
+		}
+	}
 	
 	<span class="comment">// Convert colors to arrays</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">to</span>, <span class="variable">style</span>) {
@@ -718,127 +804,37 @@ $('p').animate({
 		}
 	}, <span class="variable">animations</span>);
 	
-	<span class="keyword">function</span> <span class="variable">applyStyle</span>(<span class="variable">e</span>, <span class="variable">name</span>, <span class="variable">value</span>, <span class="variable">time</span>) {
-		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-			<span class="variable">e</span>.<span class="variable">style</span>(<span class="variable">name</span>, <span class="variable">value</span>);
-		}, <span class="variable">time</span>);
-	}
-	
-	<span class="keyword">function</span> <span class="variable">stackAnimation</span>(<span class="variable">e</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>) {
-		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-			<span class="variable">e</span>.<span class="variable">animate</span>(<span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>);
-		}, <span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>));
-	}
-	
-	<span class="keyword">function</span> <span class="variable">reduceOffset</span>(<span class="variable">e</span>, <span class="variable">timeframe</span>) {
-		<span class="variable">setTimeout</span>(<span class="keyword">function</span>() {
-			<span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">e</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) - <span class="variable">timeframe</span>);
-		}, <span class="variable">timeframe</span>);
-	}
-	
-	<span class="keyword">function</span> <span class="variable">getDefault</span>(<span class="variable">style</span>) {
-		<span class="keyword">if</span>(<span class="variable">style</span> === <span class="string">'opacity'</span>) {
-			<span class="keyword">return</span> <span class="number integer">1</span>;
-		}
-		<span class="keyword">else</span> {
-			<span class="keyword">return</span> <span class="number integer">0</span>;
-		}
-	}
-	
-	<span class="comment">// Loop through all the elements</span>
-	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Grab the element</span>
-		<span class="variable">found</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
+	<span class="comment">// Loop through all elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>, <span class="variable">count</span>) {
+		<span class="comment">// Adopt the element into an instance</span>
+		<span class="variable">element</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
 		
-		<span class="comment">// Make sure there is an offset</span>
-		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) === <span class="variable">false</span>) {
-			<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="number integer">0</span>);
+		<span class="comment">// Make sure the element has an animations array</span>
+		<span class="keyword">if</span>(<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>) === <span class="variable">false</span>) {
+			<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>, []);
 		}
 		
-		<span class="comment">// Check if we can call now, or if we need to add it to the animation stack</span>
-		<span class="keyword">if</span>(<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) &<span class="variable">gt</span>; <span class="number integer">0</span>) {
-			<span class="comment">// Add it to the stack</span>
-			<span class="variable">stackAnimation</span>(<span class="variable">found</span>, <span class="variable">animations</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>);
-			
-			<span class="comment">// Return out of the loop</span>
-			<span class="keyword">return</span> <span class="variable">false</span>;
+		<span class="comment">// Make sure the element has a timeouts array</span>
+		<span class="keyword">if</span>(<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>) === <span class="variable">false</span>) {
+			<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>, []);
 		}
 		
-		<span class="comment">// Set the offset</span>
-		<span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>, <span class="variable">found</span>.<span class="variable">data</span>(<span class="string">'SparkOffset'</span>) + <span class="variable">timeframe</span>);
+		<span class="comment">// Get the timeframe with a default if required</span>
+		<span class="variable">timeframe</span> = (<span class="variable">timeframe</span>) ? <span class="variable">timeframe</span> : <span class="number integer">600</span>;
 		
-		<span class="comment">// Reduce the offset</span>
-		<span class="variable">reduceOffset</span>(<span class="variable">found</span>, <span class="variable">timeframe</span>);
+		<span class="comment">// Push a new animation object into it</span>
+		<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>).<span class="variable">push</span>({
+			<span class="variable">animations</span>: <span class="variable">animations</span>,
+			<span class="variable">timeframe</span>: <span class="variable">timeframe</span>,
+			<span class="variable">frames</span>: <span class="variable">timeframe</span> <span class="regexp">/ (1000 /</span> <span class="variable">fps</span>),
+			<span class="variable">easing</span>: (<span class="variable">easing</span>) ? <span class="variable">easing</span> : <span class="string">'outQuad'</span>,
+			<span class="variable">callback</span>: (<span class="variable">callback</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">count</span> === <span class="variable">that</span>.<span class="variable">length</span> - <span class="number integer">1</span>) ? <span class="variable">callback</span> : <span class="variable">false</span>,
+			<span class="variable">running</span>: <span class="variable">false</span>
+		});
 		
-		<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">to</span>, <span class="variable">style</span>) {
-			<span class="comment">// Get the unit if the to is a string</span>
-			<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">to</span> === <span class="string">'string'</span>) {
-				<span class="variable">unit</span> = <span class="variable">to</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>);
-			}
-			<span class="keyword">else</span> {
-				<span class="comment">// Otherwise set it to an empty string</span>
-				<span class="variable">unit</span> = <span class="string">''</span>;
-			}
-			
-			<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
-				<span class="comment">// Grab where we need to animate from</span>
-				<span class="variable">from</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toArray</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>));
-				
-				<span class="comment">// Work out the difference</span>
-				<span class="variable">difference</span> = [<span class="variable">to</span>[<span class="number integer">0</span>] - <span class="variable">from</span>[<span class="number integer">0</span>], <span class="variable">to</span>[<span class="number integer">1</span>] - <span class="variable">from</span>[<span class="number integer">1</span>], <span class="variable">to</span>[<span class="number integer">2</span>] - <span class="variable">from</span>[<span class="number integer">2</span>]];
-			}
-			<span class="keyword">else</span> {
-				<span class="comment">// Convert to into a float</span>
-				<span class="variable">to</span> = <span class="variable">parseFloat</span>(<span class="variable">to</span>);
-				
-				<span class="comment">// Grab where we need to animate from</span>
-				<span class="variable">got</span> = <span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>);
-				
-				<span class="keyword">if</span>(<span class="variable">got</span> !== <span class="string">''</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="keyword">typeof</span> <span class="variable">got</span> === <span class="string">'string'</span>) {
-					<span class="variable">from</span> = <span class="variable">parseFloat</span>(<span class="variable">found</span>.<span class="variable">style</span>(<span class="variable">style</span>));
-				}
-				<span class="keyword">else</span> <span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">got</span> === <span class="string">'number'</span>) {
-					<span class="variable">from</span> = <span class="variable">got</span>;
-				}
-				<span class="keyword">else</span> {
-					<span class="variable">from</span> = <span class="variable">getDefault</span>(<span class="variable">style</span>);
-				}
-				
-				<span class="comment">// Work out the difference</span>
-				<span class="variable">difference</span> = <span class="variable">to</span> - <span class="variable">from</span>;
-			}
-			
-			<span class="comment">// Work out how many frames are required</span>
-			<span class="variable">frames</span> = <span class="variable">timeframe</span> <span class="regexp">/ (1000 /</span> <span class="variable">fps</span>);
-			
-			<span class="comment">// Loop through all the frames</span>
-			<span class="keyword">for</span>(<span class="variable">i</span> = <span class="number integer">1</span>; <span class="variable">i</span> &<span class="variable">lt</span>;= <span class="variable">frames</span>; <span class="variable">i</span>++) {
-				<span class="keyword">if</span>(<span class="variable">to</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
-					<span class="comment">// Work out the value</span>
-					<span class="variable">calculated</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toRgb</span>([
-						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">0</span>], <span class="variable">difference</span>[<span class="number integer">0</span>], <span class="variable">frames</span>)),
-						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">1</span>], <span class="variable">difference</span>[<span class="number integer">1</span>], <span class="variable">frames</span>)),
-						<span class="class">Math</span>.<span class="variable">floor</span>(<span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>[<span class="number integer">2</span>], <span class="variable">difference</span>[<span class="number integer">2</span>], <span class="variable">frames</span>))
-					]);
-					
-					<span class="comment">// Set it to be applied</span>
-					<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
-				}
-				<span class="keyword">else</span> {
-					<span class="comment">// Work out the value</span>
-					<span class="variable">calculated</span> = <span class="variable">easingMethods</span>[<span class="variable">easing</span>](<span class="variable">i</span>, <span class="variable">from</span>, <span class="variable">difference</span>, <span class="variable">frames</span>) + <span class="variable">unit</span>;
-					
-					<span class="comment">// Set it to be applied</span>
-					<span class="variable">applyStyle</span>(<span class="variable">found</span>, <span class="variable">style</span>, (<span class="variable">calculated</span>.<span class="variable">replace</span>(<span class="variable">onlyUnits</span>, <span class="string">''</span>).<span class="variable">length</span> === <span class="number integer">0</span>) ? <span class="variable">parseFloat</span>(<span class="variable">calculated</span>) : <span class="variable">calculated</span>, <span class="variable">i</span> * (<span class="number integer">1000</span> / <span class="variable">fps</span>));
-				}
-			}
-		}, <span class="variable">animations</span>);
+		<span class="comment">// Call the animate function and pass the element</span>
+		<span class="variable">animate</span>(<span class="variable">element</span>);
 	});
-	
-	<span class="comment">// Set the callback to be run if one was passed</span>
-	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>) {
-		<span class="variable">setTimeout</span>(<span class="variable">callback</span>, <span class="variable">timeframe</span>);
-	}
 	
 	<span class="comment">// Return the Spark object</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
@@ -1670,25 +1666,53 @@ $('div p', el);</code></pre>
 
 <pre><code>$('p').hide();</code></pre>
 
+<p>To fade the elements out, you would specify the fade transition as the optional argument</p>
+
+<pre><code>$('p').hide('fade');</code></pre>
+
+<p>You can also pass a function as the second argument to be run when the transition completes, like so</p>
+
+<pre><code>$('p').hide('fade', function() {
+    alert('done');
+});</code></pre>
+
 <p>This function takes the originial display type into account.</p>
 
 <h2></h2>
 
-<ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to hide. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hide'</span>, <span class="keyword">function</span>() {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hide'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
-	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>.<span class="variable">clone</span>();
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
 	
-	<span class="comment">// Loop through all the elements</span>
-	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Make sure it is already shown</span>
-		<span class="keyword">if</span>(<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>) !== <span class="string">'none'</span>) {
-			<span class="comment">// Store the original display type and hide the element</span>
-			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>)).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="string">'none'</span>);
+	<span class="comment">// Check for a transition</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">transition</span> === <span class="string">'string'</span>) {
+		<span class="comment">// Hide it with the specified transition</span>
+		<span class="comment">// Check for the transition</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">transitions</span>.<span class="variable">hide</span>[<span class="variable">transition</span>] === <span class="string">'function'</span>) {
+			<span class="comment">// Loop through all of the elements</span>
+			<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+				<span class="comment">// Run the transition</span>
+				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">hide</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">callback</span>);
+			});
 		}
-	});
+		<span class="keyword">else</span> {
+			<span class="comment">// If it does not exist, default to just hiding it</span>
+			<span class="this">this</span>.<span class="variable">hide</span>();
+		}
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Loop through all the elements</span>
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+			<span class="comment">// Make sure it is already shown</span>
+			<span class="keyword">if</span>(<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>) !== <span class="string">'none'</span>) {
+				<span class="comment">// Store the original display type and hide the element</span>
+				<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>)).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="string">'none'</span>);
+			}
+		});
+	}
 	
 	<span class="comment">// Return the Spark object for chaining</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
@@ -2087,24 +2111,96 @@ For best results across all browsers always wrap your code within the ready func
 
 <pre><code>$('p').show();</code></pre>
 
+<p>To fade the elements in, you would specify the fade transition as the optional argument</p>
+
+<pre><code>$('p').show('fade');</code></pre>
+
+<p>You can also pass a function as the second argument to be run when the transition completes, like so</p>
+
+<pre><code>$('p').show('fade', function() {
+    alert('done');
+});</code></pre>
+
 <p>This function takes the originial display type into account.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'show'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">callback</span>) {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
+	
+	<span class="comment">// Check for a transition</span>
+	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">transition</span> === <span class="string">'string'</span>) {
+		<span class="comment">// Show it with the specified transition</span>
+		<span class="comment">// Check for the transition</span>
+		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="this">this</span>.<span class="variable">transitions</span>.<span class="variable">show</span>[<span class="variable">transition</span>] === <span class="string">'function'</span>) {
+			<span class="comment">// Loop through all of the elements</span>
+			<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+				<span class="comment">// Run the transition</span>
+				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">show</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">callback</span>);
+			});
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// If it does not exist, default to just showing it</span>
+			<span class="this">this</span>.<span class="variable">show</span>();
+		}
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Just show it</span>
+		<span class="comment">// Loop through all the elements</span>
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+			<span class="comment">// Show the element with the correct display type</span>
+			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>));
+		});
+	}
+	
+	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/stop.js"><a href="#">stop</a></h2></td><td>src/stop.js</td></tr><tr class="code">
+<td class="docs">
+<p>Stops all animations for the specified elements</p>
+
+<p>For example, to stop the animation of all div's on the page, you would use the following line</p>
+
+<pre><code>$('div').stop();</code></pre>
 
 <h2></h2>
 
 <ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'show'</span>, <span class="keyword">function</span>() {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'stop'</span>, <span class="keyword">function</span>() {
 	<span class="comment">// Initialise any required variables</span>
-	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>.<span class="variable">clone</span>();
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
+		<span class="variable">element</span> = <span class="keyword">null</span>;
 	
-	<span class="comment">// Loop through all the elements</span>
+	<span class="comment">// Loop through all of the elements</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Show the element with the correct display type</span>
-		<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>));
+		<span class="comment">// Grab the element</span>
+		<span class="variable">element</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
+		
+		<span class="comment">// Make sure the element has a timeout and animation array</span>
+		<span class="keyword">if</span>(<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>) &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>)) {
+			 <span class="comment">// Loop through all of the timeouts</span>
+			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">t</span>) {
+				<span class="variable">clearTimeout</span>(<span class="variable">t</span>);
+			}, <span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>));
+			
+			<span class="comment">// Reset the array</span>
+			<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkTimeouts'</span>, []);
+			
+			<span class="comment">// Reset the animations array</span>
+			<span class="variable">element</span>.<span class="variable">data</span>(<span class="string">'SparkAnimations'</span>, []);
+		}
 	});
 	
-	<span class="comment">// Return the Spark object for chaining</span>
+	<span class="comment">// Return the Spark object</span>
 	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
@@ -2171,6 +2267,17 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 			<span class="variable">style</span> = <span class="variable">e</span>.<span class="variable">style</span>[<span class="variable">name</span>];
 		}
 		
+		<span class="comment">// If it is still not found, set a default</span>
+		<span class="keyword">if</span>(!<span class="variable">style</span> &<span class="variable">amp</span>;&<span class="variable">amp</span>; <span class="variable">style</span> !== <span class="number integer">0</span>) {
+			<span class="comment">// If it is opacity, set it to 1, anything else, set it to 0</span>
+			<span class="keyword">if</span>(<span class="variable">name</span> === <span class="string">'opacity'</span>) {
+				<span class="variable">style</span> = <span class="string">'1'</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="variable">style</span> = <span class="string">'0'</span>;
+			}
+		}
+		
 		<span class="comment">// Fix colours</span>
 		<span class="keyword">if</span>(<span class="variable">name</span>.<span class="variable">toLowerCase</span>().<span class="variable">indexOf</span>(<span class="string">'color'</span>) !== -<span class="number integer">1</span>) {
 			<span class="variable">style</span> = <span class="variable">that</span>.<span class="variable">color</span>.<span class="variable">toRgb</span>(<span class="variable">style</span>);
@@ -2190,7 +2297,7 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 			}
 		}
 		<span class="keyword">else</span> {
-			<span class="keyword">if</span>(<span class="variable">name</span> === <span class="string">'padding'</span> || <span class="variable">name</span> === <span class="string">'margin'</span> || <span class="variable">name</span> === <span class="string">'border'</span>) {
+			<span class="keyword">if</span>(<span class="variable">name</span> === <span class="string">'padding'</span> || <span class="variable">name</span> === <span class="string">'margin'</span>) {
 				<span class="comment">// Get the direction styles</span>
 				<span class="variable">directions</span> = [
 					<span class="variable">getStyle</span>(<span class="this">this</span>[<span class="number integer">0</span>], <span class="variable">camelStyle</span>(<span class="variable">name</span> + <span class="string">'Top'</span>)),
@@ -2271,6 +2378,205 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 	<span class="keyword">return</span> <span class="this">this</span>;
 });
 </code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/toggle.js"><a href="#">toggle</a></h2></td><td>src/toggle.js</td></tr><tr class="code">
+<td class="docs">
+<p>Toggle the visibility of the specified elements</p>
+
+<p>For example, to toggle the visibility of all p tags on the page, you would use the following line</p>
+
+<pre><code>$('p').toggle();</code></pre>
+
+<h2></h2>
+
+<ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'toggle'</span>, <span class="keyword">function</span>() {
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
+		<span class="variable">element</span> = <span class="keyword">null</span>;
+	
+	<span class="comment">// Loop through the elements</span>
+	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
+		<span class="comment">// Grab the element</span>
+		<span class="variable">element</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
+		
+		<span class="comment">// Check wether it is display none or not</span>
+		<span class="keyword">if</span>(<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'display'</span>) === <span class="string">'none'</span>) {
+			<span class="comment">// It is, show it</span>
+			<span class="variable">element</span>.<span class="variable">show</span>();
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// It is not, hide it</span>
+			<span class="variable">element</span>.<span class="variable">hide</span>();
+		}
+	});
+	
+	<span class="comment">// Return the Spark object</span>
+	<span class="keyword">return</span> <span class="this">this</span>;
+});
+</code></pre>
+</td>
+</tr><tr class="filename"><td><h2 id="src/transitions.js"><a href="#">transitions</a></h2></td><td>src/transitions.js</td></tr><tr class="code">
+<td class="docs">
+<p>Extendible object of transitions for use with the show and hide functions</p>
+
+<p>To add a transition you can use the following template</p>
+
+<pre><code>Spark.transitions.show.transitionName(function(element, callback) {
+    // Do your stuff for showing and call the callback if one was passed
+});
+
+Spark.transitions.hide.transitionName(function(element, callback) {
+    // Do your stuff for hiding and call the callback if one was passed
+});</code></pre>
+
+<p>Remember to check for the callback first before calling it and try to put things back how they where
+ </p>
+</td>
+<td class="code">
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'transitions'</span>, {
+	<span class="variable">show</span>: {
+		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Show the element and grab its opacity</span>
+			<span class="keyword">var</span> <span class="variable">original</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'opacity'</span>);
+			
+			<span class="comment">// Set the opacity to 0 and fade its opacity to its original</span>
+			<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>, <span class="number integer">0</span>).<span class="variable">animate</span>({
+				<span class="variable">opacity</span>: <span class="variable">original</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		},
+		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Show the element and grab its height</span>
+			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'height'</span>),
+				<span class="comment">// Grab its overflow and default to visible</span>
+				<span class="variable">originalOverflow</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>) || <span class="string">'visible'</span>;
+			
+			<span class="comment">// Set the height to 0 and the overflow to hidden and then slide it to its original</span>
+			<span class="variable">element</span>.<span class="variable">style</span>({
+				<span class="variable">height</span>: <span class="number integer">0</span>,
+				<span class="variable">overflow</span>: <span class="string">'hidden'</span>
+			}).<span class="variable">animate</span>({
+				<span class="variable">height</span>: <span class="variable">originalHeight</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="comment">// Set the overflow to its original</span>
+				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="variable">originalOverflow</span>);
+				
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		},
+		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Show the element and grab its height</span>
+			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'height'</span>),
+				<span class="comment">// Grab its width</span>
+				<span class="variable">originalWidth</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'width'</span>),
+				<span class="comment">// Grab its opacity</span>
+				<span class="variable">originalOpacity</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>),
+				<span class="comment">// Grab its overflow and default to visible</span>
+				<span class="variable">originalOverflow</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>) || <span class="string">'visible'</span>;
+			
+			<span class="comment">// Set the height, width and opacity to 0. Set the overflow to hidden and then animate everything to its original values</span>
+			<span class="variable">element</span>.<span class="variable">style</span>({
+				<span class="variable">height</span>: <span class="number integer">0</span>,
+				<span class="variable">width</span>: <span class="number integer">0</span>,
+				<span class="variable">opacity</span>: <span class="number integer">0</span>,
+				<span class="variable">overflow</span>: <span class="string">'hidden'</span>
+			}).<span class="variable">animate</span>({
+				<span class="variable">height</span>: <span class="variable">originalHeight</span>,
+				<span class="variable">width</span>: <span class="variable">originalWidth</span>,
+				<span class="variable">opacity</span>: <span class="variable">originalOpacity</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="comment">// Set the overflow to its original value</span>
+				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="variable">originalOverflow</span>);
+				
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		}
+	},
+	<span class="variable">hide</span>: {
+		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Grab its opacity</span>
+			<span class="keyword">var</span> <span class="variable">original</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>);
+			
+			<span class="comment">// Fade the opacity to 0, set it back to its original</span>
+			<span class="variable">element</span>.<span class="variable">animate</span>({
+				<span class="variable">opacity</span>: <span class="number integer">0</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="comment">// Hide it</span>
+				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>, <span class="variable">original</span>).<span class="variable">hide</span>();
+				
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		},
+		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Grab its height</span>
+			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'height'</span>),
+				<span class="comment">// Grab its overflow and default to visible</span>
+				<span class="variable">originalOverflow</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>) || <span class="string">'visible'</span>;
+			
+			<span class="comment">// Set its overflow to hidden and slide its height to 0</span>
+			<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="string">'hidden'</span>).<span class="variable">animate</span>({
+				<span class="variable">height</span>: <span class="number integer">0</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="variable">element</span>.<span class="variable">style</span>({
+					<span class="comment">// Set everything back to their defaults and hide it</span>
+					<span class="variable">height</span>: <span class="variable">originalHeight</span>,
+					<span class="variable">overflow</span>: <span class="variable">originalOverflow</span>
+				}).<span class="variable">hide</span>();
+				
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		},
+		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+			<span class="comment">// Grab its height</span>
+			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'height'</span>),
+				<span class="comment">// Grab its width</span>
+				<span class="variable">originalWidth</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'width'</span>),
+				<span class="comment">// Grab its opacity</span>
+				<span class="variable">originalOpacity</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>),
+				<span class="comment">// Grab its overflow and default to visible</span>
+				<span class="variable">originalOverflow</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>) || <span class="string">'visible'</span>;
+			
+			<span class="comment">// Set its overflow to hidden and animate everything to 0</span>
+			<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="string">'hidden'</span>).<span class="variable">animate</span>({
+				<span class="variable">height</span>: <span class="number integer">0</span>,
+				<span class="variable">width</span>: <span class="number integer">0</span>,
+				<span class="variable">opacity</span>: <span class="number integer">0</span>
+			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+				<span class="comment">// Set everything back to their defaults and hide it</span>
+				<span class="variable">element</span>.<span class="variable">style</span>({
+					<span class="variable">height</span>: <span class="variable">originalHeight</span>,
+					<span class="variable">width</span>: <span class="variable">originalWidth</span>,
+					<span class="variable">opacity</span>: <span class="variable">originalOpacity</span>,
+					<span class="variable">overflow</span>: <span class="variable">originalOverflow</span>
+				}).<span class="variable">hide</span>();
+				
+				<span class="comment">// Run the callback if there is one</span>
+				<span class="keyword">if</span>(<span class="variable">callback</span>) {
+					<span class="variable">callback</span>();
+				}
+			});
+		}
+	}
+});</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/triggerEvent.js"><a href="#">triggerEvent</a></h2></td><td>src/triggerEvent.js</td></tr><tr class="code">
 <td class="docs">
