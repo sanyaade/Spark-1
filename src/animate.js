@@ -60,8 +60,8 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		notUnit = /[\d\.\-]/g,
 		stack = null,
 		from = null,
-		to = null,
 		unit = null,
+		calculated = null,
 		difference = null,
 		a = null,
 		easingMethods = {
@@ -305,27 +305,52 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				a.running = true;
 				
 				// Loop through the animations
-				that.each(function(value, name) {
-					// Get the from value
-					from = parseFloat(element.style(name));
-					
-					// Get the to value
-					to = parseFloat(value);
-					
+				that.each(function(to, name) {
 					// Get the unit
-					if(typeof value === 'string') {
-						unit = value.replace(notUnit, '');
+					if(typeof to === 'string') {
+						unit = to.replace(notUnit, '');
 					}
 					else {
 						unit = 0;
 					}
 					
-					// Work out the difference
-					difference = to - from;
+					if(to instanceof Array) {
+						// Get the from value
+						from = that.color.toArray(element.style(name));
+						
+						// Work out the difference
+						difference = [
+							to[0] - from[0],
+							to[1] - from[1],
+							to[2] - from[2]
+						];
+					}
+					else {
+						// Get the from value
+						from = parseFloat(element.style(name));
+						
+						// Get the to value
+						to = parseFloat(to);
+						
+						// Work out the difference
+						difference = to - from;
+					}
 					
 					// Loop over all frames
 					for(i = 1; i <= a.frames; i++) {
-						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps));
+						// Work out the value
+						if(to instanceof Array) {
+							calculated = that.color.toRgb([
+								Math.floor(easingMethods[a.easing](i, from[0], difference[0], a.frames)),
+								Math.floor(easingMethods[a.easing](i, from[1], difference[1], a.frames)),
+								Math.floor(easingMethods[a.easing](i, from[2], difference[2], a.frames))
+							]);
+						}
+						else {
+							calculated = easingMethods[a.easing](i, from, difference, a.frames) + unit;
+						}
+						
+						doFrame(element, name, calculated, i * (1000 / fps));
 					}
 				}, a.animations);
 				
