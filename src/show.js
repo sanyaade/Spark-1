@@ -5,6 +5,10 @@
  * 
  *     $('p').show();
  * 
+ * To fade the elements in, you would specify the fade transition as the optional argument
+ * 
+ *     $('p').show('fade');
+ * 
  * This function takes the originial display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth

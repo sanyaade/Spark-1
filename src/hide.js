@@ -5,6 +5,10 @@
  * 
  *     $('p').hide();
  * 
+ * To fade the elements out, you would specify the fade transition as the optional argument
+ * 
+ *     $('p').hide('fade');
+ * 
  * This function takes the originial display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to hide. Default transitions are: fade, slide and smooth
