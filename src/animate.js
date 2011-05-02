@@ -63,7 +63,6 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 		to = null,
 		unit = null,
 		difference = null,
-		cb = null,
 		a = null,
 		easingMethods = {
 			inQuad: function (t, b, c, d) {
@@ -268,22 +267,26 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			}
 		};
 	
-	function doFrame(element, name, value, time, callback, lastFrame) {
+	function doFrame(element, name, value, time) {
 		// Set the timeout
 		setTimeout(function() {
 			// Apply the style
 			element.style(name, value);
-			
-			// If it is the last frame then remove the stack and run animate again
-			if(lastFrame) {
-				// Run the callback if it has been passed
-				if(callback) {
-					callback();
-				}
-				
-				animate(element);
-				element.data('SparkAnimations').shift();
+		}, time);
+	}
+	
+	function lastFrame(callback, element, time) {
+		setTimeout(function() {
+			// Run the callback if it has been passed
+			if(callback) {
+				callback();
 			}
+			
+			// Remove the animation object
+			element.data('SparkAnimations').shift();
+			
+			// Recurse
+			animate(element);
 		}, time);
 	}
 	
@@ -322,18 +325,12 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 					
 					// Loop over all frames
 					for(i = 1; i <= a.frames; i++) {
-						// Pass this information to doFrame function calculating the value, time and whether to pass a callback or not
-						if(typeof a.callback === 'function' && a.callbackRun === false && i === a.frames) {
-							cb = a.callback;
-							a.callbackRun = true;
-						}
-						else {
-							cb = false;
-						}
-						
-						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps), cb, i === a.frames);
+						doFrame(element, name, easingMethods[a.easing](i, from, difference, a.frames) + unit, i * (1000 / fps));
 					}
 				}, a.animations);
+				
+				// Run the last frame
+				lastFrame(a.callback, element, a.timeframe);
 			}
 		}
 	}
@@ -348,13 +345,16 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 			element.data('SparkAnimations', []);
 		}
 		
+		// Get the timeframe with a default if required
+		timeframe = (timeframe) ? timeframe : 600;
+		
 		// Push a new animation object into it
 		element.data('SparkAnimations').push({
 			animations: animations,
-			frames: ((timeframe) ? timeframe : 600) / (1000 / fps),
+			timeframe: timeframe,
+			frames: timeframe / (1000 / fps),
 			easing: (easing) ? easing : 'outQuad',
 			callback: (callback && count === that.length - 1) ? callback : false,
-			callbackRun: false,
 			running: false
 		});
 		
