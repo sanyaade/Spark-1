@@ -24,6 +24,9 @@ Spark.extend('stop', function() {
 		
 		// Reset the array
 		element.data('SparkTimeouts', []);
+		
+		// Reset the animations array
+		element.data('SparkAnimations', []);
 	});
 	
 	// Return the Spark object
