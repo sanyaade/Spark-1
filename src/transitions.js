@@ -1,5 +1,17 @@
 /**
  * Extendible object of transitions for use with the show and hide functions
+ * 
+ * To add a transition you can use the following template
+ * 
+ *     Spark.transitions.show.transitionName(function(element, callback) {
+ *         // Do your stuff for showing and call the callback if one was passed
+ *     });
+ * 
+ *     Spark.transitions.hide.transitionName(function(element, callback) {
+ *         // Do your stuff for hiding and call the callback if one was passed
+ *     });
+ * 
+ * Remember to check for the callback first before calling it and try to put things back how they where
  */
 Spark.extend('transitions', {
 	show: {
