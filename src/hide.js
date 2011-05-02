@@ -11,7 +11,7 @@
  */
 Spark.extend('hide', function() {
 	// Initialise any required variables
-	var that = this.clone();
+	var that = this;
 	
 	// Loop through all the elements
 	this.each(function(e) {
