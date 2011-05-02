@@ -18,8 +18,11 @@ Spark.extend('show', function(transition) {
 		// Show it with the specified transition
 		// Check for the transition
 		if(typeof this.transitions.show[transition] === 'function') {
-			// Run the transition
-			this.transitions.show[transition]();
+			// Loop through all of the elements
+			this.each(function(e) {
+				// Run the transition
+				that.transitions.show[transition](that.find(e));
+			});
 		}
 		else {
 			// If it does not exist, default to just showing it
