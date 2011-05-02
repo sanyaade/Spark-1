@@ -3,16 +3,21 @@
  */
 Spark.extend('transitions', {
 	show: {
-		fade: function(element) {
+		fade: function(element, callback) {
 			// Show the element and grab its opacity
 			var original = element.show().style('opacity');
 			
 			// Set the opacity to 0 and fade its opacity to its original
 			element.style('opacity', 0).animate({
 				opacity: original
+			}, false, false, function() {
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		},
-		slide: function(element) {
+		slide: function(element, callback) {
 			// Show the element and grab its height
 			var originalHeight = element.show().style('height'),
 				// Grab its overflow and default to visible
@@ -27,9 +32,14 @@ Spark.extend('transitions', {
 			}, false, false, function() {
 				// Set the overflow to its original
 				element.style('overflow', originalOverflow);
+				
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		},
-		smooth: function(element) {
+		smooth: function(element, callback) {
 			// Show the element and grab its height
 			var originalHeight = element.show().style('height'),
 				// Grab its width
@@ -52,11 +62,16 @@ Spark.extend('transitions', {
 			}, false, false, function() {
 				// Set the overflow to its original value
 				element.style('overflow', originalOverflow);
+				
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		}
 	},
 	hide: {
-		fade: function(element) {
+		fade: function(element, callback) {
 			// Grab its opacity
 			var original = element.style('opacity');
 			
@@ -66,9 +81,14 @@ Spark.extend('transitions', {
 			}, false, false, function() {
 				// Hide it
 				element.style('opacity', original).hide();
+				
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		},
-		slide: function(element) {
+		slide: function(element, callback) {
 			// Grab its height
 			var originalHeight = element.style('height'),
 				// Grab its overflow and default to visible
@@ -83,9 +103,14 @@ Spark.extend('transitions', {
 					height: originalHeight,
 					overflow: originalOverflow
 				}).hide();
+				
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		},
-		smooth: function(element) {
+		smooth: function(element, callback) {
 			// Grab its height
 			var originalHeight = element.style('height'),
 				// Grab its width
@@ -108,6 +133,11 @@ Spark.extend('transitions', {
 					opacity: originalOpacity,
 					overflow: originalOverflow
 				}).hide();
+				
+				// Run the callback if there is one
+				if(callback) {
+					callback();
+				}
 			});
 		}
 	}
