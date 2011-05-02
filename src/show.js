@@ -13,11 +13,27 @@ Spark.extend('show', function(transition) {
 	// Initialise any required variables
 	var that = this;
 	
-	// Loop through all the elements
-	this.each(function(e) {
-		// Show the element with the correct display type
-		that.find(e).style('display', that.find(e).data('SparkDisplayType'));
-	});
+	// Check for a transition
+	if(typeof transition === 'string') {
+		// Show it with the specified transition
+		// Check for the transition
+		if(typeof this.transitions.show[transition] === 'function') {
+			// Run the transition
+			this.transitions.show[transition]();
+		}
+		else {
+			// If it does not exist, default to just showing it
+			this.show();
+		}
+	}
+	else {
+		// Just show it
+		// Loop through all the elements
+		this.each(function(e) {
+			// Show the element with the correct display type
+			that.find(e).style('display', that.find(e).data('SparkDisplayType'));
+		});
+	}
 	
 	// Return the Spark object for chaining
 	return this;
