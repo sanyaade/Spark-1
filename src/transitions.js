@@ -54,6 +54,16 @@ Spark.extend('transitions', {
 		}
 	},
 	hide: {
-		
+		fade: function(element) {
+			// Grab its opacity
+			var original = element.style('opacity');
+			
+			// Fade the opacity to 0, set it back to its original and then hide it
+			element.animate({
+				opacity: 0
+			}, false, false, function() {
+				element.style('opacity', original).hide();
+			});
+		}
 	}
 });
