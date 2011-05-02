@@ -3,7 +3,9 @@
  */
 Spark.extend('transitions', {
 	show: {
-		
+		fade: function(element) {
+			
+		}
 	},
 	hide: {
 		
