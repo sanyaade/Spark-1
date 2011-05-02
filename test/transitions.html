@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<style type='text/css'>
+			div {
+				width: 100px;
+				height: 120px;
+				border: 1px dotted #000000;
+				margin: 25px;
+				background-color: #CCFF00;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div class='fade'></div>
+		<div class='slide'></div>
+		<div class='smooth'></div>
+		
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			Spark.ready(function() {
+				$('div.fade').addEvent('click', function(e) {
+					$(e.target).hide('fade', function() {
+						$(e.target).show('fade');
+					});
+				});
+				
+				$('div.slide').addEvent('click', function(e) {
+					$(e.target).hide('slide', function() {
+						$(e.target).show('slide');
+					});
+				});
+				
+				$('div.smooth').addEvent('click', function(e) {
+					$(e.target).hide('smooth', function() {
+						$(e.target).show('smooth');
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
