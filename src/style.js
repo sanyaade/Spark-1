@@ -119,7 +119,7 @@ Spark.extend('style', function(name, value) {
 		}
 		
 		// If it is still not found, set a default
-		if(!style) {
+		if(!style && style !== 0) {
 			// If it is opacity, set it to 1, anything else, set it to 0
 			if(name === 'opacity') {
 				style = '1';
