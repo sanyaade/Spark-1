@@ -18,13 +18,14 @@ Spark.extend('transitions', {
 				// Grab its overflow and default to visible
 				originalOverflow = element.style('overflow') || 'visible';
 			
-			// Set the height to 0 and the overflow to hidden and then slide it to its original. Then set the overflow to its original
+			// Set the height to 0 and the overflow to hidden and then slide it to its original
 			element.style({
 				height: 0,
 				overflow: 'hidden'
 			}).animate({
 				height: originalHeight
 			}, false, false, function() {
+				// Set the overflow to its original
 				element.style('overflow', originalOverflow);
 			});
 		},
@@ -38,7 +39,7 @@ Spark.extend('transitions', {
 				// Grab its overflow and default to visible
 				originalOverflow = element.style('overflow') || 'visible';
 			
-			// Set the height, width and opacity to 0. Set the overflow to hidden and then animate everything to its original values. Finally, set the overflow to its original value
+			// Set the height, width and opacity to 0. Set the overflow to hidden and then animate everything to its original values
 			element.style({
 				height: 0,
 				width: 0,
@@ -49,6 +50,7 @@ Spark.extend('transitions', {
 				width: originalWidth,
 				opacity: originalOpacity
 			}, false, false, function() {
+				// Set the overflow to its original value
 				element.style('overflow', originalOverflow);
 			});
 		}
@@ -58,10 +60,11 @@ Spark.extend('transitions', {
 			// Grab its opacity
 			var original = element.style('opacity');
 			
-			// Fade the opacity to 0, set it back to its original and then hide it
+			// Fade the opacity to 0, set it back to its original
 			element.animate({
 				opacity: 0
 			}, false, false, function() {
+				// Hide it
 				element.style('opacity', original).hide();
 			});
 		},
@@ -71,11 +74,12 @@ Spark.extend('transitions', {
 				// Grab its overflow and default to visible
 				originalOverflow = element.style('overflow') || 'visible';
 			
-			// Set its overflow to hidden and slide its height to 0, then set everything back to their defaults and hide it
+			// Set its overflow to hidden and slide its height to 0
 			element.style('overflow', 'hidden').animate({
 				height: 0
 			}, false, false, function() {
 				element.style({
+					// Set everything back to their defaults and hide it
 					height: originalHeight,
 					overflow: originalOverflow
 				}).hide();
@@ -91,12 +95,13 @@ Spark.extend('transitions', {
 				// Grab its overflow and default to visible
 				originalOverflow = element.style('overflow') || 'visible';
 			
-			// Set its overflow to hidden and animate everything to 0, then set everything back to their defaults and hide it
+			// Set its overflow to hidden and animate everything to 0
 			element.style('overflow', 'hidden').animate({
 				height: 0,
 				width: 0,
 				opacity: 0
 			}, false, false, function() {
+				// Set everything back to their defaults and hide it
 				element.style({
 					height: originalHeight,
 					width: originalWidth,
