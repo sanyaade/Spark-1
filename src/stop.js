@@ -17,16 +17,19 @@ Spark.extend('stop', function() {
 		// Grab the element
 		element = that.find(e);
 		
-		// Loop through all of the timeouts
-		that.each(function(t) {
-			clearTimeout(t);
-		}, element.data('SparkTimeouts'));
-		
-		// Reset the array
-		element.data('SparkTimeouts', []);
-		
-		// Reset the animations array
-		element.data('SparkAnimations', []);
+		// Make sure the element has a timeout and animation array
+		if(element.data('SparkTimeouts') && element.data('SparkAnimations')) {
+			 // Loop through all of the timeouts
+			that.each(function(t) {
+				clearTimeout(t);
+			}, element.data('SparkTimeouts'));
+			
+			// Reset the array
+			element.data('SparkTimeouts', []);
+			
+			// Reset the animations array
+			element.data('SparkAnimations', []);
+		}
 	});
 	
 	// Return the Spark object
