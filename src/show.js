@@ -7,6 +7,7 @@
  * 
  * This function takes the originial display type into account.
  * 
+ * @param {String} transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('show', function(transition) {
