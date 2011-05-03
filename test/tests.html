@@ -18,20 +18,20 @@
 		<script type='text/javascript' src='qunit.js'></script>
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
-			module('ajax.get');
+			module('net.get');
 			
 			test('Asynchronous request', function() {
-				var data = Spark.ajax.get('ajaxtest.txt');
+				var data = Spark.net.get('ajaxtest.txt');
 				equals('Loaded', data, 'Data should equal "Loaded"');
 			});
 			
 			test('Asynchronous request to a file that does not exist', function() {
-				var data = Spark.ajax.get('doesnotexist.txt');
+				var data = Spark.net.get('doesnotexist.txt');
 				equals(false, data, 'Data should equal false');
 			});
 			
 			test('Asynchronous request with parameters', function() {
-				var data = Spark.ajax.get('ajaxtest.txt', {
+				var data = Spark.net.get('ajaxtest.txt', {
 					foo: 'bar',
 					q: 'test'
 				});
@@ -39,21 +39,21 @@
 			});
 			
 			asyncTest('Synchronous request', function() {
-				var data = Spark.ajax.get('ajaxtest.txt', false, function(data) {
+				var data = Spark.net.get('ajaxtest.txt', false, function(data) {
 					start();
 					equals('Loaded', data, 'Data should equal "Loaded"');
 				});
 			});
 			
 			asyncTest('Synchronous request to a file that does not exist', function() {
-				var data = Spark.ajax.get('doesnotexist.txt', false, function(data) {
+				var data = Spark.net.get('doesnotexist.txt', false, function(data) {
 					start();
 					equals(false, data, 'Data should equal false');
 				});
 			});
 			
 			asyncTest('Synchronous request with parameters', function() {
-				var data = Spark.ajax.get('ajaxtest.txt', {
+				var data = Spark.net.get('ajaxtest.txt', {
 					foo: 'bar',
 					q: 'test'
 				}, function(data) {
@@ -64,20 +64,20 @@
 			
 			
 			
-			module('ajax.post');
+			module('net.post');
 			
 			test('Asynchronous request', function() {
-				var data = Spark.ajax.post('ajaxtest.txt');
+				var data = Spark.net.post('ajaxtest.txt');
 				equals('Loaded', data, 'Data should equal "Loaded"');
 			});
 			
 			test('Asynchronous request to a file that does not exist', function() {
-				var data = Spark.ajax.post('doesnotexist.txt');
+				var data = Spark.net.post('doesnotexist.txt');
 				equals(false, data, 'Data should equal false');
 			});
 			
 			test('Asynchronous request with parameters', function() {
-				var data = Spark.ajax.post('ajaxtest.txt', {
+				var data = Spark.net.post('ajaxtest.txt', {
 					foo: 'bar',
 					q: 'test'
 				});
@@ -85,21 +85,21 @@
 			});
 			
 			asyncTest('Synchronous request', function() {
-				var data = Spark.ajax.post('ajaxtest.txt', false, function(data) {
+				var data = Spark.net.post('ajaxtest.txt', false, function(data) {
 					start();
 					equals('Loaded', data, 'Data should equal "Loaded"');
 				});
 			});
 			
 			asyncTest('Synchronous request to a file that does not exist', function() {
-				var data = Spark.ajax.post('doesnotexist.txt', false, function(data) {
+				var data = Spark.net.post('doesnotexist.txt', false, function(data) {
 					start();
 					equals(false, data, 'Data should equal false');
 				});
 			});
 			
 			asyncTest('Synchronous request with parameters', function() {
-				var data = Spark.ajax.post('ajaxtest.txt', {
+				var data = Spark.net.post('ajaxtest.txt', {
 					foo: 'bar',
 					q: 'test'
 				}, function(data) {
@@ -388,7 +388,7 @@
 				});
 			}
 			
-			Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handleData', {
+			Spark.net.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handleData', {
 				screen_name: 'SparkJavaScript',
 				count: '5'
 			});

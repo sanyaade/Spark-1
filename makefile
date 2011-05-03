@@ -4,7 +4,7 @@ src = src/
 # Create the list of files
 files = ${src}core.js\
 		${src}ready.js\
-		${src}ajax.js\
+		${src}net.js\
 		${src}cookie.js\
 		${src}find.js\
 		${src}each.js\
