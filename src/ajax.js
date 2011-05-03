@@ -207,8 +207,16 @@ Spark.extend('ajax', {
 		if(parameters) {
 			params = this.buildParameterString(parameters);
 		}
+		else {
+			params = '';
+		}
+		
+		// Add the question mark if required
+		if(callback || params) {
+			file += '?';
+		}
 		
 		// Load the file
-		this.instance.load(file + '?callback=' + callback + ((params) ? '&' + params : ''));
+		this.instance.load(file + ((callback) ? 'callback=' + callback + '&' : '') + params);
 	}
 });
