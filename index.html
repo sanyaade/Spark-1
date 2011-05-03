@@ -271,168 +271,6 @@ code .this { color: #19469D; }</style>
 });
 </code></pre>
 </td>
-</tr><tr class="filename"><td><h2 id="src/ajax.js"><a href="#">ajax</a></h2></td><td>src/ajax.js</td></tr><tr class="code">
-<td class="docs">
-<p>The AJAX object contains three functions, <code>get</code>, <code>post</code> and <code>getJSON</code>.
-You can call these functions like so.</p>
-
-<pre><code>Spark.ajax.get('foo.json');
-Spark.ajax.post('foo.json');
-Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retreve tweets etc)</code></pre>
-
-<p>The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so. This does not apply to the <code>getJSON</code> method. This must always have a callback for the data to be passed to.</p>
-
-<p>Do not make the mistake of passing a function. This must be a string and represent the functions name. Not the function its self.</p>
-
-<pre><code>Spark.ajax.post('foo.json', false, function(data) {
-    console.log(data);
-});</code></pre>
-
-<p>The argument passed to the callback, in this case data, contains the data retrieved from the specified file. If the request failed then the passed variable will be false. The same goes for synchronous requests, if the request fails, it will return false.</p>
-
-<p>The second argument is for the parameters, if false no parameters will be sent. Here is an example of getting a file asynchronously with a parameter and a check to make sure the request worked.</p>
-
-<pre><code>Spark.ajax.get('foo.json', {
-    foo: 'bar'
-}, function(data) {
-    if(data) {
-        console.log(data);
-    }
-    else {
-        console.log('An error occurred.');
-    }
-});</code></pre>
-
-<p>In the <code>getJSON</code> method, these arguments are reversed, you must pass a callback and then an optional parameters object.</p>
-
-<pre><code>Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
-    screen_name: 'SparkJavaScript',
-    count: '5'
-});</code></pre>
-
-<p>The code above would pull the latest five tweets from Spark's twitter account and pass them in an object to a function called <code>handle</code>.
- </p>
-</td>
-<td class="code">
-
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>Perform a get request with optional parameters either synchronously or asynchronously</p>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="variable">get</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
-		<span class="comment">// Set up the AJAX object</span>
-		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
-		
-		<span class="comment">// Make sure parameters is an object</span>
-		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
-			<span class="comment">// Add the parameters to the file name</span>
-			<span class="variable">file</span> += <span class="string">'?'</span> + <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
-		}
-		
-		<span class="comment">// Check for the callback</span>
-		<span class="keyword">if</span>(<span class="variable">callback</span>) {
-			<span class="comment">// It exists, so pass it to the callback handling function</span>
-			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
-		}
-		
-		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
-		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'GET'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
-		
-		<span class="comment">// Send the request</span>
-		<span class="variable">req</span>.<span class="variable">send</span>();
-		
-		<span class="comment">// Check if the callback has not been passed</span>
-		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
-			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
-				<span class="comment">// Just return the content because it was a syncronous request</span>
-				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
-			}
-			<span class="keyword">else</span> {
-				<span class="comment">// There was an error so return false</span>
-				<span class="keyword">return</span> <span class="variable">false</span>;
-			}
-		}
-	},</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>Perform a post request with optional parameters either synchronously or asynchronously</p>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="variable">post</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
-		<span class="comment">// Set up the AJAX object</span>
-		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
-		
-		<span class="comment">// Check for the callback</span>
-		<span class="keyword">if</span>(<span class="variable">callback</span>) {
-			<span class="comment">// It exists, so pass it to the callback handling function</span>
-			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
-		}
-		
-		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
-		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'POST'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
-		
-		<span class="comment">// Set the headers</span>
-		<span class="variable">req</span>.<span class="variable">setRequestHeader</span>(<span class="string">'Content-type'</span>, <span class="string">'application/x-www-form-urlencoded'</span>);
-		
-		<span class="comment">// Only send the data if it is set</span>
-		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
-			<span class="variable">req</span>.<span class="variable">send</span>(<span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>));
-		}
-		<span class="keyword">else</span> {
-			<span class="variable">req</span>.<span class="variable">send</span>();
-		}
-		
-		<span class="comment">// Check if the callback has not been passed</span>
-		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
-			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
-				<span class="comment">// Just return the content because it was a syncronous request</span>
-				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
-			}
-			<span class="keyword">else</span> {
-				<span class="comment">// There was an error so return false</span>
-				<span class="keyword">return</span> <span class="variable">false</span>;
-			}
-		}
-	},</code></pre>
-</td>
-</tr>
-<tr class="code">
-<td class="docs">
-<p>Load a JSON file and pass it to the callback function</p>
-
-<h2></h2>
-
-<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>String</em>  callback Function name to pass the parsed JSON to</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p><p> </p></li></ul>
-</td>
-<td class="code">
-<pre><code><span class="variable">getJSON</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">callback</span>, <span class="variable">parameters</span>) {
-		<span class="comment">// Initialise any required variables</span>
-		<span class="keyword">var</span> <span class="variable">params</span> = <span class="variable">false</span>;
-		
-		<span class="comment">// Get the parameter string if required</span>
-		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
-			<span class="variable">params</span> = <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
-		}
-		
-		<span class="comment">// Load the file</span>
-		<span class="this">this</span>.<span class="variable">instance</span>.<span class="variable">load</span>(<span class="variable">file</span> + <span class="string">'?callback='</span> + <span class="variable">callback</span> + ((<span class="variable">params</span>) ? <span class="string">'&amp;'</span> + <span class="variable">params</span> : <span class="string">''</span>));
-	}
-});
-</code></pre>
-</td>
 </tr><tr class="filename"><td><h2 id="src/animate.js"><a href="#">animate</a></h2></td><td>src/animate.js</td></tr><tr class="code">
 <td class="docs">
 <p>Animate styles of the specified elements</p>
@@ -1905,6 +1743,178 @@ On error, it will throw a 'Invalid JSON' syntax error</p>
 });
 </code></pre>
 </td>
+</tr><tr class="filename"><td><h2 id="src/net.js"><a href="#">net</a></h2></td><td>src/net.js</td></tr><tr class="code">
+<td class="docs">
+<p>The net object contains three functions, <code>get</code>, <code>post</code> and <code>getJSON</code>.
+You can call these functions like so.</p>
+
+<pre><code>Spark.net.get('foo.json');
+Spark.net.post('foo.json');
+Spark.net.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retrieve tweets etc)</code></pre>
+
+<p>The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so. This does not apply to the <code>getJSON</code> method. This must always have a callback for the data to be passed to.</p>
+
+<p>Do not make the mistake of passing a function. This must be a string and represent the functions name. Not the function its self.</p>
+
+<pre><code>Spark.net.post('foo.json', false, function(data) {
+    console.log(data);
+});</code></pre>
+
+<p>The argument passed to the callback, in this case data, contains the data retrieved from the specified file. If the request failed then the passed variable will be false. The same goes for synchronous requests, if the request fails, it will return false.</p>
+
+<p>The second argument is for the parameters, if false no parameters will be sent. Here is an example of getting a file asynchronously with a parameter and a check to make sure the request worked.</p>
+
+<pre><code>Spark.net.get('foo.json', {
+    foo: 'bar'
+}, function(data) {
+    if(data) {
+        console.log(data);
+    }
+    else {
+        console.log('An error occurred.');
+    }
+});</code></pre>
+
+<p>In the <code>getJSON</code> method, these arguments are reversed, you must pass a callback and then an optional parameters object.</p>
+
+<pre><code>Spark.net.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
+    screen_name: 'SparkJavaScript',
+    count: '5'
+});</code></pre>
+
+<p>The code above would pull the latest five tweets from Spark's twitter account and pass them in an object to a function called <code>handle</code>.</p>
+
+<p>If the API requires the callback name be specified in a different value, then you can pass false for the callback name and specify the callback name in the parameters section.
+ </p>
+</td>
+<td class="code">
+
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Perform a get request with optional parameters either synchronously or asynchronously</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">get</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
+		<span class="comment">// Set up the AJAX object</span>
+		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
+		
+		<span class="comment">// Make sure parameters is an object</span>
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
+			<span class="comment">// Add the parameters to the file name</span>
+			<span class="variable">file</span> += <span class="string">'?'</span> + <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
+		}
+		
+		<span class="comment">// Check for the callback</span>
+		<span class="keyword">if</span>(<span class="variable">callback</span>) {
+			<span class="comment">// It exists, so pass it to the callback handling function</span>
+			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
+		}
+		
+		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'GET'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
+		
+		<span class="comment">// Send the request</span>
+		<span class="variable">req</span>.<span class="variable">send</span>();
+		
+		<span class="comment">// Check if the callback has not been passed</span>
+		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
+			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
+				<span class="comment">// Just return the content because it was a syncronous request</span>
+				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// There was an error so return false</span>
+				<span class="keyword">return</span> <span class="variable">false</span>;
+			}
+		}
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Perform a post request with optional parameters either synchronously or asynchronously</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p></li><li><p><strong>param</strong>: <em>Function</em>  callback If set, the call become asynchronous and the data is passed to it on completion, it will pass false if it failed</p></li><li><p><strong>returns</strong>: <em>String | Boolean</em>  The data retrieved from the file if it is a synchronous call, returns false if it failed</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">post</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">parameters</span>, <span class="variable">callback</span>) {
+		<span class="comment">// Set up the AJAX object</span>
+		<span class="keyword">var</span> <span class="variable">req</span> = <span class="this">this</span>.<span class="variable">initialise</span>();
+		
+		<span class="comment">// Check for the callback</span>
+		<span class="keyword">if</span>(<span class="variable">callback</span>) {
+			<span class="comment">// It exists, so pass it to the callback handling function</span>
+			<span class="this">this</span>.<span class="variable">handleCallback</span>(<span class="variable">req</span>, <span class="variable">callback</span>);
+		}
+		
+		<span class="comment">// Open the request, if the callback is set then make it asyncronous</span>
+		<span class="variable">req</span>.<span class="variable">open</span>(<span class="string">'POST'</span>, <span class="variable">file</span>, <span class="keyword">typeof</span> <span class="variable">callback</span> === <span class="string">'function'</span>);
+		
+		<span class="comment">// Set the headers</span>
+		<span class="variable">req</span>.<span class="variable">setRequestHeader</span>(<span class="string">'Content-type'</span>, <span class="string">'application/x-www-form-urlencoded'</span>);
+		
+		<span class="comment">// Only send the data if it is set</span>
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
+			<span class="variable">req</span>.<span class="variable">send</span>(<span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>));
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">req</span>.<span class="variable">send</span>();
+		}
+		
+		<span class="comment">// Check if the callback has not been passed</span>
+		<span class="keyword">if</span>(!<span class="variable">callback</span>) {
+			<span class="keyword">if</span>(<span class="variable">req</span>.<span class="variable">status</span> === <span class="number integer">200</span>) {
+				<span class="comment">// Just return the content because it was a syncronous request</span>
+				<span class="keyword">return</span> <span class="variable">req</span>.<span class="variable">responseText</span>;
+			}
+			<span class="keyword">else</span> {
+				<span class="comment">// There was an error so return false</span>
+				<span class="keyword">return</span> <span class="variable">false</span>;
+			}
+		}
+	},</code></pre>
+</td>
+</tr>
+<tr class="code">
+<td class="docs">
+<p>Load a JSON file and pass it to the callback function</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>String</em>  file Path of the target file</p></li><li><p><strong>param</strong>: <em>String</em>  callback Function name to pass the parsed JSON to</p></li><li><p><strong>param</strong>: <em>Object</em>  parameters The arguments you wish to pass to the file</p><p> </p></li></ul>
+</td>
+<td class="code">
+<pre><code><span class="variable">getJSON</span>: <span class="keyword">function</span>(<span class="variable">file</span>, <span class="variable">callback</span>, <span class="variable">parameters</span>) {
+		<span class="comment">// Initialise any required variables</span>
+		<span class="keyword">var</span> <span class="variable">params</span> = <span class="variable">false</span>;
+		
+		<span class="comment">// Get the parameter string if required</span>
+		<span class="keyword">if</span>(<span class="variable">parameters</span>) {
+			<span class="variable">params</span> = <span class="this">this</span>.<span class="variable">buildParameterString</span>(<span class="variable">parameters</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="variable">params</span> = <span class="string">''</span>;
+		}
+		
+		<span class="comment">// Add the question mark if required</span>
+		<span class="keyword">if</span>(<span class="variable">callback</span> || <span class="variable">params</span>) {
+			<span class="variable">file</span> += <span class="string">'?'</span>;
+		}
+		
+		<span class="comment">// Load the file</span>
+		<span class="this">this</span>.<span class="variable">instance</span>.<span class="variable">load</span>(<span class="variable">file</span> + ((<span class="variable">callback</span>) ? <span class="string">'callback='</span> + <span class="variable">callback</span> + <span class="string">'&amp;'</span> : <span class="string">''</span>) + <span class="variable">params</span>);
+	}
+});
+</code></pre>
+</td>
 </tr><tr class="filename"><td><h2 id="src/prependElement.js"><a href="#">prependElement</a></h2></td><td>src/prependElement.js</td></tr><tr class="code">
 <td class="docs">
 <p>Inserts a new element before the specified elements</p>
@@ -2252,6 +2262,11 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 		<span class="comment">// Initialise any required variables</span>
 		<span class="keyword">var</span> <span class="variable">style</span> = <span class="keyword">null</span>;
 		
+		<span class="comment">// Work around for scroll position</span>
+		<span class="keyword">if</span>(<span class="variable">name</span> === <span class="string">'scrollTop'</span> || <span class="variable">name</span> === <span class="string">'scrollLeft'</span>) {
+			<span class="keyword">return</span> <span class="variable">e</span>[<span class="variable">name</span>];
+		}
+		
 		<span class="comment">// If we can use getComputedStyle</span>
 		<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="variable">getComputedStyle</span> !== <span class="string">'undefined'</span>) {
 			<span class="comment">// Return getComputedStyle</span>
@@ -2576,7 +2591,8 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 			});
 		}
 	}
-});</code></pre>
+});
+</code></pre>
 </td>
 </tr><tr class="filename"><td><h2 id="src/triggerEvent.js"><a href="#">triggerEvent</a></h2></td><td>src/triggerEvent.js</td></tr><tr class="code">
 <td class="docs">
