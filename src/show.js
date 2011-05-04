@@ -46,7 +46,7 @@ Spark.extend('show', function(transition, callback) {
 		// Loop through all the elements
 		this.each(function(e) {
 			// Show the element with the correct display type
-			that.find(e).style('display', that.find(e).data('SparkDisplayType'));
+			that.find(e).style('display', that.find(e).data('SparkDisplayType') || 'block');
 		});
 	}
 	
