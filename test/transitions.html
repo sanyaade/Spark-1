@@ -21,19 +21,19 @@
 		<script type='text/javascript' src='../spark.js'></script>
 		<script type='text/javascript'>
 			Spark.ready(function() {
-				$('div.fade').addEvent('click', false, false, function(e) {
+				$('div.fade').addEvent('click', function(e) {
 					$(e.target).hide('fade', false, false, function() {
 						$(e.target).show('fade');
 					});
 				});
 				
-				$('div.slide').addEvent('click', false, false, function(e) {
+				$('div.slide').addEvent('click', function(e) {
 					$(e.target).hide('slide', false, false, function() {
 						$(e.target).show('slide');
 					});
 				});
 				
-				$('div.smooth').addEvent('click', false, false, function(e) {
+				$('div.smooth').addEvent('click', function(e) {
 					$(e.target).hide('smooth', false, false, function() {
 						$(e.target).show('smooth');
 					});
