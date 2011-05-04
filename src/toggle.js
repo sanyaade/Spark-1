@@ -38,11 +38,11 @@ Spark.extend('toggle', function(transition, timeframe, easing, callback) {
 		// Check whether it is display none or not
 		if(element.style('display') === 'none') {
 			// It is, show it
-			element.show(transition, callback);
+			element.show(transition, timeframe, easing, callback);
 		}
 		else {
 			// It is not, hide it
-			element.hide(transition, callback);
+			element.hide(transition, timeframe, easing, callback);
 		}
 	});
 	
