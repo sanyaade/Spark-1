@@ -155,6 +155,23 @@
 				equals(false, has, 'Has should equal false');
 			});
 			
+			test('Adding an array of classes', function() {
+				var has = $('p#test').addClass(['one', 'two', 'three']).hasClass(['one', 'two', 'three']);
+				equals(true, has, 'Has should equal true');
+			});
+			
+			test('Checking for an array of classes', function() {
+				var has = $('p#test').hasClass(['one', 'two', 'three']);
+				var notHas = $('p#test').hasClass(['one', 'six']);
+				equals(true, has, 'Has should equal true');
+				equals(false, notHas, 'NotHas should equal false');
+			});
+			
+			test('Removing an array of classes', function() {
+				var has = $('p#test').removeClass(['one', 'two', 'three']).hasClass(['one', 'two', 'three']);
+				equals(false, has, 'Has should equal false');
+			});
+			
 			
 			
 			module('cookies');
