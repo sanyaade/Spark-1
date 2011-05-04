@@ -21,7 +21,7 @@
  * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('toggle', function() {
+Spark.extend('toggle', function(transition, callback) {
 	// Initialise any required variables
 	var that = this,
 		element = null;
@@ -34,11 +34,11 @@ Spark.extend('toggle', function() {
 		// Check wether it is display none or not
 		if(element.style('display') === 'none') {
 			// It is, show it
-			element.show();
+			element.show(transition, callback);
 		}
 		else {
 			// It is not, hide it
-			element.hide();
+			element.hide(transition, callback);
 		}
 	});
 	
