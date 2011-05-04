@@ -118,9 +118,11 @@ code .this { color: #19469D; }</style>
 
 <pre><code>$('h1').addClass('border');</code></pre>
 
+<p>You can also pass an array instead and all of the class names in the array will be added.</p>
+
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to add</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  name The class name you want to add or an array of class names</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'addClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
@@ -130,13 +132,23 @@ code .this { color: #19469D; }</style>
 	
 	<span class="comment">// Loop through all the elements</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Check if it already has the class</span>
-		<span class="keyword">if</span>(!<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">hasClass</span>(<span class="variable">name</span>)) {
-			<span class="comment">// Grab the class</span>
-			<span class="variable">c</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>);
-			
-			<span class="comment">// It doesnt, add it and trim off whitespace</span>
-			<span class="variable">e</span>.<span class="variable">className</span> = ((<span class="variable">c</span>) ? <span class="variable">c</span> + <span class="string">' '</span> + <span class="variable">name</span> : <span class="variable">name</span>).<span class="variable">replace</span>(<span class="regexp">/^\s+|\s+$/i</span>, <span class="string">''</span>);
+		<span class="comment">// Check if name is an array</span>
+		<span class="keyword">if</span>(<span class="variable">name</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+			<span class="comment">// Loop over the array</span>
+			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">n</span>) {
+				<span class="comment">// Rerun the function</span>
+				<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">addClass</span>(<span class="variable">n</span>);
+			}, <span class="variable">name</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Check if it already has the class</span>
+			<span class="keyword">if</span>(!<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">hasClass</span>(<span class="variable">name</span>)) {
+				<span class="comment">// Grab the class</span>
+				<span class="variable">c</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">attribute</span>(<span class="string">'class'</span>);
+				
+				<span class="comment">// It doesnt, add it and trim off whitespace</span>
+				<span class="variable">e</span>.<span class="variable">className</span> = ((<span class="variable">c</span>) ? <span class="variable">c</span> + <span class="string">' '</span> + <span class="variable">name</span> : <span class="variable">name</span>).<span class="variable">replace</span>(<span class="regexp">/^\s+|\s+$/i</span>, <span class="string">''</span>);
+			}
 		}
 	});
 	
@@ -1485,14 +1497,37 @@ $('div p', el);</code></pre>
 
 <pre><code>$('div.focus').hasClass('focus');</code></pre>
 
+<p>You can also pass an array instead and all of the class names in the array will be checked for.</p>
+
+<p>All class names must be found for it to return true</p>
+
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to search for</p></li><li><p><strong>returns</strong>: <em>Boolean</em>  Will return true if it has the class or false if it does not</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String | Array</em>  name The class name you want to search for or an array of class names. If you pass an array, all will have to match</p></li><li><p><strong>returns</strong>: <em>Boolean</em>  Will return true if it has the class or false if it does not</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hasClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
-	<span class="comment">// Check for the class</span>
-	<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'\\b'</span> + <span class="variable">name</span> + <span class="string">'\\b'</span>).<span class="variable">test</span>(<span class="this">this</span>[<span class="number integer">0</span>].<span class="variable">className</span>);
+	<span class="comment">// Initialise any required variables</span>
+	<span class="keyword">var</span> <span class="variable">e</span> = <span class="this">this</span>[<span class="number integer">0</span>];
+	
+	<span class="comment">// Check if name is an array</span>
+	<span class="keyword">if</span>(<span class="variable">name</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+		<span class="comment">// Loop over the array</span>
+		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">n</span>) {
+			<span class="comment">// Check for the class</span>
+			<span class="keyword">if</span>(!<span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">n</span> + <span class="string">'($|\\s)'</span>).<span class="variable">test</span>(<span class="variable">e</span>.<span class="variable">className</span>)) {
+				<span class="comment">// If not found return false</span>
+				<span class="keyword">return</span> <span class="variable">false</span>;
+			}
+		}, <span class="variable">name</span>);
+		
+		<span class="comment">// Otherwise, return true</span>
+		<span class="keyword">return</span> <span class="variable">true</span>;
+	}
+	<span class="keyword">else</span> {
+		<span class="comment">// Check for the class</span>
+		<span class="keyword">return</span> <span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">name</span> + <span class="string">'($|\\s)'</span>).<span class="variable">test</span>(<span class="variable">e</span>.<span class="variable">className</span>);
+	}
 });
 </code></pre>
 </td>
@@ -1510,18 +1545,20 @@ $('div p', el);</code></pre>
 
 <p>You can also pass a function as the second argument to be run when the transition completes, like so</p>
 
-<pre><code>$('p').hide('fade', function() {
+<pre><code>$('p').hide('fade', false, false, function() {
     alert('done');
 });</code></pre>
+
+<p>The two middle arguments are timeframe and easing. This works exactly the same as the animate function.</p>
 
 <p>This function takes the originial display type into account.</p>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to hide. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to hide. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many milliseconds you wish the transition to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hide'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">callback</span>) {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'hide'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
 	
@@ -1533,7 +1570,10 @@ $('div p', el);</code></pre>
 			<span class="comment">// Loop through all of the elements</span>
 			<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
 				<span class="comment">// Run the transition</span>
-				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">hide</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">callback</span>);
+				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">hide</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
+				
+				<span class="comment">// Now remove the callback so it is only called once</span>
+				<span class="variable">callback</span> = <span class="variable">false</span>;
 			});
 		}
 		<span class="keyword">else</span> {
@@ -2026,16 +2066,31 @@ For best results across all browsers always wrap your code within the ready func
 
 <pre><code>$('h1').removeClass('border');</code></pre>
 
+<p>You can also pass an array instead and all of the class names in the array will be removed.</p>
+
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to remove</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  name The class name you want to remove</p></li><li><p><strong>param</strong>: <em>String | Array</em>  name The class name you want to remove or an array of class names</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'removeClass'</span>, <span class="keyword">function</span>(<span class="variable">name</span>) {
+	<span class="comment">// Put this in scope</span>
+	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
+	
 	<span class="comment">// Loop through all the elements</span>
 	<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
-		<span class="comment">// Remove the class</span>
-		<span class="variable">e</span>.<span class="variable">className</span> = <span class="variable">e</span>.<span class="variable">className</span>.<span class="variable">replace</span>(<span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">name</span> + <span class="string">'($|\\s)'</span>), <span class="string">''</span>);
+		<span class="comment">// Check if name is an array</span>
+		<span class="keyword">if</span>(<span class="variable">name</span> <span class="variable">instanceof</span> <span class="class">Array</span>) {
+			<span class="comment">// Loop over the array</span>
+			<span class="variable">that</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">n</span>) {
+				<span class="comment">// Remove the class</span>
+				<span class="variable">e</span>.<span class="variable">className</span> = <span class="variable">e</span>.<span class="variable">className</span>.<span class="variable">replace</span>(<span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">n</span> + <span class="string">'($|\\s)'</span>), <span class="string">''</span>);
+			}, <span class="variable">name</span>);
+		}
+		<span class="keyword">else</span> {
+			<span class="comment">// Remove the class</span>
+			<span class="variable">e</span>.<span class="variable">className</span> = <span class="variable">e</span>.<span class="variable">className</span>.<span class="variable">replace</span>(<span class="keyword">new</span> <span class="class">RegExp</span>(<span class="string">'(^|\\s)'</span> + <span class="variable">name</span> + <span class="string">'($|\\s)'</span>), <span class="string">''</span>);
+		}
 	});
 	
 	<span class="comment">// Return the Spark object for chaining</span>
@@ -2127,18 +2182,20 @@ For best results across all browsers always wrap your code within the ready func
 
 <p>You can also pass a function as the second argument to be run when the transition completes, like so</p>
 
-<pre><code>$('p').show('fade', function() {
+<pre><code>$('p').show('fade', false, false, function() {
     alert('done');
 });</code></pre>
+
+<p>The two middle arguments are timeframe and easing. This works exactly the same as the animate function.</p>
 
 <p>This function takes the originial display type into account.</p>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many milliseconds you wish the transition to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'show'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">callback</span>) {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'show'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>;
 	
@@ -2150,7 +2207,10 @@ For best results across all browsers always wrap your code within the ready func
 			<span class="comment">// Loop through all of the elements</span>
 			<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
 				<span class="comment">// Run the transition</span>
-				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">show</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">callback</span>);
+				<span class="variable">that</span>.<span class="variable">transitions</span>.<span class="variable">show</span>[<span class="variable">transition</span>](<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>), <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
+				
+				<span class="comment">// Now remove the callback so it is only called once</span>
+				<span class="variable">callback</span> = <span class="variable">false</span>;
 			});
 		}
 		<span class="keyword">else</span> {
@@ -2163,7 +2223,7 @@ For best results across all browsers always wrap your code within the ready func
 		<span class="comment">// Loop through all the elements</span>
 		<span class="this">this</span>.<span class="variable">each</span>(<span class="keyword">function</span>(<span class="variable">e</span>) {
 			<span class="comment">// Show the element with the correct display type</span>
-			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>));
+			<span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">style</span>(<span class="string">'display'</span>, <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>).<span class="variable">data</span>(<span class="string">'SparkDisplayType'</span>) || <span class="string">'block'</span>);
 		});
 	}
 	
@@ -2402,12 +2462,26 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 
 <pre><code>$('p').toggle();</code></pre>
 
+<p>To fade the elements in, you would specify the fade transition as the optional argument</p>
+
+<pre><code>$('p').show('fade');</code></pre>
+
+<p>You can also pass a function as the second argument to be run when the transition completes, like so</p>
+
+<pre><code>$('p').toggle('fade', false, false, function() {
+    alert('done');
+});</code></pre>
+
+<p>The two middle arguments are timeframe and easing. This works exactly the same as the animate function.</p>
+
+<p>This function takes the original display type into account.</p>
+
 <h2></h2>
 
-<ul><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
+<ul><li><p><strong>param</strong>: <em>String</em>  transition Optional name of the transition to use to toggle. Default transitions are: fade, slide and smooth</p></li><li><p><strong>param</strong>: <em>Number | Boolean</em>  timeframe How many milliseconds you wish the transition to take, pass false to default to 600</p></li><li><p><strong>param</strong>: <em>String | Boolean</em>  easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear</p></li><li><p><strong>param</strong>: <em>Function</em>  callback Optional function to be run after the transition completes</p></li><li><p><strong>returns</strong>: <em>Object</em>  Returns the Spark object for chaining</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'toggle'</span>, <span class="keyword">function</span>() {
+<pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'toggle'</span>, <span class="keyword">function</span>(<span class="variable">transition</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 	<span class="comment">// Initialise any required variables</span>
 	<span class="keyword">var</span> <span class="variable">that</span> = <span class="this">this</span>,
 		<span class="variable">element</span> = <span class="keyword">null</span>;
@@ -2417,15 +2491,18 @@ It takes either one or two arguments, if you pass a name and a value like so.</p
 		<span class="comment">// Grab the element</span>
 		<span class="variable">element</span> = <span class="variable">that</span>.<span class="variable">find</span>(<span class="variable">e</span>);
 		
-		<span class="comment">// Check wether it is display none or not</span>
+		<span class="comment">// Check whether it is display none or not</span>
 		<span class="keyword">if</span>(<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'display'</span>) === <span class="string">'none'</span>) {
 			<span class="comment">// It is, show it</span>
-			<span class="variable">element</span>.<span class="variable">show</span>();
+			<span class="variable">element</span>.<span class="variable">show</span>(<span class="variable">transition</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
 		}
 		<span class="keyword">else</span> {
 			<span class="comment">// It is not, hide it</span>
-			<span class="variable">element</span>.<span class="variable">hide</span>();
+			<span class="variable">element</span>.<span class="variable">hide</span>(<span class="variable">transition</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>);
 		}
+		
+		<span class="comment">// Now remove the callback so it is only called once</span>
+		<span class="variable">callback</span> = <span class="variable">false</span>;
 	});
 	
 	<span class="comment">// Return the Spark object</span>
@@ -2453,21 +2530,21 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 <td class="code">
 <pre><code><span class="class">Spark</span>.<span class="variable">extend</span>(<span class="string">'transitions'</span>, {
 	<span class="variable">show</span>: {
-		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Show the element and grab its opacity</span>
 			<span class="keyword">var</span> <span class="variable">original</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'opacity'</span>);
 			
 			<span class="comment">// Set the opacity to 0 and fade its opacity to its original</span>
 			<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>, <span class="number integer">0</span>).<span class="variable">animate</span>({
 				<span class="variable">opacity</span>: <span class="variable">original</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="comment">// Run the callback if there is one</span>
 				<span class="keyword">if</span>(<span class="variable">callback</span>) {
 					<span class="variable">callback</span>();
 				}
 			});
 		},
-		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Show the element and grab its height</span>
 			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'height'</span>),
 				<span class="comment">// Grab its overflow and default to visible</span>
@@ -2479,7 +2556,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				<span class="variable">overflow</span>: <span class="string">'hidden'</span>
 			}).<span class="variable">animate</span>({
 				<span class="variable">height</span>: <span class="variable">originalHeight</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="comment">// Set the overflow to its original</span>
 				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="variable">originalOverflow</span>);
 				
@@ -2489,7 +2566,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				}
 			});
 		},
-		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Show the element and grab its height</span>
 			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">show</span>().<span class="variable">style</span>(<span class="string">'height'</span>),
 				<span class="comment">// Grab its width</span>
@@ -2509,7 +2586,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				<span class="variable">height</span>: <span class="variable">originalHeight</span>,
 				<span class="variable">width</span>: <span class="variable">originalWidth</span>,
 				<span class="variable">opacity</span>: <span class="variable">originalOpacity</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="comment">// Set the overflow to its original value</span>
 				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="variable">originalOverflow</span>);
 				
@@ -2521,14 +2598,14 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 		}
 	},
 	<span class="variable">hide</span>: {
-		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">fade</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Grab its opacity</span>
 			<span class="keyword">var</span> <span class="variable">original</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>);
 			
 			<span class="comment">// Fade the opacity to 0, set it back to its original</span>
 			<span class="variable">element</span>.<span class="variable">animate</span>({
 				<span class="variable">opacity</span>: <span class="number integer">0</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="comment">// Hide it</span>
 				<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'opacity'</span>, <span class="variable">original</span>).<span class="variable">hide</span>();
 				
@@ -2538,7 +2615,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				}
 			});
 		},
-		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">slide</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Grab its height</span>
 			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'height'</span>),
 				<span class="comment">// Grab its overflow and default to visible</span>
@@ -2547,7 +2624,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 			<span class="comment">// Set its overflow to hidden and slide its height to 0</span>
 			<span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'overflow'</span>, <span class="string">'hidden'</span>).<span class="variable">animate</span>({
 				<span class="variable">height</span>: <span class="number integer">0</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="variable">element</span>.<span class="variable">style</span>({
 					<span class="comment">// Set everything back to their defaults and hide it</span>
 					<span class="variable">height</span>: <span class="variable">originalHeight</span>,
@@ -2560,7 +2637,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				}
 			});
 		},
-		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">callback</span>) {
+		<span class="variable">smooth</span>: <span class="keyword">function</span>(<span class="variable">element</span>, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="variable">callback</span>) {
 			<span class="comment">// Grab its height</span>
 			<span class="keyword">var</span> <span class="variable">originalHeight</span> = <span class="variable">element</span>.<span class="variable">style</span>(<span class="string">'height'</span>),
 				<span class="comment">// Grab its width</span>
@@ -2575,7 +2652,7 @@ Spark.transitions.hide.transitionName(function(element, callback) {
 				<span class="variable">height</span>: <span class="number integer">0</span>,
 				<span class="variable">width</span>: <span class="number integer">0</span>,
 				<span class="variable">opacity</span>: <span class="number integer">0</span>
-			}, <span class="variable">false</span>, <span class="variable">false</span>, <span class="keyword">function</span>() {
+			}, <span class="variable">timeframe</span>, <span class="variable">easing</span>, <span class="keyword">function</span>() {
 				<span class="comment">// Set everything back to their defaults and hide it</span>
 				<span class="variable">element</span>.<span class="variable">style</span>({
 					<span class="variable">height</span>: <span class="variable">originalHeight</span>,
