@@ -14,25 +14,24 @@
  */
 Spark.extend('hasClass', function(name) {
 	// Initialise any required variables
-	var found = true,
-		that = this;
+	var e = this[0];
 	
 	// Check if name is an array
 	if(name instanceof Array) {
 		// Loop over the array
 		this.each(function(n) {
 			// Check for the class
-			if(!new RegExp('\\b' + n + '\\b').test(that[0].className)) {
-				// If not found, set found to false
-				found = false;
+			if(!new RegExp('(^|\\s)' + n + '($|\\s)').test(e.className)) {
+				// If not found return false
+				return false;
 			}
 		}, name);
 		
-		// Return the boolean that is true if all are found
-		return found;
+		// Otherwise, return true
+		return true;
 	}
 	else {
 		// Check for the class
-		return new RegExp('\\b' + name + '\\b').test(this[0].className);
+		return new RegExp('(^|\\s)' + name + '($|\\s)').test(e.className);
 	}
 });
