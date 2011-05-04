@@ -15,21 +15,21 @@
  */
 Spark.extend('transitions', {
 	show: {
-		fade: function(element, callback) {
+		fade: function(element, timeframe, easing, callback) {
 			// Show the element and grab its opacity
 			var original = element.show().style('opacity');
 			
 			// Set the opacity to 0 and fade its opacity to its original
 			element.style('opacity', 0).animate({
 				opacity: original
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Run the callback if there is one
 				if(callback) {
 					callback();
 				}
 			});
 		},
-		slide: function(element, callback) {
+		slide: function(element, timeframe, easing, callback) {
 			// Show the element and grab its height
 			var originalHeight = element.show().style('height'),
 				// Grab its overflow and default to visible
@@ -41,7 +41,7 @@ Spark.extend('transitions', {
 				overflow: 'hidden'
 			}).animate({
 				height: originalHeight
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Set the overflow to its original
 				element.style('overflow', originalOverflow);
 				
@@ -51,7 +51,7 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		smooth: function(element, callback) {
+		smooth: function(element, timeframe, easing, callback) {
 			// Show the element and grab its height
 			var originalHeight = element.show().style('height'),
 				// Grab its width
@@ -71,7 +71,7 @@ Spark.extend('transitions', {
 				height: originalHeight,
 				width: originalWidth,
 				opacity: originalOpacity
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Set the overflow to its original value
 				element.style('overflow', originalOverflow);
 				
@@ -83,14 +83,14 @@ Spark.extend('transitions', {
 		}
 	},
 	hide: {
-		fade: function(element, callback) {
+		fade: function(element, timeframe, easing, callback) {
 			// Grab its opacity
 			var original = element.style('opacity');
 			
 			// Fade the opacity to 0, set it back to its original
 			element.animate({
 				opacity: 0
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Hide it
 				element.style('opacity', original).hide();
 				
@@ -100,7 +100,7 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		slide: function(element, callback) {
+		slide: function(element, timeframe, easing, callback) {
 			// Grab its height
 			var originalHeight = element.style('height'),
 				// Grab its overflow and default to visible
@@ -109,7 +109,7 @@ Spark.extend('transitions', {
 			// Set its overflow to hidden and slide its height to 0
 			element.style('overflow', 'hidden').animate({
 				height: 0
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				element.style({
 					// Set everything back to their defaults and hide it
 					height: originalHeight,
@@ -122,7 +122,7 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		smooth: function(element, callback) {
+		smooth: function(element, timeframe, easing, callback) {
 			// Grab its height
 			var originalHeight = element.style('height'),
 				// Grab its width
@@ -137,7 +137,7 @@ Spark.extend('transitions', {
 				height: 0,
 				width: 0,
 				opacity: 0
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Set everything back to their defaults and hide it
 				element.style({
 					height: originalHeight,
