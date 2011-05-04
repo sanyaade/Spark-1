@@ -15,13 +15,23 @@ Spark.extend('addClass', function(name) {
 	
 	// Loop through all the elements
 	this.each(function(e) {
-		// Check if it already has the class
-		if(!that.find(e).hasClass(name)) {
-			// Grab the class
-			c = that.find(e).attribute('class');
-			
-			// It doesnt, add it and trim off whitespace
-			e.className = ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, '');
+		// Check if name is an array
+		if(name instanceof Array) {
+			// Loop over the array
+			that.each(function(n) {
+				// Rerun the function
+				that.find(e).addClass(n);
+			}, name);
+		}
+		else {
+			// Check if it already has the class
+			if(!that.find(e).hasClass(name)) {
+				// Grab the class
+				c = that.find(e).attribute('class');
+				
+				// It doesnt, add it and trim off whitespace
+				e.className = ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, '');
+			}
 		}
 	});
 	
