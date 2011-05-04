@@ -20,7 +20,7 @@
  * This function takes the original display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to toggle. Default transitions are: fade, slide and smooth
- * @param {Number|Boolean} timeframe How many milliseconds you wish the animation to take, pass false to default to 600
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the transition to take, pass false to default to 600
  * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
