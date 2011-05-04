@@ -44,6 +44,9 @@ Spark.extend('toggle', function(transition, timeframe, easing, callback) {
 			// It is not, hide it
 			element.hide(transition, timeframe, easing, callback);
 		}
+		
+		// Now remove the callback so it is only called once
+		callback = false;
 	});
 	
 	// Return the Spark object
