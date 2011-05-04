@@ -15,7 +15,7 @@
  *         alert('done');
  *     });
  * 
- * This function takes the originial display type into account.
+ * This function takes the original display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to toggle. Default transitions are: fade, slide and smooth
  * @param {Function} callback Optional function to be run after the transition completes
@@ -31,7 +31,7 @@ Spark.extend('toggle', function(transition, callback) {
 		// Grab the element
 		element = that.find(e);
 		
-		// Check wether it is display none or not
+		// Check whether it is display none or not
 		if(element.style('display') === 'none') {
 			// It is, show it
 			element.show(transition, callback);
