@@ -38,7 +38,7 @@ Spark.extend('hide', function(transition, timeframe, easing, callback) {
 			this.each(function(e) {
 				// Run the transition
 				that.transitions.hide[transition](that.find(e), timeframe, easing, callback);
-
+				
 				// Now remove the callback so it is only called once
 				callback = false;
 			});
