@@ -5,7 +5,10 @@
  * 
  *     $('h1').removeClass('border');
  * 
+ * You can also pass an array instead and all of the class names in the array will be removed.
+ * 
  * @param {String} name The class name you want to remove
+ * @param {String|Array} name The class name you want to remove or an array of class names
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('removeClass', function(name) {

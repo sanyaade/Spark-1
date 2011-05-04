@@ -5,7 +5,9 @@
  * 
  *     $('h1').addClass('border');
  * 
- * @param {String} name The class name you want to add
+ * You can also pass an array instead and all of the class names in the array will be added.
+ * 
+ * @param {String|Array} name The class name you want to add or an array of class names
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('addClass', function(name) {
