@@ -11,17 +11,21 @@
  * 
  * You can also pass a function as the second argument to be run when the transition completes, like so
  * 
- *     $('p').toggle('fade', function() {
+ *     $('p').toggle('fade', false, false, function() {
  *         alert('done');
  *     });
+ * 
+ * The two middle arguments are timeframe and easing. This works exactly the same as the animate function.
  * 
  * This function takes the original display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to toggle. Default transitions are: fade, slide and smooth
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the animation to take, pass false to default to 600
+ * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('toggle', function(transition, callback) {
+Spark.extend('toggle', function(transition, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this,
 		element = null;
