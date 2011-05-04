@@ -5,10 +5,34 @@
  * 
  *     $('div.focus').hasClass('focus');
  * 
- * @param {String} name The class name you want to search for
+ * You can also pass an array instead and all of the class names in the array will be checked for.
+ * 
+ * All class names must be found for it to return true
+ * 
+ * @param {String|Array} name The class name you want to search for or an array of class names. If you pass an array, all will have to match
  * @returns {Boolean} Will return true if it has the class or false if it does not
  */
 Spark.extend('hasClass', function(name) {
-	// Check for the class
-	return new RegExp('\\b' + name + '\\b').test(this[0].className);
+	// Initialise any required variables
+	var found = true,
+		that = this;
+	
+	// Check if name is an array
+	if(name instanceof Array) {
+		// Loop over the array
+		this.each(function(n) {
+			// Check for the class
+			if(!new RegExp('\\b' + n + '\\b').test(that[0].className)) {
+				// If not found, set found to false
+				found = false;
+			}
+		}, name);
+		
+		// Return the boolean that is true if all are found
+		return found;
+	}
+	else {
+		// Check for the class
+		return new RegExp('\\b' + name + '\\b').test(this[0].className);
+	}
 });
