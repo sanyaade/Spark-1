@@ -306,6 +306,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				
 				// Loop through the animations
 				that.each(function(to, name) {
+					// If to is a function, run it
+					if(typeof to === 'function') {
+						to = to();
+					}
+					
 					// Get the unit
 					if(typeof to === 'string') {
 						unit = to.replace(notUnit, '');
