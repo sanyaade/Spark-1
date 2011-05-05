@@ -80,7 +80,12 @@ Spark.extend('style', function(name, value) {
 		nameTest = new RegExp('(^|\\s)' + name + '($|\\s)', 'i');
 		
 		// Assign px to the value if required
-		value = (typeof value === 'number' && !nameTest.test(pxNames)) ? value + 'px' : value.toString();
+		if(typeof value === 'number' && !nameTest.test(pxNames)) {
+			value = value + 'px';
+		}
+		else if(typeof value === 'number') {
+			value = value.toString();
+		}
 		
 		// Work around for scroll position
 		if(name === 'scrollTop' || name === 'scrollLeft') {
