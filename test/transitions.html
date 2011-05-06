@@ -22,21 +22,15 @@
 		<script type='text/javascript'>
 			Spark.ready(function() {
 				$('div.fade').addEvent('click', function(e) {
-					$(e.target).hide('fade', false, false, function() {
-						$(e.target).show('fade');
-					});
+					$(e.target).hide('fade').show('fade');
 				});
 				
 				$('div.slide').addEvent('click', function(e) {
-					$(e.target).hide('slide', false, false, function() {
-						$(e.target).show('slide');
-					});
+					$(e.target).hide('slide').show('slide');;
 				});
 				
 				$('div.smooth').addEvent('click', function(e) {
-					$(e.target).hide('smooth', false, false, function() {
-						$(e.target).show('smooth');
-					});
+					$(e.target).hide('smooth').show('smooth');
 				});
 			});
 		</script>
