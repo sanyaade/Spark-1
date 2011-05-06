@@ -39,17 +39,28 @@ Spark.extend('transitions', {
 			});
 		},
 		slide: function(element, timeframe, easing, callback) {
-			// Show the element and grab its height
-			var originalHeight = element.show().style('height'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+			// Initialise any required variables
+			var originalHeight = null,
+				originalOverflow = null;
 			
 			// Set the height to 0 and the overflow to hidden and then slide it to its original
-			element.style({
-				height: 0,
-				overflow: 'hidden'
-			}).animate({
-				height: originalHeight
+			element.animate({
+				height: function() {
+				    // Show the element and get its height
+				    originalHeight = element.show().style('height');
+				    
+				    // Grab its overflow and default to visible
+				    originalOverflow = element.style('overflow') || 'visible';
+				    
+				    // Set height to 0 and overflow to hidden
+				    element.style({
+					height: 0,
+					overflow: 'hidden'
+				    });
+				    
+				    // Slide height to its original
+				    return originalHeight;
+				}
 			}, timeframe, easing, function() {
 				// Set the overflow to its original
 				element.style('overflow', originalOverflow);
@@ -116,14 +127,25 @@ Spark.extend('transitions', {
 			});
 		},
 		slide: function(element, timeframe, easing, callback) {
-			// Grab its height
-			var originalHeight = element.style('height'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+			// Initialise any required variables
+			var originalHeight = null,
+				originalOverflow = null;
 			
 			// Set its overflow to hidden and slide its height to 0
-			element.style('overflow', 'hidden').animate({
-				height: 0
+			element.animate({
+				height: function() {
+				    // Grab its height
+				    originalHeight = element.style('height');
+				    
+				    // Grab its overflow and default to visible
+				    originalOverflow = element.style('overflow') || 'visible';
+				    
+				    // Set the overflow to hidden
+				    element.style('overflow', 'hidden');
+				    
+				    // Animate the height to 0
+				    return 0;
+				}
 			}, timeframe, easing, function() {
 				element.style({
 					// Set everything back to their defaults and hide it
