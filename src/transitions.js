@@ -72,25 +72,44 @@ Spark.extend('transitions', {
 			});
 		},
 		smooth: function(element, timeframe, easing, callback) {
-			// Show the element and grab its height
-			var originalHeight = element.show().style('height'),
-				// Grab its width
-				originalWidth = element.style('width'),
-				// Grab its opacity
-				originalOpacity = element.style('opacity'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+			// Initialise any required variables
+			var originalHeight = null,
+				originalWidth = null,
+				originalOpacity = null,
+				originalOverflow = null;
 			
 			// Set the height, width and opacity to 0. Set the overflow to hidden and then animate everything to its original values
-			element.style({
-				height: 0,
-				width: 0,
-				opacity: 0,
-				overflow: 'hidden'
-			}).animate({
-				height: originalHeight,
-				width: originalWidth,
-				opacity: originalOpacity
+			element.animate({
+				height: function() {
+				    // Show the element and grab its height
+				    originalHeight = element.show().style('height');
+				    
+				    // Grab its width
+				    originalWidth = element.style('width');
+				    
+				    // Grab its opacity
+				    originalOpacity = element.style('opacity');
+				    
+				    // Grab its overflow and default to visible
+				    originalOverflow = element.style('overflow') || 'visible';
+				    
+				    // Reset the styles
+				    element.style({
+					height: 0,
+					width: 0,
+					opacity: 0,
+					overflow: 'hidden'
+				    });
+				    
+				    // Return the original height
+				    return originalHeight;
+				},
+				width: function() {
+				    return originalWidth;
+				},
+				opacity: function() {
+				    return originalOpacity;
+				}
 			}, timeframe, easing, function() {
 				// Set the overflow to its original value
 				element.style('overflow', originalOverflow);
@@ -160,18 +179,30 @@ Spark.extend('transitions', {
 			});
 		},
 		smooth: function(element, timeframe, easing, callback) {
-			// Grab its height
-			var originalHeight = element.style('height'),
-				// Grab its width
-				originalWidth = element.style('width'),
-				// Grab its opacity
-				originalOpacity = element.style('opacity'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+			// Initialise any required variables
+			var originalHeight = null,
+				originalWidth = null,
+				originalOpacity = null,
+				originalOverflow = null;
 			
 			// Set its overflow to hidden and animate everything to 0
 			element.style('overflow', 'hidden').animate({
-				height: 0,
+				height: function() {
+				    // Grab its height
+				    originalHeight = element.style('height');
+				    
+				    // Grab its width
+				    originalWidth = element.style('width');
+				    
+				    // Grab its opacity
+				    originalOpacity = element.style('opacity');
+				    
+				    // Grab its overflow and default to visible
+				    originalOverflow = element.style('overflow') || 'visible';
+				    
+				    // Slide height to 0
+				    return 0;
+				},
 				width: 0,
 				opacity: 0
 			}, timeframe, easing, function() {
