@@ -16,12 +16,21 @@
 Spark.extend('transitions', {
 	show: {
 		fade: function(element, timeframe, easing, callback) {
-			// Show the element and grab its opacity
-			var original = element.show().style('opacity');
+			// Initialise any required variables
+			var original = null;
 			
-			// Set the opacity to 0 and fade its opacity to its original
-			element.style('opacity', 0).animate({
-				opacity: original
+			// Fade its opacity to its original
+			element.animate({
+				opacity: function() {
+				    // Show the element and grab its opacity
+				    original =  element.show().style('opacity');
+				    
+				    // Set its opacity to 0
+				    element.style('opacity', 0);
+				    
+				    // Return the original
+				    return original;
+				}
 			}, timeframe, easing, function() {
 				// Run the callback if there is one
 				if(callback) {
@@ -84,12 +93,18 @@ Spark.extend('transitions', {
 	},
 	hide: {
 		fade: function(element, timeframe, easing, callback) {
-			// Grab its opacity
-			var original = element.style('opacity');
+			// Initialise any required variables
+			var original = null;
 			
 			// Fade the opacity to 0, set it back to its original
 			element.animate({
-				opacity: 0
+				opacity: function() {
+				    // Get the opacity
+				    original = element.style('opacity');
+				    
+				    // Fade to 0
+				    return 0;
+				}
 			}, timeframe, easing, function() {
 				// Hide it
 				element.style('opacity', original).hide();
