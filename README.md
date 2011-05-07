@@ -7,7 +7,7 @@ You can download it and read up on the functions from the links below.
 ## Links
 
  * [Website](http://sparkjs.co.uk/)
- * [Downloads](http://sparkjs.co.uk/download.html)
+ * [Downloads](https://github.com/SparkJS/Package)
  * [Documentation](http://sparkjs.github.com/Spark/)
  * [Twitter](http://twitter.com/#!/SparkJavaScript)
 
