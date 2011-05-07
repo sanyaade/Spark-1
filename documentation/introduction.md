@@ -47,3 +47,21 @@ Here is an example debug plugin.
         // Enable chaining
         return this;
     });
+
+## Transitions
+
+You can add extra transitions as and when you choose, they are a kind of sub-plugin.
+
+To add one, simply add your transition function to `Spark.transitions.show` and `Spark.transitions.hide`.
+
+I recommend copying the source of the fade transition and building on top of that.
+
+After it is added you can use it via the `toggle`, `show` and `hide` functions by passing its name as the argument.
+
+For instance, if you created one called `drop`. You could run the showing version like so.
+
+    $('div').show('drop');
+
+And you could run the hiding version like this.
+
+    $('div').hide('drop');
