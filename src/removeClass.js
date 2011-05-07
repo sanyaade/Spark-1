@@ -13,21 +13,29 @@
  */
 Spark.extend('removeClass', function(name) {
 	// Put this in scope
-	var that = this;
+	var that = this,
+		type = null,
+		element = null;
 	
 	// Loop through all the elements
 	this.each(function(e) {
+		// Get the element
+		element = that.find(e);
+		
+		// Get the type
+		type = element.attribute('class') ? 'class' : 'className';
+		
 		// Check if name is an array
 		if(name instanceof Array) {
 			// Loop over the array
 			that.each(function(n) {
 				// Remove the class
-				e.className = e.className.replace(new RegExp('(^|\\s)' + n + '($|\\s)'), '');
+				element.attribute(type, element.attribute(type).replace(new RegExp('(^|\\s)' + n + '($|\\s)'), ''));
 			}, name);
 		}
 		else {
 			// Remove the class
-			e.className = e.className.replace(new RegExp('(^|\\s)' + name + '($|\\s)'), '');
+			element.attribute(type, element.attribute(type).replace(new RegExp('(^|\\s)' + name + '($|\\s)'), ''));
 		}
 	});
 	

@@ -15,14 +15,19 @@
 Spark.extend('hasClass', function(name) {
 	// Initialise any required variables
 	var e = this[0],
-		found = true;
+		found = true,
+		element = this.find(e),
+		type = null;
+	
+	// Get the type
+	type = element.attribute('class') ? 'class' : 'className';
 	
 	// Check if name is an array
 	if(name instanceof Array) {
 		// Loop over the array
 		this.each(function(n) {
 			// Check for the class
-			if(!new RegExp('(^|\\s)' + n + '($|\\s)').test(e.className)) {
+			if(!new RegExp('(^|\\s)' + n + '($|\\s)').test(element.attribute(type))) {
 				// If not found set found to false
 				found = false;
 			}
@@ -33,6 +38,6 @@ Spark.extend('hasClass', function(name) {
 	}
 	else {
 		// Check for the class
-		return new RegExp('(^|\\s)' + name + '($|\\s)').test(e.className);
+		return new RegExp('(^|\\s)' + name + '($|\\s)').test(element.attribute(type));
 	}
 });
