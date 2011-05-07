@@ -136,6 +136,30 @@
 			
 			
 			
+			module('property');
+			
+			test('Getting and setting a property', function() {
+				var property = $('p#test').property('alt');
+				equals(undefined, property, 'Property should equal undefined');
+				
+				property = $('p#test').property('alt', 'Alt set').property('alt');
+				equals('Alt set', property, 'Property should equal "Alt set"');
+			});
+			
+			test('Setting and getting multiple properties with an object', function() {
+				var a = $('p#test').property({
+					a: 'This is a',
+					b: 'This is b'
+				}).property('a');
+				
+				var b = $('p#test').property('b');
+				
+				equals('This is a', a, 'a should equal "This is a"');
+				equals('This is b', b, 'b should equal "This is b"');
+			});
+			
+			
+			
 			module('classes');
 			
 			test('Checking for a class', function() {
