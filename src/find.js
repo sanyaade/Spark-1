@@ -31,6 +31,14 @@ Spark.extend('find', function(parameters, context) {
 		},
 		expressions = {};
 	
+	// Loop over the expressions compiling them
+	this.each(function(expression, name) {
+		expressions[name] = {
+			find: new RegExp(expression, 'i'),
+			replace: new RegExp(expression + '.*', 'i')
+		};
+	}, expressionStrings);
+	
 	// Return the Spark object to allow chaining
 	return that;
 };
