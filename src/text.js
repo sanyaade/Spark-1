@@ -15,7 +15,14 @@ Spark.extend('text', function(content, append) {
 	
 	// Check if they just want the text
 	if(typeof content === 'undefined') {
-		return this[0][type];
+		// Make sure we have some elements
+		if(this.length !== 0) {
+			return this[0][type];
+		}
+		else {
+			// Return false because we have no elements
+			return false;
+		}
 	}
 	
 	// Loop through all the elements
