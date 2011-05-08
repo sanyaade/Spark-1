@@ -27,12 +27,16 @@ Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
 	var that = this.clone(),
 		expressionStrings = {
-			
+			'\\*',
 		},
 		expressions = {};
 	
 	// Loop over the expressions compiling them
 	this.each(function(expression, name) {
+		// Add the start of string anchor
+		expression += '$';
+		
+		// Compile the regexs
 		expressions[name] = {
 			find: new RegExp(expression, 'i'),
 			replace: new RegExp(expression + '.*', 'i')
