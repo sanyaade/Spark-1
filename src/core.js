@@ -6,18 +6,45 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://sparkjs.co.uk/licence.html
  */
-(function() {
+var Spark = (function() {
 	// Create the object
-	var Spark = {};
+	function Spark(){}
 	
-	// Add the extend function
-	Spark.prototype.extend = function(toAdd) {
+    /**
+     * Adds a variable to Spark's prototype.
+     * This is used to extend Spark with plugins.
+     * 
+     * @param {String} name Name you wish to add your variable under
+     * @param {Mixed} toAdd Variable you wish to add
+     */
+	Spark.prototype.extend = function(name, toAdd) {
+		// Add the object
+		Spark.prototype[name] = toAdd;
 		
+		// If the object is actually an object, then assign the Spark instance to it
+		if(typeof toAdd === 'object') {
+			toAdd.instance = this;
+		}
 	};
 	
-	// Check if the name is already in use
-	if(typeof window.Spark === 'undefined') {
-		// If not then expose the object
-		window.Spark = Spark;
-	}
+    /**
+     * Create a clone of the object. This should be done when anything is being stored in it for chaining.
+     * Otherwise added variables will be there for ever.
+     * This way they only exist within that chain.
+     * 
+     * @returns {Object} The copy of the object
+     */
+	Spark.prototype.clone = function() {
+		return new Spark();
+	};
+	
+	/** @private */
+	return new Spark();
 }());
+
+// Set up the alias for the find function as long as $ is not already in use
+if(typeof window.$ === 'undefined') {
+	var $ = function(parameters, context) {
+		return Spark.find(parameters, context);
+	};
+}

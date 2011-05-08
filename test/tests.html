@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<link rel='stylesheet' type='text/css' href='qunit.css' />
+	</head>
+	
+	<body>
+		<p id='test' class='original' title='Original'>Test element</p>
+		
+		<h1 id="qunit-header">QUnit example</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+		<div id="qunit-fixture">test markup, will be hidden</div>
+		
+		<script type='text/javascript' src='qunit.js'></script>
+		<script type='text/javascript' src='../spark.js'></script>
+		<script type='text/javascript'>
+			module('net.get');
+			
+			test('Asynchronous request', function() {
+				var data = Spark.net.get('ajaxtest.txt');
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			test('Asynchronous request to a file that does not exist', function() {
+				var data = Spark.net.get('doesnotexist.txt');
+				equals(false, data, 'Data should equal false');
+			});
+			
+			test('Asynchronous request with parameters', function() {
+				var data = Spark.net.get('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				});
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			asyncTest('Synchronous request', function() {
+				var data = Spark.net.get('ajaxtest.txt', false, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			asyncTest('Synchronous request to a file that does not exist', function() {
+				var data = Spark.net.get('doesnotexist.txt', false, function(data) {
+					start();
+					equals(false, data, 'Data should equal false');
+				});
+			});
+			
+			asyncTest('Synchronous request with parameters', function() {
+				var data = Spark.net.get('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				}, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			
+			
+			module('net.post');
+			
+			test('Asynchronous request', function() {
+				var data = Spark.net.post('ajaxtest.txt');
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			test('Asynchronous request to a file that does not exist', function() {
+				var data = Spark.net.post('doesnotexist.txt');
+				equals(false, data, 'Data should equal false');
+			});
+			
+			test('Asynchronous request with parameters', function() {
+				var data = Spark.net.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				});
+				equals('Loaded', data, 'Data should equal "Loaded"');
+			});
+			
+			asyncTest('Synchronous request', function() {
+				var data = Spark.net.post('ajaxtest.txt', false, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			asyncTest('Synchronous request to a file that does not exist', function() {
+				var data = Spark.net.post('doesnotexist.txt', false, function(data) {
+					start();
+					equals(false, data, 'Data should equal false');
+				});
+			});
+			
+			asyncTest('Synchronous request with parameters', function() {
+				var data = Spark.net.post('ajaxtest.txt', {
+					foo: 'bar',
+					q: 'test'
+				}, function(data) {
+					start();
+					equals('Loaded', data, 'Data should equal "Loaded"');
+				});
+			});
+			
+			
+			
+			module('attribute');
+			
+			test('Getting an attribute', function() {
+				var attribute = $('p#test').attribute('title');
+				equals('Original', attribute, 'Attribute should equal "Original"');
+			});
+			
+			test('Setting an attribute', function() {
+				var attribute = $('p#test').attribute('title', 'Title set').attribute('title');
+				equals('Title set', attribute, 'Attribute should equal "Title set"');
+			});
+			
+			test('Setting multiple attributes with an object', function() {
+				var title = $('p#test').attribute({
+					title: 'Title set with object',
+					rel: 'Rel set with object'
+				}).attribute('title');
+				
+				var rel = $('p#test').attribute('rel');
+				
+				equals('Title set with object', title, 'Title should equal "Title set with object"');
+				equals('Rel set with object', rel, 'Rel should equal "Rel set with object"');
+			});
+			
+			
+			
+			module('property');
+			
+			test('Getting and setting a property', function() {
+				var property = $('p#test').property('alt');
+				equals(undefined, property, 'Property should equal undefined');
+				
+				property = $('p#test').property('alt', 'Alt set').property('alt');
+				equals('Alt set', property, 'Property should equal "Alt set"');
+			});
+			
+			test('Setting and getting multiple properties with an object', function() {
+				var a = $('p#test').property({
+					a: 'This is a',
+					b: 'This is b'
+				}).property('a');
+				
+				var b = $('p#test').property('b');
+				
+				equals('This is a', a, 'a should equal "This is a"');
+				equals('This is b', b, 'b should equal "This is b"');
+			});
+			
+			
+			
+			module('classes');
+			
+			test('Checking for a class', function() {
+				var has = $('p#test').hasClass('original');
+				var notHas = $('p#test').hasClass('nothas');
+				equals(true, has, 'Has should equal true');
+				equals(false, notHas, 'NotHas should equal false');
+			});
+			
+			test('Adding a class', function() {
+				var has = $('p#test').addClass('new').hasClass('new');
+				equals(true, has, 'Has should equal true');
+			});
+			
+			test('Removing a class', function() {
+				var has = $('p#test').removeClass('new').hasClass('new');
+				equals(false, has, 'Has should equal false');
+			});
+			
+			test('Adding an array of classes', function() {
+				var has = $('p#test').addClass(['one', 'two', 'three']).hasClass(['one', 'two', 'three']);
+				equals(true, has, 'Has should equal true');
+				
+				var has = $('p#test').hasClass(['one', 'two', 'three']);
+				var notHas = $('p#test').hasClass(['one', 'six']);
+				equals(true, has, 'Has should equal true');
+				equals(false, notHas, 'NotHas should equal false');
+			});
+			
+			test('Removing an array of classes', function() {
+				var has = $('p#test').removeClass(['one', 'two', 'three']).hasClass(['one', 'two', 'three']);
+				equals(false, has, 'Has should equal false');
+			});
+			
+			
+			
+			module('cookies');
+			
+			test('Setting a session cookie', function() {
+				Spark.cookie('test1', 'foo');
+				equals('foo', Spark.cookie('test1'), 'The test1 cookie should equal "foo"');
+			});
+			
+			test('Setting a timed cookie', function() {
+				Spark.cookie('test2', 'bar', 100000);
+				equals('bar', Spark.cookie('test2'), 'The test2 cookie should equal "bar"');
+			});
+			
+			test('Getting a cookie that does not exist', function() {
+				equals(false, Spark.cookie('doesnotexist'), 'The doesnotexist cookie should equal false because it does not exist');
+			});
+			
+			
+			
+			module('data');
+			
+			test('Setting data', function() {
+				$('p#test').data('foo', 'bar');
+				equals('bar', $('p#test').data('foo'), 'The foo data should equal "bar"');
+			});
+			
+			test('Getting data that does not exist', function() {
+				equals(false, $('p#test').data('doesnotexist'), 'The doesnotexist data should equal false');
+			});
+			
+			
+			
+			module('json');
+			
+			var json;
+			var obj = {
+			    someArray: ['foo', 'bar', 123],
+			    someObject: { foo: 'bar', embedded: { eleet: 1337 } },
+			    someString: '"Hi there!"',
+			    someNumber: 123,
+			    someBoolean: true
+			};
+			
+			test('Stringifying an object', function() {
+				json = Spark.json.stringify(obj);
+				equals('{"someArray":["foo","bar",123],"someObject":{"foo":"bar","embedded":{"eleet":1337}},"someString":"\\"Hi there!\\"","someNumber":123,"someBoolean":true}', json, 'The JSON should equal this JSON');
+			});
+			
+			test('Parsing JSON', function() {
+				equals(123, Spark.json.parse(json).someNumber, 'Object.someNumber should equal this 123');
+			});
+			
+			
+			
+			module('style');
+			
+			test('Setting a style', function() {
+				var style = $('p#test').style('opacity', '0.5').style('opacity');
+				equals('0.5', style, 'The style (opacity) should equal 0.5');
+			});
+			
+			test('Setting a style with an object', function() {
+				var style = $('p#test').style({
+					border: '3px solid #0000FF',
+					'border-width': '1px',
+					opacity: '0.7'
+				}).style('border-width');
+				equals('1px', style, 'The style (border-width) should equal "1px"');
+			});
+			
+			test('Getting a colour', function() {
+				var style = $('p').style('color');
+				equals('rgb(0, 0, 0)', style, 'The style (color) should equal "rgb(0,0,0)"');
+			});
+			
+			
+			
+			module('events');
+			
+			function testEvent(e) {
+				start();
+				equals('P', e.target.nodeName, 'The nodeName should equal "P"');
+			}
+			
+			test('Adding an event', function() {
+				ok($('p#test').addEvent('click', testEvent));
+			});
+			
+			asyncTest('Triggering an event', function() {
+				$('p#test').triggerEvent('click');
+			});
+			
+			test('Removing an event', function() {
+				ok($('p#test').removeEvent('click', testEvent));
+			});
+			
+			
+			
+			module('each');
+			
+			test('Looping through elements', function() {
+				$('p#test').each(function(e) {
+					equals('P', e.nodeName, 'The nodeName should equal "P"');
+				});
+			});
+			
+			test('Looping through an array', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The array item should equal "test"');
+				}, ['test']);
+			});
+			
+			test('Looping through an object', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The object item should equal "test"');
+				}, {foo: 'test'});
+			});
+			
+			test('Looping through an array like object', function() {
+				$('p#test').each(function(e) {
+					equals('test', e, 'The object item should equal "test"');
+				}, {0: 'test', length: 1});
+			});
+			
+			
+			
+			module('elements');
+			
+			var el = Spark.createElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'});
+			
+			test('Creating an element', function() {
+				equals('Hello, World!', el.innerHTML, 'The elements innerHTML should equal "Hello, World!"');
+			});
+			
+			test('Inserting an element', function() {
+				ok($('p#test').insertElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').insertElement(el));
+			});
+			
+			test('Prepending an element', function() {
+				ok($('p#test').prependElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').prependElement(el));
+			});
+			
+			test('Appending an element', function() {
+				ok($('p#test').appendElement('p', 'Hello, World!', {title: 'Title'}, {color: '#FF0000'}));
+				ok($('p#test').appendElement(el));
+			});
+			
+			test('Removing an element', function() {
+				ok($('p#test p').removeElement());
+			});
+			
+			
+			
+			module('html');
+			
+			test('Replacing html', function() {
+				equals('Test', $('p#test').html('Test').html(), 'The inner html should equal test');
+			});
+			
+			test('Appending html', function() {
+				equals('Testing', $('p#test').html('ing', true).html(), 'The inner html should equal testing');
+			});
+			
+			
+			
+			module('text');
+			
+			test('Replacing text', function() {
+				equals('Test', $('p#test').text('Test').text(), 'The text should equal test');
+			});
+			
+			test('Appending text', function() {
+				equals('Testing', $('p#test').text('ing', true).text(), 'The text should equal testing');
+			});
+			
+			
+			
+			module('visibility');
+			
+			test('Showing, hiding and toggling', function() {
+				equals('none', $('p#test').hide().style('display'), 'Hiding');
+				equals('block', $('p#test').show().style('display'), 'Showing');
+				equals('inline', $('p#test').style('display', 'inline').hide().show().style('display'), 'Maintaining original type');
+				equals('none', $('p#test').toggle().style('display'), 'Toggling 1');
+				equals('inline', $('p#test').toggle().style('display'), 'Toggling 2');
+				$('p#test').style('display', 'block');
+			});
+			
+			
+			
+			module('color');
+			
+			test('Converting to array', function() {
+				equals([255, 0, 0].join(), Spark.color.toArray('red').join(), 'Name');
+				equals([255, 0, 0].join(), Spark.color.toArray('rgb(255, 0, 0)').join(), 'RGB');
+				equals([255, 0, 0].join(), Spark.color.toArray('#FF0000').join(), 'Hex');
+				equals([255, 0, 0].join(), Spark.color.toArray([255, 0, 0]).join(), 'Array');
+			});
+			
+			test('Converting to RGB', function() {
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('red'), 'Name');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('rgb(255, 0, 0)'), 'RGB');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb('#FF0000'), 'Hex');
+				equals('rgb(255, 0, 0)', Spark.color.toRgb([255, 0, 0]), 'Array');
+			});
+			
+			test('Converting to hex', function() {
+				equals('#FF0000', Spark.color.toHex('red'), 'Name');
+				equals('#FF0000', Spark.color.toHex('rgb(255, 0, 0)'), 'RGB');
+				equals('#FF0000', Spark.color.toHex('#FF0000'), 'Hex');
+				equals('#FF0000', Spark.color.toHex([255, 0, 0]), 'Array');
+			});
+			
+			test('Converting to name', function() {
+				equals('red', Spark.color.toName('red'), 'Name');
+				equals('red', Spark.color.toName('rgb(255, 0, 0)'), 'RGB');
+				equals('red', Spark.color.toName('#FF0000'), 'Hex');
+				equals('red', Spark.color.toName([255, 0, 0]), 'Array');
+			});
+			
+			
+			
+			module('net.getJSON');
+			
+			function handleData(data) {
+				test('Loading a JSON file', function() {
+					ok(data);
+				});
+			}
+			
+			Spark.net.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handleData', {
+				screen_name: 'SparkJavaScript',
+				count: '5'
+			});
+		</script>
+	</body>
+</html>
