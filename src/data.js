@@ -33,7 +33,8 @@ Spark.extend('data', function(name, data) {
 	
 	// Check that we have an element to work with
 	if(this.elements instanceof Array) {
-		if(typeof this.elements[0] === 'object') {
+		// Make sure we have some elements
+		if(this.length !== 0) {
 			// Grab the element
 			e = this.elements[0];
 			
