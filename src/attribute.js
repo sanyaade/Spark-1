@@ -35,8 +35,11 @@ Spark.extend('attribute', function(name, value) {
 			});
 		}
 		else {
-			// Get the attribute
-			return this[0].getAttribute(name);
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				// Get the attribute
+				return this[0].getAttribute(name);
+			}
 		}
 	}
 	else if(typeof name === 'object') {
