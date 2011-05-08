@@ -25,7 +25,11 @@
  */
 Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
-	var that = this.clone();
+	var that = this.clone(),
+		expressionStrings = {
+			
+		},
+		expressions = {};
 	
 	// Return the Spark object to allow chaining
 	return that;
