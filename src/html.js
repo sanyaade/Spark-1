@@ -12,7 +12,15 @@
 Spark.extend('html', function(content, append) {
 	// Check if they just want the innerHTML
 	if(typeof content === 'undefined') {
-		return this[0].innerHTML;
+		// Make sure we have some elements
+		if(this.length !== 0) {
+			// Return the innerHTML
+			return this[0].innerHTML;
+		}
+		else {
+			// Return false because we have no elements
+			return false;
+		}
 	}
 	
 	// Loop through all the elements
