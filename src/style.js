@@ -164,28 +164,35 @@ Spark.extend('style', function(name, value) {
 			}
 		}
 		else {
-			if(name === 'padding' || name === 'margin') {
-				// Get the direction styles
-				directions = [
-					getStyle(this[0], camelStyle(name + 'Top')),
-					getStyle(this[0], camelStyle(name + 'Bottom')),
-					getStyle(this[0], camelStyle(name + 'Left'))
-				];
-				
-				// Loop through the styles
-				for(i = 1; i < 2; i++) {
-					// Compare
-					if(directions[0] !== directions[i]) {
-						return '';
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				if(name === 'padding' || name === 'margin') {
+					// Get the direction styles
+					directions = [
+						getStyle(this[0], camelStyle(name + 'Top')),
+						getStyle(this[0], camelStyle(name + 'Bottom')),
+						getStyle(this[0], camelStyle(name + 'Left'))
+					];
+					
+					// Loop through the styles
+					for(i = 1; i < 2; i++) {
+						// Compare
+						if(directions[0] !== directions[i]) {
+							return '';
+						}
 					}
+					
+					// They match, return one of them
+					return directions[0];
 				}
-				
-				// They match, return one of them
-				return directions[0];
+				else {
+					// Get the style
+					return getStyle(this[0], camelStyle(name));
+				}
 			}
 			else {
-				// Get the style
-				return getStyle(this[0], camelStyle(name));
+				// Return false because we have no elements
+				return false;
 			}
 		}
 	}
