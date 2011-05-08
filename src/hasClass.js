@@ -16,13 +16,16 @@ Spark.extend('hasClass', function(name) {
 	// Initialise any required variables
 	var e = null,
 		found = true,
-		element = this.find(e),
+		element = null,
 		type = null;
 	
 	// Make sure we have some elements
 	if(this.length !== 0) {
 		// Get the first element
 		e = this[0];
+		
+		// Put it in an instance
+		element = this.find(e);
 	}
 	else {
 		// We have nothing, return false
