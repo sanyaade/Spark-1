@@ -37,8 +37,15 @@ Spark.extend('property', function(name, value) {
 			});
 		}
 		else {
-			// Get the property
-			return this[0][name];
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				// Get the property
+				return this[0][name];
+			}
+			else {
+				// Return false because we have no elements
+				return false;
+			}
 		}
 	}
 	else if(typeof name === 'object') {
