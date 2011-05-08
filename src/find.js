@@ -30,7 +30,12 @@ Spark.extend('find', function(parameters, context) {
 			'any': '\\*',
 			'tag': '([a-z0-9]+)',
 			'attribute': '\\[([a-z_:][a-z0-9_:\\.\\-]+)\\]',
-			'attribute-equals': '\\[([a-z_:][a-z0-9_:\\.\\-]*)=[\'"](.*)[\'"]\\]'
+			'attribute-equals': '\\[([a-z_:][a-z0-9_:\\.\\-]*)=[\'"](.*)[\'"]\\]',
+			'attribute-equals-whitespace': '\\[([a-z_:][a-z0-9_:\\.\\-]*)~=[\'"](.*)[\'"]\\]',
+			'attribute-equals-start': '\\[([a-z_:][a-z0-9_:\\.\\-]*)^=[\'"](.*)[\'"]\\]',
+			'attribute-equals-end': '\\[([a-z_:][a-z0-9_:\\.\\-]*)$=[\'"](.*)[\'"]\\]',
+			'attribute-equals-contains': '\\[([a-z_:][a-z0-9_:\\.\\-]*)\\*=[\'"](.*)[\'"]\\]',
+			'attribute-equals-hyphen': '\\[([a-z_:][a-z0-9_:\\.\\-]*)|=[\'"](.*)[\'"]\\]'
 		},
 		expressions = {};
 	
