@@ -14,10 +14,20 @@
  */
 Spark.extend('hasClass', function(name) {
 	// Initialise any required variables
-	var e = this[0],
+	var e = null,
 		found = true,
 		element = this.find(e),
 		type = null;
+	
+	// Make sure we have some elements
+	if(this.length !== 0) {
+		// Get the first element
+		e = this[0];
+	}
+	else {
+		// We have nothing, return false
+		return false;
+	}
 	
 	// Get the type
 	type = element.attribute('class') ? 'class' : 'className';
