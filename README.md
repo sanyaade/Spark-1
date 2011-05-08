@@ -1,20 +1,29 @@
-Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/), a 17 year old web developer from Essex, England.
+Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/), a 17 year old web developer England.
 
-It incorporates animation, DOM control, AJAX and JSON manipulation. It can be extended with plugins to accomplish more.
+It incorporates animation, DOM control, AJAX and JSON manipulation, color conversion, animation, cookies and many more functions to control your web page. It can be extended with plugins to accomplish more.
 
 You can download it and read up on the functions from the links below.
 
 ## Links
 
  * [Website](http://sparkjs.co.uk/)
- * [Downloads](http://sparkjs.co.uk/download.html)
- * [Documentation](http://sparkjs.co.uk/documentation.html)
+ * [Downloads](https://github.com/SparkJS/Spark/downloads)
+ * [Documentation](http://sparkjs.github.com/Spark/)
  * [Twitter](http://twitter.com/#!/SparkJavaScript)
- * [My blog](http://blog.flowdev.co.uk/)
 
 ## Building
 
-To build Spark you will need GNU make, NodeJS and Java installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
+To build Spark you will need [GNU make](http://www.gnu.org/software/make/), [NodeJS](http://nodejs.org/) and [Java](http://www.java.com/en/) installed. Although you can just download pre-made versions from [the website](http://sparkjs.co.uk/download.html).
+
+To document Spark you will need [dox](https://github.com/visionmedia/dox) installed too.
+
+If you have all three of these then you can build Spark with the following commands.
+
+ * Combine source files, compress and validate - `make`
+ * Combine source files and validate - `make develop`
+ * Just validate the already present files - `make validate`
+ * Generate documentation - `make document`
+ * Remove generated files - `make clean`
 
 ## Licences
 

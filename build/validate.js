@@ -10,15 +10,12 @@ var result = jshint(src, {
 	curly: true,
 	eqeqeq: true,
 	forin: true,
-	browser: true
+	browser: true,
+	evil: true
 });
 
 // Check for errors
-if(result) {
-	// All good baby, baby!
-	sys.puts('Validation successful');
-}
-else {
+if(!result) {
 	// It's the end of the world!
 	for(i = 0; i < jshint.errors.length; i++) {
 		// Log the error
