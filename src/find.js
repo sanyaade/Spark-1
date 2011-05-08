@@ -27,7 +27,8 @@ Spark.extend('find', function(parameters, context) {
 	// Initialise any required variables
 	var that = this.clone(),
 		expressionStrings = {
-			'any': '\\*'
+			'any': '\\*',
+			'tag': '([a-z0-9])'
 		},
 		expressions = {};
 	
