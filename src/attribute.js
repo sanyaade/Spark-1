@@ -40,6 +40,10 @@ Spark.extend('attribute', function(name, value) {
 				// Get the attribute
 				return this[0].getAttribute(name);
 			}
+			else {
+				// Return false because we have no elements
+				return false;
+			}
 		}
 	}
 	else if(typeof name === 'object') {
