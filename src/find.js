@@ -36,7 +36,7 @@ Spark.extend('find', function(parameters, context) {
 	// Loop over the expressions compiling them
 	this.each(function(expression, name) {
 		// Add the start of string anchor
-		expression += '$';
+		expression += '^';
 		
 		// Compile the regexs
 		expressions[name] = {
