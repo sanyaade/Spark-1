@@ -40,7 +40,11 @@ Spark.extend('find', function(parameters, context) {
 			'nth-child': ':nth-child\\(([0-9\\+\\-n]+|odd|even)\\)',
 			'nth-last-child': ':nth-last-child\\(([0-9\\+\\-n]+|odd|even)\\)',
 			'nth-of-type': ':nth-of-type\\(([0-9\\+\\-n]+|odd|even)\\)',
-			'nth-last-of-type': ':nth-last-of-type\\(([0-9\\+\\-n]+|odd|even)\\)'
+			'nth-last-of-type': ':nth-last-of-type\\(([0-9\\+\\-n]+|odd|even)\\)',
+			'first-child': ':first-child',
+			'last-child': ':last-child',
+			'first-of-type': ':first-of-type',
+			'last-of-type': ':last-of-type'
 		},
 		expressions = {};
 	
