@@ -69,8 +69,8 @@ Spark.extend('find', function(selector, context) {
 		};
 	}, expressionStrings);
 	
-	// Put spaces round child, sibling and adjacent selectors and remove masses of spaces and finally trim it
-	selector = selector.replace(/(>|~|\+)/g, ' $1 ').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+	// Put spaces round child, sibling and adjacent selectors, remove masses of spaces, remove spaces from around commas and finally trim it
+	selector = selector.replace(/(>|~|\+)/g, ' $1 ').replace(/\s+/g, ' ').replace(/\s*,\s*/, ',').replace(/^\s+|\s+$/g, '');
 	
 	// Return the Spark object to allow chaining
 	return that;
