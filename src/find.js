@@ -49,7 +49,8 @@ Spark.extend('find', function(parameters, context) {
 			'only-of-type': ':only-of-type',
 			'lang': ':lang\\([a-z]+\\)',
 			'class': '\\.(-?[_a-z]+[_a-z0-9-]*)',
-			'id': '#([a-z][:\\._a-z0-9-]*)'
+			'id': '#([a-z][:\\._a-z0-9-]*)',
+			'not': ':not\\((.*)\\)'
 		},
 		expressions = {};
 	
