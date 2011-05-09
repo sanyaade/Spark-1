@@ -36,7 +36,8 @@ Spark.extend('find', function(parameters, context) {
 			'attribute-equals-end': '\\[([a-z_:][a-z0-9_:\\.\\-]*)$=[\'"](.*)[\'"]\\]',
 			'attribute-equals-contains': '\\[([a-z_:][a-z0-9_:\\.\\-]*)\\*=[\'"](.*)[\'"]\\]',
 			'attribute-equals-hyphen': '\\[([a-z_:][a-z0-9_:\\.\\-]*)|=[\'"](.*)[\'"]\\]',
-			'root': ':root'
+			'root': ':root',
+			'nth-child': ':nth-child\\(([0-9\\+\\-n]+|odd|even)\\)'
 		},
 		expressions = {};
 	
