@@ -67,4 +67,4 @@ Spark.extend('find', function(parameters, context) {
 	
 	// Return the Spark object to allow chaining
 	return that;
-};
+});
