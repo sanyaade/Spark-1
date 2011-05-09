@@ -44,7 +44,9 @@ Spark.extend('find', function(parameters, context) {
 			'first-child': ':first-child',
 			'last-child': ':last-child',
 			'first-of-type': ':first-of-type',
-			'last-of-type': ':last-of-type'
+			'last-of-type': ':last-of-type',
+			'only-child': ':only-child',
+			'only-of-type': ':only-of-type'
 		},
 		expressions = {};
 	
