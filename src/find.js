@@ -19,11 +19,11 @@
  * 
  * You can also pass element objects to it and they will be adopted. If you pass an event object it will adopt the events target.
  * 
- * @param {String} parameters The CSS selector string to your required elements
+ * @param {String} selector The CSS selector string to your required elements
  * @param {Object} context The element you wish to start the search from, defaults to document
  * @returns {Object} Returns the Spark object to allow chaining
  */
-Spark.extend('find', function(parameters, context) {
+Spark.extend('find', function(selector, context) {
 	// Initialise any required variables
 	var that = this.clone(),
 		expressionStrings = {
@@ -68,6 +68,9 @@ Spark.extend('find', function(parameters, context) {
 			replace: new RegExp(expression + '.*', 'i')
 		};
 	}, expressionStrings);
+	
+	// Put spaces round child, sibling and adjacent selectors and remove masses of spaces and finally trim it
+	selector = selector.replace(/(>|~|\+)/g, ' $1 ').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
 	
 	// Return the Spark object to allow chaining
 	return that;
