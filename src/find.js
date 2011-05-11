@@ -60,7 +60,7 @@ Spark.extend('find', function(selector, context) {
 		selectors = null;
 	
 	// Loop over the expressions compiling them
-	this.each(function(expression, name) {
+	that.each(function(expression, name) {
 		// Add the start of string anchor
 		expression = '^' + expression;
 		
@@ -78,7 +78,7 @@ Spark.extend('find', function(selector, context) {
 	selectors = selector.split(',');
 	
 	// Loop over the selectors
-	this.each(function(selector) {
+	that.each(function(selector) {
 		// Get the context
 		currentContext = context || document;
 	}, selectors);
