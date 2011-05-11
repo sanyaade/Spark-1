@@ -57,7 +57,8 @@ Spark.extend('find', function(selector, context) {
 		},
 		expressions = {},
 		currentContext = null,
-		selectors = null;
+		selectors = null,
+		filters = null;
 	
 	// Loop over the expressions compiling them
 	that.each(function(expression, name) {
@@ -81,6 +82,14 @@ Spark.extend('find', function(selector, context) {
 	that.each(function(selector) {
 		// Get the context and default to document
 		currentContext = context || document;
+		
+		// Split the selector into its filters
+		filters = selector.split(' ');
+		
+		// Loop over the filters
+		that.each(function(filter) {
+			
+		}, filters);
 	}, selectors);
 	
 	// Return the Spark object to allow chaining
