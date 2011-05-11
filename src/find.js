@@ -55,7 +55,8 @@ Spark.extend('find', function(selector, context) {
 			'sibling': '~',
 			'adjacent-sibling': '\\+'
 		},
-		expressions = {};
+		expressions = {},
+		currentContext = null;
 	
 	// Loop over the expressions compiling them
 	this.each(function(expression, name) {
