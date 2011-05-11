@@ -56,7 +56,8 @@ Spark.extend('find', function(selector, context) {
 			'adjacent-sibling': '\\+'
 		},
 		expressions = {},
-		currentContext = null;
+		currentContext = null,
+		selectors = null;
 	
 	// Loop over the expressions compiling them
 	this.each(function(expression, name) {
@@ -72,6 +73,9 @@ Spark.extend('find', function(selector, context) {
 	
 	// Put spaces round child, sibling and adjacent selectors, remove masses of spaces, remove spaces from around commas and finally trim it
 	selector = selector.replace(/(>|~|\+)/g, ' $1 ').replace(/\s+/g, ' ').replace(/\s*,\s*/, ',').replace(/^\s+|\s+$/g, '');
+	
+	// Split the selectors
+	selectors = selector.split(',');
 	
 	// Return the Spark object to allow chaining
 	return that;
