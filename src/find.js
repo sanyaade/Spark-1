@@ -61,7 +61,10 @@ Spark.extend('find', function(selector, context) {
 	// Does the hard work of searching
 	// The code below this function calls this function
 	function findElement(selector, context) {
-		
+		// Keep looping over the selector until there is nothing left
+		while(selector.length > 0) {
+			
+		}
 	}
 	
 	// Loop over the expressions compiling them
