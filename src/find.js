@@ -68,7 +68,10 @@ Spark.extend('find', function(selector, context) {
 		
 		// Keep looping over the selector until there is nothing left
 		while(selector.length > 0) {
-			
+			// Loop over the context
+			that.each(function(element, i) {
+				
+			}, context);
 		}
 	}
 	
