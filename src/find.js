@@ -79,7 +79,7 @@ Spark.extend('find', function(selector, context) {
 	
 	// Loop over the selectors
 	that.each(function(selector) {
-		// Get the context
+		// Get the context and default to document
 		currentContext = context || document;
 	}, selectors);
 	
