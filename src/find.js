@@ -58,6 +58,12 @@ Spark.extend('find', function(selector, context) {
 		expressions = {},
 		currentContext = null;
 	
+	// Does the hard work of searching
+	// The code below this function calls this function
+	function findElement(selector, context) {
+		
+	}
+	
 	// Loop over the expressions compiling them
 	that.each(function(expression, name) {
 		// Add the start of string anchor
@@ -75,13 +81,14 @@ Spark.extend('find', function(selector, context) {
 	
 	// Loop over the selectors
 	that.each(function(selector) {
-		// Get the context and default to document
+		// Get the current context
 		currentContext = context || document;
 		
 		// Loop over the sub selectors
 		that.each(function(selector) {
-			
-		}, selector.split(' ').reverse());
+			// Perform the search
+			currentContext = findElement(selector, currentContext);
+		}, selector.split(' '));
 	}, selector.split(','));
 	
 	// Return the Spark object to allow chaining
