@@ -81,7 +81,7 @@ Spark.extend('find', function(selector, context) {
 		// Loop over the filters
 		that.each(function(filter) {
 			
-		}, selector.split(' '));
+		}, selector.split(' ').reverse());
 	}, selector.split(','));
 	
 	// Return the Spark object to allow chaining
