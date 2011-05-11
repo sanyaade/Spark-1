@@ -78,8 +78,8 @@ Spark.extend('find', function(selector, context) {
 		// Get the context and default to document
 		currentContext = context || document;
 		
-		// Loop over the filters
-		that.each(function(filter) {
+		// Loop over the sub selectors
+		that.each(function(selector) {
 			
 		}, selector.split(' ').reverse());
 	}, selector.split(','));
