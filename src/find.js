@@ -77,6 +77,12 @@ Spark.extend('find', function(selector, context) {
 	// Split the selectors
 	selectors = selector.split(',');
 	
+	// Loop over the selectors
+	this.each(function(selector) {
+		// Get the context
+		currentContext = context || document;
+	}, selectors);
+	
 	// Return the Spark object to allow chaining
 	return that;
 });
