@@ -50,29 +50,16 @@ Spark.extend('find', function(selector, context) {
 			'lang': ':lang\\(([a-z]+)\\)',
 			'class': '\\.(-?[_a-z]+[_a-z0-9-]*)',
 			'id': '#([a-z][:\\._a-z0-9-]*)',
-			'not': ':not\\((.*?)\\)',
-			'child': '>',
-			'sibling': '~',
-			'adjacent-sibling': '\\+'
+			'not': ':not\\((.*?)\\)'
 		},
 		expressions = {},
-		currentContext = null;
+		currentContext = null,
+		levels = [];
 	
 	// Does the hard work of searching
 	// The code below this function calls this function
-	function findElement(selector, context) {
-		// Convert objects to arrays
-		if(context.nodeName) {
-			context = [context];
-		}
+	function findElement(selector) {
 		
-		// Keep looping over the selector until there is nothing left
-		while(selector.length > 0) {
-			// Loop over the context
-			that.each(function(element, i) {
-				
-			}, context);
-		}
 	}
 	
 	// Loop over the expressions compiling them
@@ -98,8 +85,8 @@ Spark.extend('find', function(selector, context) {
 		// Loop over the sub selectors
 		that.each(function(selector) {
 			// Perform the search
-			currentContext = findElement(selector, currentContext);
-		}, selector.split(' '));
+			levels.push(findElement(selector));
+		}, selector.split(' ').reverse());
 	}, selector.split(','));
 	
 	// Return the Spark object to allow chaining
