@@ -129,7 +129,7 @@ Spark.extend('find', function(selector, context) {
 		levels = [];
 		
 		// Get the current context
-		currentContext = context || document;
+		currentContext = context || that.elements || document;
 		
 		// Loop over the sub selectors
 		that.each(function(selector) {
