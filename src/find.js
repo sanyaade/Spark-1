@@ -97,7 +97,7 @@ Spark.extend('find', function(selector, context) {
 			if(expressions.any.find.test(selector)) {
 				// If there are no found, add all elements
 				if(found.length === 0) {
-					found = methods.convertList(methods.any());
+					found = methods.any();
 				}
 				
 				selector = selector.replace(expressions.any.replace, '');
@@ -105,7 +105,7 @@ Spark.extend('find', function(selector, context) {
 			else if(expressions.tag.find.test(selector)) {
 				// If there are no found, search for the tag
 				if(found.length === 0) {
-					found = methods.convertList(document.getElementsByTagName(selector.replace(expressions.tag.find, '$1')));
+					found = document.getElementsByTagName(selector.replace(expressions.tag.find, '$1'));
 					console.log(found);
 				}
 				
