@@ -55,6 +55,8 @@ Spark.extend('find', function(selector, context) {
 		expressions = {},
 		levels = null,
 		first = null,
+		i = null,
+		tempChild = null,
 		found = [],
 		methods = {
 			any: function() {
@@ -63,8 +65,7 @@ Spark.extend('find', function(selector, context) {
 			},
 			convertList: function(list) {
 				// Initialise any required variables
-				var i = null,
-					converted = [];
+				var converted = [];
 				
 				// Convert a node list to an array
 				for(i = 0; i < list.length; i++) {
@@ -108,7 +109,6 @@ Spark.extend('find', function(selector, context) {
 				// If there are no found, search for the tag
 				if(found.length === 0) {
 					found = document.getElementsByTagName(selector.replace(expressions.tag.find, '$1'));
-					console.log(found);
 				}
 				
 				selector = selector.replace(expressions.tag.replace, '');
@@ -123,9 +123,38 @@ Spark.extend('find', function(selector, context) {
 		return found;
 	}
 	
+	// Checks if an element is a child of any of the parents
+	function isChild(child, parents) {
+		for(i = 0; i < parents.length; i++) {
+			tempChild = child;
+			
+			while(tempChild.parentNode) {
+				tempChild = tempChild.parentNode;
+				
+				if(tempChild === parents[i]) {
+					// Found it!
+					return true;
+				}
+			}
+		}
+		
+		// Return false by default
+		return false;
+	}
+	
 	// Checks if an element can go all the way through the path array
 	function matchPath(element, path) {
+		// Loop through the path
+		for(i = 0; i < path.length; i++) {
+			// Check if the element is a child of the current path
+			if(!isChild(element, path[i])) {
+				// It is not, return false
+				return false;
+			}
+		}
 		
+		// Return true by default
+		return true;
 	}
 	
 	// Loop over the expressions compiling them
