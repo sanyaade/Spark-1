@@ -67,14 +67,8 @@ Spark.extend('find', function(selector, context) {
 	
 	// Loop over the expressions compiling them
 	that.each(function(expression, name) {
-		// Add the start of string anchor
-		expression = '^' + expression;
-		
-		// Compile the regexs
-		expressions[name] = {
-			find: new RegExp(expression, 'i'),
-			replace: new RegExp(expression + '.*', 'i')
-		};
+		// Compile the regex
+		expressions[name] = new RegExp('^' + expression + '.*', 'i');
 	}, expressionStrings);
 	
 	// Put spaces round child, sibling and adjacent selectors, remove masses of spaces, remove spaces from around commas and finally trim it
