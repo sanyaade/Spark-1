@@ -54,6 +54,7 @@ Spark.extend('find', function(selector, context) {
 		},
 		expressions = {},
 		levels = null,
+		first = null,
 		methods = {
 			any: function() {
 				// Return all elements in the DOM
@@ -149,6 +150,9 @@ Spark.extend('find', function(selector, context) {
 		
 		// Add the context
 		levels.push(context);
+		
+		// Get the first
+		first = levels.splice(0, 1);
 	}, selector.split(','));
 	
 	// Return the Spark object to allow chaining
