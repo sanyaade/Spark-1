@@ -123,6 +123,11 @@ Spark.extend('find', function(selector, context) {
 		return found;
 	}
 	
+	// Checks if an element can go all the way through the path array
+	function matchPath(element, path) {
+		
+	}
+	
 	// Loop over the expressions compiling them
 	that.each(function(expression, name) {
 		// Add the start of string anchor
@@ -158,7 +163,7 @@ Spark.extend('find', function(selector, context) {
 		// Loop over the elements
 		that.each(function(bottom) {
 			// Check if it matches the path
-			if(methods.matchPath(bottom, levels)) {
+			if(matchPath(bottom, levels)) {
 				// It does, add it to the found
 				found.push(bottom);
 			}
