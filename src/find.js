@@ -54,7 +54,7 @@ Spark.extend('find', function(selector, context) {
 		},
 		expressions = {},
 		currentContext = null,
-		levels = [];
+		levels = null;
 	
 	// Does the hard work of searching
 	// The code below this function calls this function
@@ -79,6 +79,9 @@ Spark.extend('find', function(selector, context) {
 	
 	// Loop over the selectors
 	that.each(function(selector) {
+		// Reset levels
+		levels = [];
+		
 		// Get the current context
 		currentContext = context || document;
 		
