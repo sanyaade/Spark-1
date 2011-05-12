@@ -58,7 +58,7 @@ Spark.extend('find', function(selector, context) {
 	
 	// Does the hard work of searching
 	// The code below this function calls this function
-	function findElement(selector) {
+	function findElements(selector) {
 		
 	}
 	
@@ -85,7 +85,7 @@ Spark.extend('find', function(selector, context) {
 		// Loop over the sub selectors
 		that.each(function(selector) {
 			// Perform the search
-			levels.push(findElement(selector));
+			levels.push(findElements(selector));
 		}, selector.split(' ').reverse());
 	}, selector.split(','));
 	
