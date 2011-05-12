@@ -84,7 +84,7 @@ Spark.extend('find', function(selector, context) {
 	
 	// Make sure we have a context
 	if(!context) {
-		var context = that.elements || [document]
+		context = that.elements || [document]
 	}
 	
 	// Does the hard work of searching
