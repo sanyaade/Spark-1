@@ -55,7 +55,7 @@ Spark.extend('find', function(selector, context) {
 		expressions = {},
 		currentContext = null,
 		levels = null,
-		methods: {
+		methods = {
 			any: function() {
 				// Return all elements in the DOM
 				return document.all || document.getElementsByTagName('*');
