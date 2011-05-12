@@ -53,7 +53,6 @@ Spark.extend('find', function(selector, context) {
 			'not': ':not\\((.*?)\\)'
 		},
 		expressions = {},
-		currentContext = null,
 		levels = null,
 		methods = {
 			any: function() {
@@ -81,6 +80,11 @@ Spark.extend('find', function(selector, context) {
 		that.elements = [selector];
 		
 		return that;
+	}
+	
+	// Make sure we have a context
+	if(!context) {
+		var context = that.elements || [document]
 	}
 	
 	// Does the hard work of searching
@@ -128,14 +132,14 @@ Spark.extend('find', function(selector, context) {
 		// Reset levels
 		levels = [];
 		
-		// Get the current context
-		currentContext = [context] || that.elements || [document];
-		
 		// Loop over the sub selectors
 		that.each(function(selector) {
 			// Perform the search
 			levels.push(findElements(selector));
 		}, selector.split(' ').reverse());
+		
+		// Add the context
+		levels.push(context);
 	}, selector.split(','));
 	
 	// Return the Spark object to allow chaining
