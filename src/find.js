@@ -74,6 +74,15 @@ Spark.extend('find', function(selector, context) {
 			}
 		};
 	
+	// If selector is an object, adopt it and return
+	if(typeof selector === 'object') {
+		that[0] = selector;
+		that.length = 1;
+		that.elements = [selector];
+		
+		return that;
+	}
+	
 	// Does the hard work of searching
 	function findElements(selector) {
 		// Set up the array to be returned
