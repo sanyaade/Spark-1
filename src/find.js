@@ -54,21 +54,61 @@ Spark.extend('find', function(selector, context) {
 		},
 		expressions = {},
 		currentContext = null,
-		levels = null;
+		levels = null,
+		methods: {
+			any: function() {
+				// Return all elements in the DOM
+				return document.all || document.getElementsByTagName('*');
+			},
+			convertList: function(list) {
+				// Initialise any required variables
+				var i = null,
+					converted = [];
+				
+				// Convert a node list to an array
+				for(i = 0; i < list.length; i++) {
+					converted.push(list[i]);
+				}
+				
+				return converted;
+			}
+		};
 	
 	// Does the hard work of searching
-	// The code below this function calls this function
 	function findElements(selector) {
+		// Set up the array to be returned
+		var found = [];
+		
 		// Loop over the selector until there is nothing left
 		while(selector.length > 0) {
-			
+			if(expressions.any.find.test(selector)) {
+				// If there are no found, add all elements
+				if(found.length === 0) {
+					found = methods.convertList(methods.any());
+				}
+				
+				selector = selector.replace(expressions.any.replace, '');
+			}
+			else {
+				// If the selector does not match anything, return an empty array
+				return [];
+			}
 		}
+		
+		// Return the found
+		return found;
 	}
 	
 	// Loop over the expressions compiling them
 	that.each(function(expression, name) {
-		// Compile the regex
-		expressions[name] = new RegExp('^' + expression + '.*', 'i');
+		// Add the start of string anchor
+		expression = '^' + expression;
+		
+		// Compile the regexs
+		expressions[name] = {
+			replace: new RegExp(expression, 'i'),
+			find: new RegExp(expression + '.*', 'i')
+		};
 	}, expressionStrings);
 	
 	// Put spaces round child, sibling and adjacent selectors, remove masses of spaces, remove spaces from around commas and finally trim it
