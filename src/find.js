@@ -55,6 +55,7 @@ Spark.extend('find', function(selector, context) {
 		expressions = {},
 		levels = null,
 		first = null,
+		found = [],
 		methods = {
 			any: function() {
 				// Return all elements in the DOM
@@ -153,7 +154,23 @@ Spark.extend('find', function(selector, context) {
 		
 		// Get the first
 		first = levels.splice(0, 1);
+		
+		// Loop over the elements
+		that.each(function(bottom) {
+			// Check if it matches the path
+			if(methods.matchPath(bottom, levels)) {
+				// It does, add it to the found
+				found.push(bottom);
+			}
+		}, first);
 	}, selector.split(','));
+	
+	// Assign the found to that
+	that.each(function(e, i) {
+		that[i] = e;
+	}, found);
+	that.length = found.length;
+	that.elements = found;
 	
 	// Return the Spark object to allow chaining
 	return that;
