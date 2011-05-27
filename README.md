@@ -1,4 +1,4 @@
-Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/), a 17 year old web developer England.
+Spark is a lightweight JavaScript library written by [Oliver Caldwell](http://flowdev.co.uk/).
 
 It incorporates animation, DOM control, AJAX and JSON manipulation, color conversion, animation, cookies and many more functions to control your web page. It can be extended with plugins to accomplish more.
 
